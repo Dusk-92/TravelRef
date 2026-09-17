@@ -87,13 +87,10 @@ jobs:
           total = int(re.search(r'Requirements extracted: (\d+)', req).group(1))
           matched = int(re.search(r'Matched officially: (\d+)', req).group(1))
           unmatched = int(re.search(r'Unmatched: (\d+)', req).group(1))
-          assert total == matched + unmatched, (total, matched, unmatched)
-
-          section = req.split('UNMATCHED:', 1)[1] if 'UNMATCHED:' in req else ''
-          codes = set(re.findall(r'^- (\w+):', section, re.M))
-          allowed = {'Q7', 'Q8'}
-          assert codes <= allowed, codes
-          assert unmatched == len(codes), (unmatched, codes)
+          assert total == 77, total
+          assert matched == total, (matched, total)
+          assert unmatched == 0, unmatched
+          assert not re.search(r'^- \w+:', req.split('UNMATCHED:', 1)[1], re.M)
           print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas, {matched}/{total} requirements')
           PY
 
