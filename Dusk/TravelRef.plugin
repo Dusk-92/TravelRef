@@ -3,11 +3,11 @@
   <Information>
 	<Name>TravelRef</Name>
 	<Author>David Down</Author>
-	<Version>3.3.2-FR-r5</Version>
+	<Version>3.3.2-FR-r6</Version>
 	<Image>Dusk/TravelRef/Stable.tga</Image>
-	<Description>TravelRef 3.3.2 FR r5 : interface et recherches françaises, noms officiels LOTRO, routage conservé sur les clés internes et validation automatique.</Description>
+	<Description>TravelRef 3.3.2 FR r6 : interface et recherches françaises, noms officiels LOTRO, routage conservé sur les clés internes et robustesse renforcée.</Description>
 	<website>https://github.com/Dusk-92/TravelRef</website>
   </Information>
-  <Package>Dusk.TravelRef.TR_Main</Package>
+  <Package>Dusk.TravelRef.TR_Entry</Package>
   <Configuration Apartment="Dusk"/>
 </Plugin>
