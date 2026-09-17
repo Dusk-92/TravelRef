@@ -1,28 +1,28 @@
-name: Audit official French requirements
+name: Generate official French requirements
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "tools/audit_requirements_fr.py"
+      - "tools/generate_requirements_fr.py"
       - ".github/workflows/audit-requirements-fr.yml"
 
 permissions:
   contents: write
 
 jobs:
-  audit:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Audit requirements
-        run: python3 tools/audit_requirements_fr.py
-      - name: Commit report
+      - name: Generate requirements
+        run: python3 tools/generate_requirements_fr.py
+      - name: Commit generated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tools/TR_RequirementsFR_Audit.txt
+          git add Dusk/TravelRef/TR_OfficialFR_Requirements.lua tools/TR_RequirementsFR_Audit.txt
           git diff --cached --quiet && exit 0
-          git commit -m "Audit official French TravelRef requirements"
+          git commit -m "Generate official French TravelRef requirements"
           git pull --rebase origin main
           git push
