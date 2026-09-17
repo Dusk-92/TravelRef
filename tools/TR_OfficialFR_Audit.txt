@@ -10,17 +10,11 @@ Official sources loaded:
 - parchmentMaps.xml: 205 paired EN/FR labels
 
 Real TravelRef location/destination names extracted: 426
-Matched location/destination names: 418
-Unmatched location/destination names: 8
+Matched location/destination names: 424
+Unmatched location/destination names: 2
 Zone names extracted: 47 / matched: 44
 Area names extracted: 83 / matched: 75
 
 Unmatched real TravelRef location/destination names:
 - Blazon of the Great Alliance
 - Blazon of the Last Alliance
-- Northern Shore(B)
-- Ruins of Dol Guldur
-- Southern Shore(B)
-- the War-stead
-- To Minas Tirith, Before the Battle
-- To Mins Tirith, Before the Battle
