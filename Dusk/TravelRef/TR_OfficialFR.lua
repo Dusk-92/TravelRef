@@ -1,4 +1,5 @@
 -- TravelRef official French LOTRO display layer.
+-- coding: utf-8 'ä
 --
 -- This layer only updates TravelRef's existing TR_LocFR / TR_ZoneFR tables.
 -- It does not replace TR_LocName / TR_ZoneName, so the original routing and
@@ -12,8 +13,6 @@ local function TR_OfficialSafeImport(moduleName)
 end
 
 local TR_OfficialOK, TR_OfficialError = pcall(function()
-    -- noAccent is useful for old TravelRef spellings such as Gabilshathur vs
-    -- Gabilshathûr. If it cannot be loaded, exact/simple matches still work.
     TR_OfficialSafeImport("Dusk.TravelRef.Common.noAccent")
 
     TR_OfficialZoneRaw = {}
@@ -24,12 +23,36 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data4")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data5")
 
+    -- Fallback local: LOTRO/Turbine Lua peut parfois ne pas charger noAccent
+    -- assez tôt. On garde donc ici les caractères utiles pour comparer les
+    -- vieilles clés TravelRef aux libellés officiels modernes.
+    local AccentFallback = {
+        ["à"]="a", ["á"]="a", ["â"]="a", ["ã"]="a", ["ä"]="a", ["å"]="a",
+        ["À"]="A", ["Á"]="A", ["Â"]="A", ["Ã"]="A", ["Ä"]="A", ["Å"]="A",
+        ["æ"]="ae", ["Æ"]="AE", ["ç"]="c", ["Ç"]="C",
+        ["è"]="e", ["é"]="e", ["ê"]="e", ["ë"]="e",
+        ["È"]="E", ["É"]="E", ["Ê"]="E", ["Ë"]="E",
+        ["ì"]="i", ["í"]="i", ["î"]="i", ["ï"]="i",
+        ["Ì"]="I", ["Í"]="I", ["Î"]="I", ["Ï"]="I",
+        ["ñ"]="n", ["Ñ"]="N",
+        ["ò"]="o", ["ó"]="o", ["ô"]="o", ["õ"]="o", ["ö"]="o", ["ø"]="o",
+        ["Ò"]="O", ["Ó"]="O", ["Ô"]="O", ["Õ"]="O", ["Ö"]="O", ["Ø"]="O",
+        ["ù"]="u", ["ú"]="u", ["û"]="u", ["ü"]="u",
+        ["Ù"]="U", ["Ú"]="U", ["Û"]="U", ["Ü"]="U",
+        ["ý"]="y", ["ÿ"]="y", ["Ý"]="Y",
+        ["œ"]="oe", ["Œ"]="OE",
+    }
+
     local function OfficialNorm(value)
         if type(value) ~= "string" then return nil end
-        if type(noAccent) == "function" then value = noAccent(value) end
+        if type(noAccent) == "function" then
+            value = noAccent(value)
+        else
+            for accented,plain in pairs(AccentFallback) do
+                value = string.gsub(value, accented, plain)
+            end
+        end
         value = string.lower(value)
-        value = string.gsub(value, "œ", "oe")
-        value = string.gsub(value, "æ", "ae")
         value = string.gsub(value, "[^%w]", "")
         return value
     end
@@ -57,8 +80,6 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
 
         for en,fr in pairs(raw or {}) do addExact(en, fr) end
 
-        -- TravelRef often stores an older/shorter internal name while the
-        -- current LOTRO travel label contains a qualifier in parentheses.
         for en,fr in pairs(raw or {}) do
             local base = string.gsub(en, "%s*%b()%s*$", "")
             addAlias(base, fr)
@@ -69,6 +90,7 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
             addAlias(string.gsub(simple, "^The%s+", ""), fr)
 
             local travel = string.gsub(en, "%s+%-%s+Swift$", "")
+            travel = string.gsub(travel, "%s+%-%s+Swift Travel$", "")
             travel = string.gsub(travel, "%s+%-%s+Boat Travel$", "")
             addAlias(travel, fr)
             addAlias(string.gsub(travel, "^The%s+", ""), fr)
@@ -92,16 +114,44 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         ["Valley of Ikorbad"] = "Valley of Ikorbân",
     }
 
-    -- Update only the existing display tables. The original TravelRef
-    -- functions automatically pick these values up, including suffixes such
-    -- as (R), (B), (M), etc.
+    -- Anciennes clés TravelRef encore utilisées par l'addon mais absentes ou
+    -- orthographiées différemment dans travelsMap.xml. Les valeurs ci-dessous
+    -- viennent des tables FR officielles LOTRO (travelsWeb/dungeons).
+    local LegacyOfficial = {
+        ["Anazarmekhem"] = "Anazârmekhem",
+        ["Eastern Crossroads"] = "Carrefour de l'Est",
+        ["Nameless Places"] = "Des lieux sans nom",
+        ["Second Hall Camp-site"] = "Campement de la Seconde salle",
+        ["Sudultirh Outpost"] = "Avant-poste de Sudulthurkh",
+        ["Sudulthurkh Outpost"] = "Avant-poste de Sudulthurkh",
+        ["The Deep Descent"] = "Longue Descente",
+        ["Tharakh Bazan"] = "Tharâkh Bazân",
+        ["Jazargund"] = "Jazârgund",
+        ["King's Crossing"] = "Carrefour du roi - Trajet en bateau",
+        ["Trader's Wharf"] = "Quai des négociants - Trajet en bateau",
+        ["Court of Celeborn"] = "Cour de Celeborn",
+        ["The Vineyards of Lorien"] = "Les Vignes de la Lórien",
+    }
+
     if type(TR_LocFR) == "table" then
         local function applyLocation(name)
             if type(name) ~= "string" then return end
             local base = string.match(name, "^(.-)(%([A-Z]+%))$")
             base = base or name
+
             local key = OfficialNorm(base)
             local fr = key and OfficialLoc[key] or nil
+
+            -- TravelRef a parfois ajouté/supprimé un article par rapport au
+            -- client (ex. "The Deep Descent" / "Deep Descent").
+            if not fr then
+                local noThe = string.gsub(base, "^The%s+", "")
+                if noThe ~= base then
+                    local noTheKey = OfficialNorm(noThe)
+                    fr = noTheKey and OfficialLoc[noTheKey] or nil
+                end
+            end
+
             if fr then TR_LocFR[base] = fr end
         end
 
@@ -111,6 +161,13 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         if type(R_Dest) == "table" then
             for en in pairs(R_Dest) do applyLocation(en) end
         end
+
+        for en,fr in pairs(LegacyOfficial) do
+            TR_LocFR[en] = fr
+        end
+
+        -- Le nœud bateau de Lothlórien a une désignation officielle dédiée.
+        TR_LocFR["Lothlorien(B)"] = "Quais de la Lothlorien(B)"
 
         -- Rebuild the reverse lookup used when a French menu entry is chosen.
         TR_LocEN = {}
