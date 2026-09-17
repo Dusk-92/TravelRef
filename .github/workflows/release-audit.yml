@@ -1,0 +1,65 @@
+name: Temporary TravelRef release audit
+
+on:
+  push:
+    paths:
+      - "tools/release_audit.lua"
+      - ".github/workflows/release-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+      - name: Compile every Lua file
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef tools -type f -name '*.lua' -print0 | while IFS= read -r -d '' f; do
+            echo "LUAC $f"
+            "$LUAC" -p "$f"
+          done
+      - name: Audit real TravelRef data and route rules
+        run: lua5.1 tools/release_audit.lua
+      - name: Inventory visible English and state-sensitive code
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          files = [
+              Path('Dusk/TravelRef/TR_Main.lua'),
+              Path('Dusk/TravelRef/TR_Window.lua'),
+              Path('Dusk/TravelRef/TR_Launcher.lua'),
+              Path('Dusk/TravelRef/TR_Robustness.lua'),
+              Path('Dusk/TravelRef/Common/Help.lua'),
+              Path('Dusk/TravelRef/Common/DropMenu.lua'),
+              Path('Dusk/TravelRef/Common/ScrollMenu.lua'),
+              Path('Dusk/TravelRef/Common/Options.lua'),
+          ]
+          english = re.compile(r'\b(Selected|Possible|command|commands|arguments|Enter|none|Personal|Kinship|Premium|Member|Travel|Return|Muster|Sail)\b', re.I)
+          string_re = re.compile(r'(["\'])(.*?)(?<!\\)\1')
+          print('=== POSSIBLE VISIBLE ENGLISH ===')
+          for path in files:
+              for lineno,line in enumerate(path.read_text(encoding='utf-8-sig').splitlines(),1):
+                  if line.lstrip().startswith('--'): continue
+                  for _,text in string_re.findall(line):
+                      if english.search(text):
+                          print(f'{path}:{lineno}: {text}')
+          print('=== TR_req / TR_Opt WRITES ===')
+          write_re = re.compile(r'\b(TR_(?:req|Opt)(?:\.[A-Za-z_][A-Za-z0-9_]*|\[[^\]]+\])?)\s*=')
+          for path in files[:4]:
+              for lineno,line in enumerate(path.read_text(encoding='utf-8-sig').splitlines(),1):
+                  if write_re.search(line): print(f'{path}:{lineno}: {line.strip()}')
+          print('=== RAW SORTS ===')
+          for path in files:
+              for lineno,line in enumerate(path.read_text(encoding='utf-8-sig').splitlines(),1):
+                  if 'table.sort' in line: print(f'{path}:{lineno}: {line.strip()}')
+          PY
