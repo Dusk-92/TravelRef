@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "tools/apply_r10.py"
+      - "tools/apply_r10_runner.py"
       - ".github/workflows/apply-r10.yml"
   workflow_dispatch:
 
@@ -16,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Apply guarded r10 patch
-        run: python3 tools/apply_r10.py
+        run: python3 tools/apply_r10_runner.py
       - name: Install Lua 5.1
         run: |
           sudo apt-get update
