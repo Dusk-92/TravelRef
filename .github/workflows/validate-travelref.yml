@@ -7,14 +7,18 @@ on:
       - "Dusk/TravelRef/**"
       - "Dusk/TravelRef.plugin"
       - "tools/generate_official_fr.py"
+      - "tools/generate_requirements_fr.py"
       - "tools/TR_OfficialFR_Audit.txt"
+      - "tools/TR_RequirementsFR_Audit.txt"
       - ".github/workflows/validate-travelref.yml"
   pull_request:
     paths:
       - "Dusk/TravelRef/**"
       - "Dusk/TravelRef.plugin"
       - "tools/generate_official_fr.py"
+      - "tools/generate_requirements_fr.py"
       - "tools/TR_OfficialFR_Audit.txt"
+      - "tools/TR_RequirementsFR_Audit.txt"
       - ".github/workflows/validate-travelref.yml"
 
 permissions:
@@ -41,7 +45,9 @@ jobs:
           done
 
       - name: Validate generator syntax
-        run: python3 -m py_compile tools/generate_official_fr.py
+        run: |
+          python3 -m py_compile tools/generate_official_fr.py
+          python3 -m py_compile tools/generate_requirements_fr.py
 
       - name: Validate plugin XML
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
@@ -49,9 +55,10 @@ jobs:
       - name: Check generated localization is current
         run: |
           python3 tools/generate_official_fr.py
-          git diff --exit-code -- Dusk/TravelRef/TR_OfficialFR_Auto.lua tools/TR_OfficialFR_Audit.txt
+          python3 tools/generate_requirements_fr.py
+          git diff --exit-code -- Dusk/TravelRef/TR_OfficialFR_Auto.lua Dusk/TravelRef/TR_OfficialFR_Requirements.lua tools/TR_OfficialFR_Audit.txt tools/TR_RequirementsFR_Audit.txt
 
-      - name: Check localization coverage report
+      - name: Check localization coverage reports
         run: |
           python3 - <<'PY'
           import re
@@ -75,7 +82,19 @@ jobs:
           assert unmatched_locations == 0, unmatched_locations
           assert zones == matched_zones, (zones, matched_zones)
           assert areas == matched_areas, (areas, matched_areas)
-          print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas')
+
+          req = Path('tools/TR_RequirementsFR_Audit.txt').read_text(encoding='utf-8')
+          total = int(re.search(r'Requirements extracted: (\d+)', req).group(1))
+          matched = int(re.search(r'Matched officially: (\d+)', req).group(1))
+          unmatched = int(re.search(r'Unmatched: (\d+)', req).group(1))
+          assert total == matched + unmatched, (total, matched, unmatched)
+
+          section = req.split('UNMATCHED:', 1)[1] if 'UNMATCHED:' in req else ''
+          codes = set(re.findall(r'^- (\w+):', section, re.M))
+          allowed = {'Q7', 'Q8'}
+          assert codes <= allowed, codes
+          assert unmatched == len(codes), (unmatched, codes)
+          print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas, {matched}/{total} requirements')
           PY
 
       - name: Check known regressions
@@ -105,6 +124,7 @@ jobs:
           grep -F 'table.sort(Loc_list, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
           grep -F 'table.sort(list, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
           grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Requirements", true)' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F 'for _,en in ipairs(zones) do applyZone(en) end' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F '["œ"]="oe"' Dusk/TravelRef/Common/noAccent.lua
           grep -F 'local ambiguousLoc = {}' Dusk/TravelRef/TR_OfficialFR.lua
