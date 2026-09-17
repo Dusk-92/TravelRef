@@ -140,3 +140,5 @@ jobs:
           ! grep -F 'dv.r:sub(1,1)==","' Dusk/TravelRef/TR_Window.lua
           ! grep -F 'Nul loc' Dusk/TravelRef/TR_Window.lua
           ! grep -F '[fp]' Dusk/TravelRef/TR_OfficialFR_Auto.lua
+
+# r10 clean-head validation trigger
