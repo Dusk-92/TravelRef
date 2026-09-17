@@ -1,0 +1,79 @@
+name: Apply r8 audit fixes
+
+on:
+  push:
+    paths:
+      - "tools/apply_r8_audit_fixes.py"
+      - ".github/workflows/apply-r8-audit-fixes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply guarded patch
+        run: python3 tools/apply_r8_audit_fixes.py
+
+      - name: Regenerate official French data
+        run: |
+          python3 tools/generate_official_fr.py
+          python3 tools/generate_requirements_fr.py
+
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+
+      - name: Validate Lua syntax
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+            "$LUAC" -p "$file"
+          done
+
+      - name: Validate plugin XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
+
+      - name: Guard key r8 fixes
+        run: |
+          grep -F '<Version>3.3.2-FR-r8</Version>' Dusk/TravelRef.plugin
+          grep -F 'if TR_req.NV[name] then str=' Dusk/TravelRef/TR_Main.lua
+          test "$(grep -F -c 'if TR_req.NV[name] then str=' Dusk/TravelRef/TR_Main.lua)" -eq 2
+          ! grep -F 'if TR_req[name] then str=' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'table.sort(Loc_list)' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'table.sort(dest)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local d,ln = Loc_Find(nil, y, x, Locs)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local ambiguousZone = {}' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'local ambiguousArea = {}' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'Matched/verified French: 77' tools/TR_RequirementsFR_Audit.txt
+          grep -F 'Unmatched: 0' tools/TR_RequirementsFR_Audit.txt
+          grep -F 'Fuzzy faction matches: 0' tools/TR_RequirementsFR_Audit.txt
+
+      - name: Commit r8 fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            Dusk/TravelRef.plugin \
+            Dusk/TravelRef/TR_Main.lua \
+            Dusk/TravelRef/TR_Window.lua \
+            Dusk/TravelRef/TR_OfficialFR.lua \
+            Dusk/TravelRef/TR_FR_NOTES.txt \
+            Dusk/TravelRef/TR_OfficialFR_Auto.lua \
+            Dusk/TravelRef/TR_OfficialFR_Requirements.lua \
+            tools/generate_requirements_fr.py \
+            tools/TR_OfficialFR_Audit.txt \
+            tools/TR_RequirementsFR_Audit.txt
+          if git diff --cached --quiet; then
+            echo "No r8 changes to commit."
+            exit 0
+          fi
+          git commit -m "Fix TravelRef r8 audit findings"
+          git pull --rebase origin main
+          git push
