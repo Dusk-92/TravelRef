@@ -184,13 +184,26 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
 
         TR_LocFR["Lothlorien(B)"] = "Quais de la Lothlorien(B)"
 
+        -- Build reverse lookup conservatively: an ambiguous French label must
+        -- never silently resolve to whichever English key pairs() saw last.
         TR_LocEN = {}
+        local ambiguousLoc = {}
+        local function addReverseLocation(en)
+            local fr = TR_LocName(en)
+            local previous = TR_LocEN[fr]
+            if previous == nil then
+                TR_LocEN[fr] = en
+            elseif previous ~= en then
+                ambiguousLoc[fr] = true
+            end
+        end
         if type(Locs) == "table" then
-            for en in pairs(Locs) do TR_LocEN[TR_LocName(en)] = en end
+            for en in pairs(Locs) do addReverseLocation(en) end
         end
         if type(R_Dest) == "table" then
-            for en in pairs(R_Dest) do TR_LocEN[TR_LocName(en)] = en end
+            for en in pairs(R_Dest) do addReverseLocation(en) end
         end
+        for fr in pairs(ambiguousLoc) do TR_LocEN[fr] = nil end
     end
 
     if type(TR_ZoneFR) == "table" then
