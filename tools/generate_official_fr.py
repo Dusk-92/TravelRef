@@ -24,13 +24,14 @@ REPORT = ROOT / "tools" / "TR_OfficialFR_Audit.txt"
 
 BASE = "https://raw.githubusercontent.com/LotroCompanion/lotro-data/master/lore/labels"
 # Priority matters: TravelRef is a travel addon, so travel UI labels win over
-# generic landmark/area labels when both exist.
+# generic landmark/area/map labels when both exist.
 SOURCES = [
     ("travelsMap.xml", 0),
     ("travelsWeb.xml", 1),
     ("dungeons.xml", 2),
     ("landmarks.xml", 3),
     ("geoAreas.xml", 4),
+    ("parchmentMaps.xml", 5),
 ]
 
 INTERNAL_SUFFIX_RE = re.compile(r"\(([A-Z]+)\)$")
@@ -39,15 +40,20 @@ TRAVEL_SUFFIX_RE = re.compile(
     re.IGNORECASE,
 )
 PAREN_SUFFIX_RE = re.compile(r"\s*\([^()]+\)\s*$")
+ACTION_PREFIX_RE = re.compile(r"^(?:To|Travel to|Boat to)\s+", re.IGNORECASE)
+EAGLE_SUFFIX_RE = re.compile(r"\s*-\s*Eagle\s*$", re.IGNORECASE)
 
 # Old TravelRef spellings/typos which cannot safely be recovered by mere
 # accent/punctuation normalization. Values are current official EN labels.
 LEGACY_EN_ALIASES = {
     "Aethir": "Aerthir",
+    "Bloody Eagle Tavern": "The Bloody Eagle Tavern",
     "Echad Dunnan": "Echad Dúnann",
     "Falathorn Homesteads": "Falathlorn Homesteads",
+    "Hall Under the Mtn": "Hall Under the Mountain",
     "Sudultirh Outpost": "Sudulthurkh Outpost",
     "The Vinyards of Lorien": "The Vineyards of Lórien",
+    "To Mins Tirith, Before the Battle": "Minas Tirith (before battle)",
     "Great River": "The Great River",
     "West Rohan": "Western Rohan",
     "East Gondor": "Eastern Gondor",
@@ -102,6 +108,40 @@ def official_aliases(value: str) -> set[str]:
         values.add(re.sub(r",\s+the\s+.+$", "", item, flags=re.I).strip())
 
     return {item for item in values if item}
+
+
+def travelref_candidates(value: str) -> list[str]:
+    """Return safe official-name candidates for TravelRef action-style keys."""
+    values = [value.strip()]
+
+    def add(item: str) -> None:
+        item = item.strip()
+        if item and item not in values:
+            values.append(item)
+
+    # TravelRef sometimes stores an action as the destination key.
+    for item in list(values):
+        add(ACTION_PREFIX_RE.sub("", item))
+        add(EAGLE_SUFFIX_RE.sub("", item))
+
+    # Apply the two transforms together as well (e.g. action + transport tag).
+    for item in list(values):
+        add(EAGLE_SUFFIX_RE.sub("", ACTION_PREFIX_RE.sub("", item)))
+
+    # Old TravelRef wording vs current map/resource wording.
+    for item in list(values):
+        add(re.sub(r"\bHousing\b", "Homesteads", item, flags=re.I))
+        add(re.sub(r",\s*After the Battle$", " (after battle)", item, flags=re.I))
+        add(re.sub(r",\s*Before the Battle$", " (before battle)", item, flags=re.I))
+
+    # Article variants are common between TravelRef and current LOTRO labels.
+    for item in list(values):
+        if item.lower().startswith("the "):
+            add(item[4:])
+        else:
+            add("The " + item)
+
+    return values
 
 
 def section(text: str, start_marker: str, end_marker: str) -> str:
@@ -186,10 +226,10 @@ def main() -> None:
         search_names = []
         legacy = LEGACY_EN_ALIASES.get(base)
         if legacy:
-            search_names.append(legacy)
-        search_names.append(base)
-        if base.lower().startswith("the "):
-            search_names.append(base[4:].strip())
+            search_names.extend(travelref_candidates(legacy))
+        for candidate in travelref_candidates(base):
+            if candidate not in search_names:
+                search_names.append(candidate)
 
         for candidate in search_names:
             key = norm(candidate)
