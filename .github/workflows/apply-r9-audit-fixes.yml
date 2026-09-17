@@ -1,0 +1,72 @@
+name: Apply r9 audit fixes
+
+on:
+  push:
+    paths:
+      - "tools/apply_r9_audit_fixes.py"
+      - ".github/workflows/apply-r9-audit-fixes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply guarded patch
+        run: python3 tools/apply_r9_audit_fixes.py
+
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+
+      - name: Validate Lua syntax
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+            "$LUAC" -p "$file"
+          done
+
+      - name: Run route-rule behavior tests
+        run: lua5.1 tools/test_route_rules.lua
+
+      - name: Validate plugin XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
+
+      - name: Guard key r9 fixes
+        run: |
+          grep -F '<Version>3.3.2-FR-r9</Version>' Dusk/TravelRef.plugin
+          grep -F 'import "Dusk.TravelRef.TR_RouteRules"' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local tdr = TR_DiscountRate(td, TR_req, TD_list)' Dusk/TravelRef/TR_Main.lua
+          grep -F '(NoReq or TR_RequirementCodesMet(dv.r, TR_req, true))' Dusk/TravelRef/TR_Window.lua
+          grep -F 'return TR_RequirementCodesMet(dv.r, TR_req, false)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'skill and TR_LocName(code)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'HouseName(None)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'self.houseMenu:BuildMenu(HouseMenuFR' Dusk/TravelRef/TR_Window.lua
+          grep -F 'TR_req.dock = nil' Dusk/TravelRef/TR_Window.lua
+          ! grep -F 'not (dv.r and dv.r:sub(1,1)==',' and not Req(dv))' Dusk/TravelRef/TR_Window.lua
+
+      - name: Commit r9 fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            Dusk/TravelRef.plugin \
+            Dusk/TravelRef/TR_Main.lua \
+            Dusk/TravelRef/TR_Window.lua \
+            Dusk/TravelRef/TR_RouteRules.lua \
+            Dusk/TravelRef/TR_FR_NOTES.txt \
+            tools/test_route_rules.lua
+          if git diff --cached --quiet; then
+            echo "No r9 changes to commit."
+            exit 0
+          fi
+          git commit -m "Fix TravelRef r9 routing and persistence"
+          git pull --rebase origin main
+          git push
