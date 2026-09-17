@@ -1,11 +1,8 @@
 -- TravelRef official French LOTRO display layer.
 -- coding: utf-8 'ä
 --
--- This layer only updates TravelRef's existing TR_LocFR / TR_ZoneFR tables.
--- It does not replace TR_LocName / TR_ZoneName, so the original routing and
--- UI code keep working exactly as before.
--- Any localization error is contained with pcall so it can never prevent
--- TravelRef itself from loading.
+-- Internal travel/location keys stay in English. This layer only changes
+-- labels shown to the player. Any localization failure is contained by pcall.
 
 local function TR_OfficialSafeImport(moduleName)
     local ok = pcall(import, moduleName)
@@ -23,14 +20,24 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data3")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data4")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data5")
-    -- Generated from travelsMap + travelsWeb + dungeons + landmarks + geoAreas.
-    -- SafeImport keeps TravelRef loadable even if this optional generated file
-    -- is absent or malformed.
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto")
 
-    -- Fallback local: LOTRO/Turbine Lua peut parfois ne pas charger noAccent
-    -- assez tôt. On garde donc ici les caractères utiles pour comparer les
-    -- vieilles clés TravelRef aux libellés officiels modernes.
+    -- TravelRef uses a few shortened/old internal names which do not exist as
+    -- exact English labels in the current client data. These French values are
+    -- taken from the corresponding official EN/FR localization IDs.
+    TR_OfficialZoneRaw["Azanulbizar"] = "Contes des temps jadis : Azanulbizar"
+    TR_OfficialZoneRaw["Strongholds"] = "Bastions du Nord"
+    TR_OfficialZoneRaw["Zirer Tarka"] = "Les îles du Bouclier"
+
+    TR_OfficialAreaRaw["Belfalas"] = "Les Havres de Belfalas (Gondor royal)"
+    TR_OfficialAreaRaw["Dor-en-Emil"] = "Dor-en-Ernil (Gondor royal)"
+    TR_OfficialAreaRaw["Fearwater"] = "Sûg Nidar, les Eaux troubles"
+    TR_OfficialAreaRaw["the berths"] = "Dil-irmiz, les Mouillages"
+    TR_OfficialAreaRaw["the cellars"] = "Tâkhdar, les Caves"
+    TR_OfficialAreaRaw["the crypts"] = "Khabârkhad, les Cryptes"
+    TR_OfficialAreaRaw["the vaults"] = "Kamrabezûr, les Chambres fortes"
+    TR_OfficialAreaRaw["the wells"] = "Ilmabiri, les Puits"
+
     local AccentFallback = {
         ["à"]="a", ["á"]="a", ["â"]="a", ["ã"]="a", ["ä"]="a", ["å"]="a",
         ["À"]="A", ["Á"]="A", ["Â"]="A", ["Ã"]="A", ["Ä"]="A", ["Å"]="A",
@@ -44,8 +51,7 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         ["Ò"]="O", ["Ó"]="O", ["Ô"]="O", ["Õ"]="O", ["Ö"]="O", ["Ø"]="O",
         ["ù"]="u", ["ú"]="u", ["û"]="u", ["ü"]="u",
         ["Ù"]="U", ["Ú"]="U", ["Û"]="U", ["Ü"]="U",
-        ["ý"]="y", ["ÿ"]="y", ["Ý"]="Y",
-        ["œ"]="oe", ["Œ"]="OE",
+        ["ý"]="y", ["ÿ"]="y", ["Ý"]="Y", ["œ"]="oe", ["Œ"]="OE",
     }
 
     local function OfficialNorm(value)
@@ -84,7 +90,6 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         end
 
         for en,fr in pairs(raw or {}) do addExact(en, fr) end
-
         for en,fr in pairs(raw or {}) do
             local base = string.gsub(en, "%s*%b()%s*$", "")
             addAlias(base, fr)
@@ -110,6 +115,7 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
 
     local OfficialLoc = BuildOfficialMap(TR_OfficialLocRaw)
     local OfficialZone = BuildOfficialMap(TR_OfficialZoneRaw)
+    local OfficialArea = BuildOfficialMap(TR_OfficialAreaRaw)
 
     local ZoneAliases = {
         ["Great River"] = "The Great River",
@@ -119,10 +125,6 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         ["Valley of Ikorbad"] = "Valley of Ikorbân",
     }
 
-    -- Anciennes clés TravelRef encore utilisées par l'addon mais absentes ou
-    -- orthographiées différemment dans travelsMap.xml. Les valeurs ci-dessous
-    -- viennent des tables FR officielles LOTRO (travelsWeb/dungeons) ou de
-    -- libellés français vérifiés du client/notes officielles.
     local LegacyOfficial = {
         ["Anazarmekhem"] = "Anazârmekhem",
         ["Eastern Crossroads"] = "Carrefour de l'Est",
@@ -146,12 +148,8 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
             if type(name) ~= "string" then return end
             local base = string.match(name, "^(.-)(%([A-Z]+%))$")
             base = base or name
-
             local key = OfficialNorm(base)
             local fr = key and OfficialLoc[key] or nil
-
-            -- TravelRef a parfois ajouté/supprimé un article par rapport au
-            -- client (ex. "The Deep Descent" / "Deep Descent").
             if not fr then
                 local noThe = string.gsub(base, "^The%s+", "")
                 if noThe ~= base then
@@ -159,7 +157,6 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
                     fr = noTheKey and OfficialLoc[noTheKey] or nil
                 end
             end
-
             if fr then TR_LocFR[base] = fr end
         end
 
@@ -169,15 +166,10 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         if type(R_Dest) == "table" then
             for en in pairs(R_Dest) do applyLocation(en) end
         end
+        for en,fr in pairs(LegacyOfficial) do TR_LocFR[en] = fr end
 
-        for en,fr in pairs(LegacyOfficial) do
-            TR_LocFR[en] = fr
-        end
-
-        -- Le nœud bateau de Lothlórien a une désignation officielle dédiée.
         TR_LocFR["Lothlorien(B)"] = "Quais de la Lothlorien(B)"
 
-        -- Rebuild the reverse lookup used when a French menu entry is chosen.
         TR_LocEN = {}
         if type(Locs) == "table" then
             for en in pairs(Locs) do TR_LocEN[TR_LocName(en)] = en end
@@ -194,14 +186,42 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
             local fr = key and OfficialZone[key] or nil
             if fr then TR_ZoneFR[en] = fr end
         end
-
         TR_ZoneEN = {}
         for en,fr in pairs(TR_ZoneFR) do TR_ZoneEN[fr] = en end
     end
+
+    -- Areas are display/search metadata only; routing uses the location keys and
+    -- destination graph. Translate the area labels in memory and rebuild the
+    -- area index so /tr areas, /tra and area lookups all operate in French.
+    if type(Locs) == "table" and type(Areas) == "table" then
+        TR_AreaFR = {}
+        TR_AreaEN = {}
+        local NewAreas = {}
+
+        for area,zone in pairs(Areas) do
+            local key = OfficialNorm(area)
+            local fr = (key and OfficialArea[key]) or area
+            TR_AreaFR[area] = fr
+            TR_AreaEN[fr] = area
+            NewAreas[fr] = zone
+        end
+
+        for _,loc in pairs(Locs) do
+            if type(loc) == "table" and loc.a then
+                loc.a = TR_AreaFR[loc.a] or loc.a
+            end
+        end
+        Areas = NewAreas
+
+        function TR_AreaName(name)
+            return TR_AreaFR[name] or name
+        end
+        function TR_AreaKey(name)
+            return TR_AreaEN[name] or name
+        end
+    end
 end)
 
--- Never let the optional localization layer break the addon. If something
--- goes wrong, TravelRef simply keeps its previous/manual French names.
 if not TR_OfficialOK and Turbine and Turbine.Shell then
     Turbine.Shell.WriteLine("<rgb=#FF6040>TravelRef FR officiel désactivé : "..tostring(TR_OfficialError).."</rgb>")
 end
