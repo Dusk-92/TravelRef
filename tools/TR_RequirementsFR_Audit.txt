@@ -1,0 +1,111 @@
+TravelRef requirement localization audit
+========================================
+
+- deeds.xml: 44167 paired EN/FR labels
+- quests.xml: 218651 paired EN/FR labels
+
+Requirements extracted: 77
+Matched officially: 15
+Ambiguous: 9
+Unmatched: 53
+
+MATCHED:
+- D1: Silent and Restless => Silence nerveux [deeds.xml 1879140606; EN=Silent and Restless]
+- D12: Mirkwood Landing => L'arrivée dans la Forêt Noire [deeds.xml 1879165716; EN=Mirkwood Landing]
+- D16: Into the Black and Twisted Forest => Dans l'enchevêtrement de la Forêt Noire [deeds.xml 1879155755; EN=Into the Black and Twisted Forest]
+- D17: Into the Black and Twisted Forest (Int.) => Dans l'enchevêtrement de la Forêt Noire (intermédiaire) [deeds.xml 1879155756; EN=Into the Black and Twisted Forest (Intermediate)]
+- D18: Into the Black and Twisted Forest (Adv.) => Dans l'enchevêtrement de la Forêt Noire (avancé) [deeds.xml 1879155757; EN=Into the Black and Twisted Forest (Advanced)]
+- D2: Silent and Restless (Intermediate) => Silence nerveux (Intermédiaire) [deeds.xml 1879140607; EN=Silent and Restless (Intermediate)]
+- D3: Silent and Restless (Advanced) => Silence nerveux (Avancé) [deeds.xml 1879140608; EN=Silent and Restless (Advanced)]
+- D4: Silent and Restless (Final) => Silence nerveux (Final) [deeds.xml 1879140609; EN=Silent and Restless (Final)]
+- D5: Mysteries of Enedwaith => Mystères d'Enedwaith [deeds.xml 1879190071; EN=Mysteries of Enedwaith]
+- D6: Mysteries of Enedwaith (Intermediate) => Mystères d'Enedwaith (Intermédiaire) [deeds.xml 1879190075; EN=Mysteries of Enedwaith (Intermediate)]
+- D7: Mysteries of Enedwaith (Advanced) => Mystères d'Enedwaith (Avancé) [deeds.xml 1879190076; EN=Mysteries of Enedwaith (Advanced)]
+- Q2: The Frozen War => La guerre glaciale [quests.xml 1879108253; EN=The Frozen War]
+- Q3: The Paths of Caras Galadhon => Les chemins de Caras Galadhon [quests.xml 1879152965; EN=The Paths of Caras Galadhon]
+- Q6: The Stable: Rebuild => L'étable : à reconstruire [quests.xml 1879237965; EN=The Stable: Rebuild]
+- Q9: Welcome to Lyndelby => Bienvenue à Lyndelby [quests.xml 1879405021; EN=Welcome to Lyndelby]
+
+AMBIGUOUS:
+- D13: Ally of Lothlorien
+    deeds.xml 1879152646: EN=Ally of Lothlórien | FR=Allié / Alliée de la Lothlórien
+    deeds.xml key:620837338:228870261: EN=Ally of Lothlórien | FR=${PLAYERNAME:Allié|Alliée} de la Lothlórien
+- D14: Defender of Lothlorien
+    deeds.xml 1879152647: EN=Defender of Lothlórien | FR=Défenseur / Défenseuse de la Lothlórien
+    deeds.xml key:620837340:228870261: EN=Defender of Lothlórien | FR=${PLAYERNAME:Défenseur|Défenseuse} de la Lothlórien
+- D15: Warrior of Lothlorien
+    deeds.xml 1879152648: EN=Warrior of Lothlórien | FR=Guerrier / Guerrière de la Lothlórien
+    deeds.xml key:620837342:228870261: EN=Warrior of Lothlórien | FR=${PLAYERNAME:Guerrier|Guerrière} de la Lothlórien
+- R16: Friend to The Grey Company
+    deeds.xml 1879190489: EN=Friend to the Grey Company | FR=Ami / Amie de la Compagnie grise
+    deeds.xml key:620865318:228870261: EN=Friend to the Grey Company | FR=${PLAYERNAME:Ami|Amie} de la Compagnie grise
+- R22: Friend to Theodred's Riders
+    deeds.xml 1879222241: EN=Friend to Théodred's Riders | FR=Ami / Amie des cavaliers de Théodred
+    deeds.xml key:620888908:228870261: EN=Friend to Théodred's Riders | FR=${PLAYERNAME:Ami|Amie} des cavaliers de Théodred
+- R23: Friend to the Wold
+    deeds.xml 1879246618: EN=Friend to the Wold | FR=Ami / Amie des Hommes du Plateau
+    deeds.xml key:620905951:228870261: EN=Friend to the Wold | FR=${PLAYERNAME:Ami|Amie} des Hommes du Plateau
+- R24: Friend to the Norcrofts
+    deeds.xml 1879246621: EN=Friend to the Norcrofts | FR=Ami / Amie des Hommes des Norcrofts
+    deeds.xml key:620905954:228870261: EN=Friend to the Norcrofts | FR=${PLAYERNAME:Ami|Amie} des Hommes des Norcrofts
+- R25: Friend to the Sutcrofts
+    deeds.xml 1879246630: EN=Friend to the Sutcrofts | FR=Ami / Amie des Hommes des Sutcrofts
+    deeds.xml key:620905963:228870261: EN=Friend to the Sutcrofts | FR=${PLAYERNAME:Ami|Amie} des Hommes des Sutcrofts
+- R9: Friend to Thorin's Hall
+    deeds.xml 1879190398: EN=Friend to Thorin's Hall | FR=Ami / Amie du Palais de Thorin
+    deeds.xml key:620865315:228870261: EN=Friend to Thorin's Hall | FR=${PLAYERNAME:Ami|Amie} du Palais de Thorin
+
+UNMATCHED:
+- Q1: V1;B6;Ch 6: Challenging the Stone
+- Q10: The Peace Restored
+- Q4: V2;B4;Ch 5: Into the Fire
+- Q5: V2;B2;Ch 8: The Twenty-first Hall
+- Q7: V4;B9;Ch 2: The Eagles are Coming
+- Q8: BBM;Ch 11.2: The Same as You
+- R1: Acq. with Men of Bree
+- R10: Friend to Mathom Society
+- R11: Friend to Men of Bree
+- R12: Friend to Rangers of Esteldin
+- R13: Friend to The Eglain
+- R14: Friend to Lossoth
+- R15: Friend to Council of the North
+- R17: Friend to Iron Garrison Guards
+- R18: Friend to Iron Garrison Miners
+- R19: Friend to Malledhrim
+- R2: Acq. with Elves of Rivendell
+- R20: Friend to Men of Dunland
+- R21: Friend to Algraig
+- R26: Friend to Riders of Stangard
+- R27: Friend to Entwash Vale
+- R28: Ally with Men of the Wold
+- R29: Ally with Men of the Norcrofts
+- R3: Acq. with Lossoth of Forochel
+- R30: Ally with Men of the Sutcrofts
+- R31: Ally with Men of Entwash Vale
+- R32: Friend to People of Wildermore
+- R33: Ally with The Eorlingas
+- R34: Ally with The Helmingas
+- R35: Ally with Dol Amroth
+- R36: Ally with Pelargir
+- R37: Ally with Rangers of Ithilien
+- R38: Ally with Minas Tirith
+- R39: Ally with Riders of Rohan
+- R4: Acq. with Council of the North
+- R40: Ally with Host of the West
+- R41: Kindred to Dwarves of Erebor
+- R42: Kindred to Grey Mountains Exp.
+- R43: Kindred to Wilderfolk
+- R44: Kindred to Renewal of Gondor
+- R45: Kindred to Citizens of Umbar Baharbel
+- R46: Kindred to March on Gundabad
+- R47: Fabaral of Habanakka of Thrain
+- R48: Kindred to Protectors of Wilderland
+- R49: Respected in White Company
+- R5: Acq. with Rangers of Esteldin
+- R50: Esteemed in Host of the West
+- R51: Kindred to Conquest of Gorgoroth
+- R52: Kindred to Reclaimers of the Mtn-Hold
+- R53: Friend to Yonder-watch
+- R6: Friend to Wardens of Annuminas
+- R7: Friend to Elves of Rivendell
+- R8: Friend to Galadhrim
