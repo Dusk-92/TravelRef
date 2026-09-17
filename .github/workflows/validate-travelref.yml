@@ -46,6 +46,11 @@ jobs:
       - name: Validate plugin XML
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
 
+      - name: Check generated localization is current
+        run: |
+          python3 tools/generate_official_fr.py
+          git diff --exit-code -- Dusk/TravelRef/TR_OfficialFR_Auto.lua tools/TR_OfficialFR_Audit.txt
+
       - name: Check localization coverage report
         run: |
           python3 - <<'PY'
@@ -76,15 +81,29 @@ jobs:
       - name: Check known regressions
         run: |
           grep -F '<Package>Dusk.TravelRef.TR_Entry</Package>' Dusk/TravelRef.plugin
+          grep -F '<Version>3.3.2-FR-r7</Version>' Dusk/TravelRef.plugin
           grep -F 'import "Dusk.TravelRef.TR_Main"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'import "Dusk.TravelRef.TR_Robustness"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'elseif (flg or tbl.d) and (not r or tbl.r == r) then' Dusk/TravelRef/TR_Robustness.lua
           grep -F 'local function TR_SearchNorm' Dusk/TravelRef/TR_Main.lua
+          grep -F 'function TR_FrenchSort(a,b)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'TR_req.NV[args] = not TR_req.NV[args]' Dusk/TravelRef/TR_Main.lua
+          grep -F 'for name,nv in pairs(TR_req.NV) do' Dusk/TravelRef/TR_Main.lua
+          grep -F 'if TR_req.NV[name] then markname=' Dusk/TravelRef/TR_Main.lua
           grep -F 'local dest = { }' Dusk/TravelRef/TR_Main.lua
           grep -F 'local z = Areas[areaArg]' Dusk/TravelRef/TR_Main.lua
           grep -F 'local pname = player:GetName()' Dusk/TravelRef/TR_Main.lua
           grep -F 'local dt = { [MRD] = R_Dest[MRD] }' Dusk/TravelRef/TR_Window.lua
           grep -F 'local w = Turbine.UI.Lotro.Shortcut' Dusk/TravelRef/TR_Window.lua
+          grep -F 'TD_list[tdCode] or 1' Dusk/TravelRef/TR_Window.lua
+          grep -F 'if tdCode=="R17" and TR_req.R18 then td = td-0.1 end' Dusk/TravelRef/TR_Window.lua
+          grep -F 'if TR_req.S2 then td = td*0.8 end' Dusk/TravelRef/TR_Window.lua
+          grep -F 'local dtime = tonumber(self.dtime:GetText())' Dusk/TravelRef/TR_Window.lua
+          grep -F 'TR_req.dtime or 20' Dusk/TravelRef/TR_Window.lua
+          grep -F 'self.visit:SetChecked(TR_req.NV[dest] or false)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'table.sort(zlist, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'table.sort(Loc_list, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'table.sort(list, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
           grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F 'for _,en in ipairs(zones) do applyZone(en) end' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F '["œ"]="oe"' Dusk/TravelRef/Common/noAccent.lua
