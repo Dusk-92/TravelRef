@@ -51,19 +51,19 @@ LEGACY_EN_ALIASES = {
     "Echad Dunnan": "Echad Dúnann",
     "Falathorn Homesteads": "Falathlorn Homesteads",
     "Hall Under the Mtn": "Hall Under the Mountain",
-    "Northern Shore": "Gladdenmere - Northern Shore",
-    "Ruins of Dol Guldur": "Dol Guldur (razed)",
-    "Southern Shore": "Gladdenmere - Southern Shore",
     "Sudultirh Outpost": "Sudulthurkh Outpost",
     "The Vinyards of Lorien": "The Vineyards of Lórien",
-    "the War-stead": "War-stead of the Rohirrim",
-    "To Minas Tirith, Before the Battle": "Minas Tirith",
-    "To Mins Tirith, Before the Battle": "Minas Tirith",
+    "To Mins Tirith, Before the Battle": "Minas Tirith (before battle)",
     "Great River": "The Great River",
     "West Rohan": "Western Rohan",
     "East Gondor": "Eastern Gondor",
     "West Gondor": "Western Gondor",
     "Valley of Ikorbad": "Valley of Ikorbân",
+    "Northern Shore": "Gladdenmere - Northern Shore",
+    "Southern Shore": "Gladdenmere - Southern Shore",
+    "the War-stead": "War-stead of the Rohirrim",
+    "Ruins of Dol Guldur": "Dol Guldur (razed)",
+    "To Minas Tirith, Before the Battle": "Minas Tirith",
 }
 
 
@@ -124,22 +124,18 @@ def travelref_candidates(value: str) -> list[str]:
         if item and item not in values:
             values.append(item)
 
-    # TravelRef sometimes stores an action as the destination key.
     for item in list(values):
         add(ACTION_PREFIX_RE.sub("", item))
         add(EAGLE_SUFFIX_RE.sub("", item))
 
-    # Apply the two transforms together as well (e.g. action + transport tag).
     for item in list(values):
         add(EAGLE_SUFFIX_RE.sub("", ACTION_PREFIX_RE.sub("", item)))
 
-    # Old TravelRef wording vs current map/resource wording.
     for item in list(values):
         add(re.sub(r"\bHousing\b", "Homesteads", item, flags=re.I))
         add(re.sub(r",\s*After the Battle$", " (after battle)", item, flags=re.I))
         add(re.sub(r",\s*Before the Battle$", " (before battle)", item, flags=re.I))
 
-    # Article variants are common between TravelRef and current LOTRO labels.
     for item in list(values):
         if item.lower().startswith("the "):
             add(item[4:])
@@ -160,17 +156,12 @@ def section(text: str, start_marker: str, end_marker: str) -> str:
 
 
 def extract_travelref_names(text: str) -> tuple[set[str], set[str], set[str]]:
-    """Extract only real travel nodes/destinations, zones and areas.
-
-    This intentionally ignores Barter, Return metadata, NPC names, item IDs,
-    etc. The previous broad audit counted those as false-positive 'places'.
-    """
+    """Extract only real travel nodes/destinations, zones and areas."""
     r_dest = section(text, "R_Dest = {", "R_Locs = {")
     locs = section(text, "Locs = {", "\nrType =")
     travel_text = r_dest + "\n" + locs
 
     bracket_keys = set(re.findall(r'\["((?:\\.|[^"\\])*)"\]\s*=', travel_text))
-    # In Locs, n= is an alternate display/location name, not a barter NPC.
     named = set(re.findall(r'\bn\s*=\s*"((?:\\.|[^"\\])*)"', locs))
     zones = set(re.findall(r'\bz\s*=\s*"((?:\\.|[^"\\])*)"', locs))
     areas = set(re.findall(r'\ba\s*=\s*"((?:\\.|[^"\\])*)"', locs))
@@ -250,6 +241,8 @@ def main() -> None:
     zone_matches = {}
     area_matches = {}
     unresolved = []
+    unresolved_zones = []
+    unresolved_areas = []
 
     for name in sorted(locations):
         result = match(name)
@@ -262,11 +255,15 @@ def main() -> None:
         result = match(name)
         if result:
             zone_matches[name] = result
+        else:
+            unresolved_zones.append(name)
 
     for name in sorted(areas):
         result = match(name)
         if result:
             area_matches[name] = result
+        else:
+            unresolved_areas.append(name)
 
     lines = [
         "-- AUTO-GENERATED. Do not edit by hand.",
@@ -280,8 +277,6 @@ def main() -> None:
         "",
     ]
 
-    # Suffix variants such as (B)/(R)/(KG) share the same display base, so emit
-    # each base only once.
     emitted = set()
     for name, (fr, en_official, source) in sorted(loc_matches.items(), key=lambda x: x[0].lower()):
         base = strip_internal_suffix(name)
@@ -324,6 +319,10 @@ def main() -> None:
         "Unmatched real TravelRef location/destination names:",
     ]
     report += [f"- {name}" for name in sorted(unresolved, key=str.lower)]
+    report += ["", "Unmatched TravelRef zone names:"]
+    report += [f"- {name}" for name in sorted(unresolved_zones, key=str.lower)]
+    report += ["", "Unmatched TravelRef area/sub-zone names:"]
+    report += [f"- {name}" for name in sorted(unresolved_areas, key=str.lower)]
     REPORT.write_text("\n".join(report) + "\n", encoding="utf-8")
 
     print(f"Generated {OUT.relative_to(ROOT)} with {len(emitted)} unique location mappings")
