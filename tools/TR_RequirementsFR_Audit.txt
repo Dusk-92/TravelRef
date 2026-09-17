@@ -1,59 +1,84 @@
-TravelRef requirement localization audit
-========================================
+TravelRef official French requirement audit
+===========================================
 
 - deeds.xml: 44167 paired EN/FR labels
 - quests.xml: 218651 paired EN/FR labels
+- factions.xml: 107 localized factions with structured standing data
 
 Requirements extracted: 77
-Matched officially: 15
-Ambiguous: 9
-Unmatched: 53
+Matched officially: 69
+Unmatched: 8
 
 MATCHED:
-- D1: Silent and Restless => Silence nerveux [deeds.xml 1879140606; EN=Silent and Restless]
-- D12: Mirkwood Landing => L'arrivée dans la Forêt Noire [deeds.xml 1879165716; EN=Mirkwood Landing]
-- D16: Into the Black and Twisted Forest => Dans l'enchevêtrement de la Forêt Noire [deeds.xml 1879155755; EN=Into the Black and Twisted Forest]
-- D17: Into the Black and Twisted Forest (Int.) => Dans l'enchevêtrement de la Forêt Noire (intermédiaire) [deeds.xml 1879155756; EN=Into the Black and Twisted Forest (Intermediate)]
-- D18: Into the Black and Twisted Forest (Adv.) => Dans l'enchevêtrement de la Forêt Noire (avancé) [deeds.xml 1879155757; EN=Into the Black and Twisted Forest (Advanced)]
-- D2: Silent and Restless (Intermediate) => Silence nerveux (Intermédiaire) [deeds.xml 1879140607; EN=Silent and Restless (Intermediate)]
-- D3: Silent and Restless (Advanced) => Silence nerveux (Avancé) [deeds.xml 1879140608; EN=Silent and Restless (Advanced)]
-- D4: Silent and Restless (Final) => Silence nerveux (Final) [deeds.xml 1879140609; EN=Silent and Restless (Final)]
-- D5: Mysteries of Enedwaith => Mystères d'Enedwaith [deeds.xml 1879190071; EN=Mysteries of Enedwaith]
-- D6: Mysteries of Enedwaith (Intermediate) => Mystères d'Enedwaith (Intermédiaire) [deeds.xml 1879190075; EN=Mysteries of Enedwaith (Intermediate)]
-- D7: Mysteries of Enedwaith (Advanced) => Mystères d'Enedwaith (Avancé) [deeds.xml 1879190076; EN=Mysteries of Enedwaith (Advanced)]
-- Q2: The Frozen War => La guerre glaciale [quests.xml 1879108253; EN=The Frozen War]
-- Q3: The Paths of Caras Galadhon => Les chemins de Caras Galadhon [quests.xml 1879152965; EN=The Paths of Caras Galadhon]
-- Q6: The Stable: Rebuild => L'étable : à reconstruire [quests.xml 1879237965; EN=The Stable: Rebuild]
-- Q9: Welcome to Lyndelby => Bienvenue à Lyndelby [quests.xml 1879405021; EN=Welcome to Lyndelby]
-
-AMBIGUOUS:
-- D13: Ally of Lothlorien
-    deeds.xml 1879152646: EN=Ally of Lothlórien | FR=Allié / Alliée de la Lothlórien
-    deeds.xml key:620837338:228870261: EN=Ally of Lothlórien | FR=${PLAYERNAME:Allié|Alliée} de la Lothlórien
-- D14: Defender of Lothlorien
-    deeds.xml 1879152647: EN=Defender of Lothlórien | FR=Défenseur / Défenseuse de la Lothlórien
-    deeds.xml key:620837340:228870261: EN=Defender of Lothlórien | FR=${PLAYERNAME:Défenseur|Défenseuse} de la Lothlórien
-- D15: Warrior of Lothlorien
-    deeds.xml 1879152648: EN=Warrior of Lothlórien | FR=Guerrier / Guerrière de la Lothlórien
-    deeds.xml key:620837342:228870261: EN=Warrior of Lothlórien | FR=${PLAYERNAME:Guerrier|Guerrière} de la Lothlórien
-- R16: Friend to The Grey Company
-    deeds.xml 1879190489: EN=Friend to the Grey Company | FR=Ami / Amie de la Compagnie grise
-    deeds.xml key:620865318:228870261: EN=Friend to the Grey Company | FR=${PLAYERNAME:Ami|Amie} de la Compagnie grise
-- R22: Friend to Theodred's Riders
-    deeds.xml 1879222241: EN=Friend to Théodred's Riders | FR=Ami / Amie des cavaliers de Théodred
-    deeds.xml key:620888908:228870261: EN=Friend to Théodred's Riders | FR=${PLAYERNAME:Ami|Amie} des cavaliers de Théodred
-- R23: Friend to the Wold
-    deeds.xml 1879246618: EN=Friend to the Wold | FR=Ami / Amie des Hommes du Plateau
-    deeds.xml key:620905951:228870261: EN=Friend to the Wold | FR=${PLAYERNAME:Ami|Amie} des Hommes du Plateau
-- R24: Friend to the Norcrofts
-    deeds.xml 1879246621: EN=Friend to the Norcrofts | FR=Ami / Amie des Hommes des Norcrofts
-    deeds.xml key:620905954:228870261: EN=Friend to the Norcrofts | FR=${PLAYERNAME:Ami|Amie} des Hommes des Norcrofts
-- R25: Friend to the Sutcrofts
-    deeds.xml 1879246630: EN=Friend to the Sutcrofts | FR=Ami / Amie des Hommes des Sutcrofts
-    deeds.xml key:620905963:228870261: EN=Friend to the Sutcrofts | FR=${PLAYERNAME:Ami|Amie} des Hommes des Sutcrofts
-- R9: Friend to Thorin's Hall
-    deeds.xml 1879190398: EN=Friend to Thorin's Hall | FR=Ami / Amie du Palais de Thorin
-    deeds.xml key:620865315:228870261: EN=Friend to Thorin's Hall | FR=${PLAYERNAME:Ami|Amie} du Palais de Thorin
+- D1: Silent and Restless => Silence nerveux [official title deeds.xml:1879140606; EN=Silent and Restless]
+- D12: Mirkwood Landing => L'arrivée dans la Forêt Noire [official title deeds.xml:1879165716; EN=Mirkwood Landing]
+- D13: Ally of Lothlorien => Allié / Alliée de la Lothlórien [official title deeds.xml:1879152646; EN=Ally of Lothlórien]
+- D14: Defender of Lothlorien => Défenseur / Défenseuse de la Lothlórien [official title deeds.xml:1879152647; EN=Defender of Lothlórien]
+- D15: Warrior of Lothlorien => Guerrier / Guerrière de la Lothlórien [official title deeds.xml:1879152648; EN=Warrior of Lothlórien]
+- D16: Into the Black and Twisted Forest => Dans l'enchevêtrement de la Forêt Noire [official title deeds.xml:1879155755; EN=Into the Black and Twisted Forest]
+- D17: Into the Black and Twisted Forest (Int.) => Dans l'enchevêtrement de la Forêt Noire (intermédiaire) [official title deeds.xml:1879155756; EN=Into the Black and Twisted Forest (Intermediate)]
+- D18: Into the Black and Twisted Forest (Adv.) => Dans l'enchevêtrement de la Forêt Noire (avancé) [official title deeds.xml:1879155757; EN=Into the Black and Twisted Forest (Advanced)]
+- D2: Silent and Restless (Intermediate) => Silence nerveux (Intermédiaire) [official title deeds.xml:1879140607; EN=Silent and Restless (Intermediate)]
+- D3: Silent and Restless (Advanced) => Silence nerveux (Avancé) [official title deeds.xml:1879140608; EN=Silent and Restless (Advanced)]
+- D4: Silent and Restless (Final) => Silence nerveux (Final) [official title deeds.xml:1879140609; EN=Silent and Restless (Final)]
+- D5: Mysteries of Enedwaith => Mystères d'Enedwaith [official title deeds.xml:1879190071; EN=Mysteries of Enedwaith]
+- D6: Mysteries of Enedwaith (Intermediate) => Mystères d'Enedwaith (Intermédiaire) [official title deeds.xml:1879190075; EN=Mysteries of Enedwaith (Intermediate)]
+- D7: Mysteries of Enedwaith (Advanced) => Mystères d'Enedwaith (Avancé) [official title deeds.xml:1879190076; EN=Mysteries of Enedwaith (Advanced)]
+- Q2: The Frozen War => La guerre glaciale [official title quests.xml:1879108253; EN=The Frozen War]
+- Q3: The Paths of Caras Galadhon => Les chemins de Caras Galadhon [official title quests.xml:1879152965; EN=The Paths of Caras Galadhon]
+- Q6: The Stable: Rebuild => L'étable : à reconstruire [official title quests.xml:1879237965; EN=The Stable: Rebuild]
+- Q9: Welcome to Lyndelby => Bienvenue à Lyndelby [official title quests.xml:1879405021; EN=Welcome to Lyndelby]
+- R1: Acq. with Men of Bree => Connaissance — Hommes de Bree [official faction 1879091340 (exact/alias); EN rank=Acquaintance; EN faction=Men of Bree]
+- R10: Friend to Mathom Society => Ami / Amie — La Société des Mathoms [official faction 1879091345 (exact/alias); EN rank=Friend; EN faction=The Mathom Society]
+- R11: Friend to Men of Bree => Ami / Amie — Hommes de Bree [official faction 1879091340 (exact/alias); EN rank=Friend; EN faction=Men of Bree]
+- R12: Friend to Rangers of Esteldin => Ami / Amie — Rôdeurs d'Esteldin [official faction 1879091344 (exact/alias); EN rank=Friend; EN faction=Rangers of Esteldín]
+- R13: Friend to The Eglain => Ami / Amie — Les Eglain [official faction 1879161272 (exact/alias); EN rank=Friend; EN faction=The Eglain]
+- R14: Friend to Lossoth => Ami / Amie — Lossoth du Forochel [official faction 1879103954 (exact/alias); EN rank=Friend; EN faction=Lossoth of Forochel]
+- R15: Friend to Council of the North => Ami / Amie — Conseil du Nord [official faction 1879091341 (exact/alias); EN rank=Friend; EN faction=Council of the North]
+- R16: Friend to The Grey Company => Ami / Amie de la Compagnie grise [official title deeds.xml:1879190489; EN=Friend to the Grey Company]
+- R17: Friend to Iron Garrison Guards => Ami / Amie — Gardes de la Garnison de Fer [official faction 1879143761 (exact/alias); EN rank=Friend; EN faction=Iron Garrison Guards]
+- R18: Friend to Iron Garrison Miners => Ami / Amie — Mineurs de la Garnison de Fer [official faction 1879143766 (exact/alias); EN rank=Friend; EN faction=Iron Garrison Miners]
+- R19: Friend to Malledhrim => Ami / Amie — Malledhrim [official faction 1879154438 (exact/alias); EN rank=Friend; EN faction=Malledhrim]
+- R2: Acq. with Elves of Rivendell => Connaissance — Elfes de Fondcombe [official faction 1879091346 (exact/alias); EN rank=Acquaintance; EN faction=Elves of Rivendell]
+- R20: Friend to Men of Dunland => Ami / Amie — Hommes du Pays de Dun [official faction 1879202077 (exact/alias); EN rank=Friend; EN faction=Men of Dunland]
+- R21: Friend to Algraig => Ami / Amie — Les Algraig, hommes d'Enedwaith [official faction 1879181920 (exact/alias); EN rank=Friend; EN faction=Algraig, Men of Enedwaith]
+- R22: Friend to Theodred's Riders => Ami / Amie des cavaliers de Théodred [official title deeds.xml:1879222241; EN=Friend to Théodred's Riders]
+- R23: Friend to the Wold => Ami / Amie des Hommes du Plateau [official title deeds.xml:1879246618; EN=Friend to the Wold]
+- R24: Friend to the Norcrofts => Ami / Amie des Hommes des Norcrofts [official title deeds.xml:1879246621; EN=Friend to the Norcrofts]
+- R25: Friend to the Sutcrofts => Ami / Amie des Hommes des Sutcrofts [official title deeds.xml:1879246630; EN=Friend to the Sutcrofts]
+- R26: Friend to Riders of Stangard => Ami / Amie — Les Cavaliers de Stangarde [official faction 1879227796 (exact/alias); EN rank=Friend; EN faction=The Riders of Stangard]
+- R27: Friend to Entwash Vale => Ami / Amie — Hommes de la vallée de l'Entalluve [official faction 1879237267 (exact/alias); EN rank=Friend; EN faction=Men of the Entwash Vale]
+- R28: Ally with Men of the Wold => Allié / Alliée — Hommes du Plateau [official faction 1879237312 (exact/alias); EN rank=Ally; EN faction=Men of the Wold]
+- R29: Ally with Men of the Norcrofts => Allié / Alliée — Hommes des Norcrofts [official faction 1879237304 (exact/alias); EN rank=Ally; EN faction=Men of the Norcrofts]
+- R3: Acq. with Lossoth of Forochel => Connaissance — Lossoth du Forochel [official faction 1879103954 (exact/alias); EN rank=Acquaintance; EN faction=Lossoth of Forochel]
+- R30: Ally with Men of the Sutcrofts => Allié / Alliée — Hommes des Sutcrofts [official faction 1879237243 (exact/alias); EN rank=Ally; EN faction=Men of the Sutcrofts]
+- R31: Ally with Men of Entwash Vale => Allié / Alliée — Hommes de la vallée de l'Entalluve [official faction 1879237267 (fuzzy 0.914); EN rank=Ally; EN faction=Men of the Entwash Vale]
+- R32: Friend to People of Wildermore => Ami / Amie — Peuple des Landes farouches [official faction 1879259430 (exact/alias); EN rank=Friend; EN faction=People of Wildermore]
+- R33: Ally with The Eorlingas => Allié / Alliée — Les Eorlingas [official faction 1879271130 (exact/alias); EN rank=Ally; EN faction=The Eorlingas]
+- R34: Ally with The Helmingas => Allié / Alliée — Les Helmingas [official faction 1879271131 (exact/alias); EN rank=Ally; EN faction=The Helmingas]
+- R35: Ally with Dol Amroth => Allié / Alliée — Dol Amroth [official faction 1879306071 (exact/alias); EN rank=Ally; EN faction=Dol Amroth]
+- R36: Ally with Pelargir => Allié / Alliée — Pelargir [official faction 1879314940 (exact/alias); EN rank=Ally; EN faction=Pelargir]
+- R37: Ally with Rangers of Ithilien => Allié / Alliée — Rôdeurs de l'Ithilien [official faction 1879322612 (exact/alias); EN rank=Ally; EN faction=Rangers of Ithilien]
+- R39: Ally with Riders of Rohan => Allié / Alliée — Cavaliers du Rohan [official faction 1879330539 (exact/alias); EN rank=Ally; EN faction=Riders of Rohan]
+- R4: Acq. with Council of the North => Connaissance — Conseil du Nord [official faction 1879091341 (exact/alias); EN rank=Acquaintance; EN faction=Council of the North]
+- R40: Ally with Host of the West => Allié / Alliée — Armée de l'ouest [official faction 1879334719 (exact/alias); EN rank=Ally; EN faction=Host of the West]
+- R41: Kindred to Dwarves of Erebor => Frère / Sœur — Nains d'Erebor [official faction 1879363082 (exact/alias); EN rank=Kindred; EN faction=Dwarves of Erebor]
+- R42: Kindred to Grey Mountains Exp. => Frère / Sœur — Expédition des Montagnes Grises [official faction 1879368441 (exact/alias); EN rank=Kindred; EN faction=Grey Mountains Expedition]
+- R43: Kindred to Wilderfolk => Frère / Sœur — Peuple sauvage [official faction 1879386002 (exact/alias); EN rank=Kindred; EN faction=Wilderfolk]
+- R44: Kindred to Renewal of Gondor => Frère / Sœur — Le Gondor renaissant [official faction 1879463136 (exact/alias); EN rank=Kindred; EN faction=The Renewal of Gondor]
+- R45: Kindred to Citizens of Umbar Baharbel => Frère / Sœur — Habitants d'Umbar Baharbêl [official faction 1879465745 (exact/alias); EN rank=Kindred; EN faction=Citizens of Umbar Baharbêl]
+- R46: Kindred to March on Gundabad => Frère / Sœur — Les Reconquérants de Gundabad [official faction 1879407816 (exact/alias); EN rank=Kindred; EN faction=March on Gundabad]
+- R47: Fabaral of Habanakka of Thrain => Fabarâl — Haban'akkâ de Thraïn [official faction 1879413559 (exact/alias); EN rank=Fabaral; EN faction=The Haban'akkâ of Thráin]
+- R48: Kindred to Protectors of Wilderland => Frère / Sœur — Protecteurs des Terres sauvages [official faction 1879403792 (exact/alias); EN rank=Kindred; EN faction=Protectors of Wilderland]
+- R49: Respected in White Company => Respecté / Respectée — La Compagnie blanche [official faction 1879389868 (exact/alias); EN rank=Respected; EN faction=The White Company]
+- R5: Acq. with Rangers of Esteldin => Connaissance — Rôdeurs d'Esteldin [official faction 1879091344 (exact/alias); EN rank=Acquaintance; EN faction=Rangers of Esteldín]
+- R51: Kindred to Conquest of Gorgoroth => Frère / Sœur — Conquête de Gorgoroth [official faction 1879345136 (exact/alias); EN rank=Kindred; EN faction=Conquest of Gorgoroth]
+- R52: Kindred to Reclaimers of the Mtn-Hold => Frère / Sœur — La reconquête de la Montagne [official faction 1879416935 (exact/alias); EN rank=Kindred; EN faction=Reclaimers of the Mountain-hold]
+- R53: Friend to Yonder-watch => Ami / Amie — La Garde de la Comté lointaine [official faction 1879443125 (exact/alias); EN rank=Friend; EN faction=The Yonder-watch]
+- R6: Friend to Wardens of Annuminas => Ami / Amie — Les Gardiens d'Annuminas [official faction 1879091343 (exact/alias); EN rank=Friend; EN faction=The Wardens of Annúminas]
+- R7: Friend to Elves of Rivendell => Ami / Amie — Elfes de Fondcombe [official faction 1879091346 (exact/alias); EN rank=Friend; EN faction=Elves of Rivendell]
+- R8: Friend to Galadhrim => Ami / Amie — Galadhrim [official faction 1879150133 (exact/alias); EN rank=Friend; EN faction=Galadhrim]
+- R9: Friend to Thorin's Hall => Ami / Amie du Palais de Thorin [official title deeds.xml:1879190398; EN=Friend to Thorin's Hall]
 
 UNMATCHED:
 - Q1: V1;B6;Ch 6: Challenging the Stone
@@ -62,50 +87,5 @@ UNMATCHED:
 - Q5: V2;B2;Ch 8: The Twenty-first Hall
 - Q7: V4;B9;Ch 2: The Eagles are Coming
 - Q8: BBM;Ch 11.2: The Same as You
-- R1: Acq. with Men of Bree
-- R10: Friend to Mathom Society
-- R11: Friend to Men of Bree
-- R12: Friend to Rangers of Esteldin
-- R13: Friend to The Eglain
-- R14: Friend to Lossoth
-- R15: Friend to Council of the North
-- R17: Friend to Iron Garrison Guards
-- R18: Friend to Iron Garrison Miners
-- R19: Friend to Malledhrim
-- R2: Acq. with Elves of Rivendell
-- R20: Friend to Men of Dunland
-- R21: Friend to Algraig
-- R26: Friend to Riders of Stangard
-- R27: Friend to Entwash Vale
-- R28: Ally with Men of the Wold
-- R29: Ally with Men of the Norcrofts
-- R3: Acq. with Lossoth of Forochel
-- R30: Ally with Men of the Sutcrofts
-- R31: Ally with Men of Entwash Vale
-- R32: Friend to People of Wildermore
-- R33: Ally with The Eorlingas
-- R34: Ally with The Helmingas
-- R35: Ally with Dol Amroth
-- R36: Ally with Pelargir
-- R37: Ally with Rangers of Ithilien
 - R38: Ally with Minas Tirith
-- R39: Ally with Riders of Rohan
-- R4: Acq. with Council of the North
-- R40: Ally with Host of the West
-- R41: Kindred to Dwarves of Erebor
-- R42: Kindred to Grey Mountains Exp.
-- R43: Kindred to Wilderfolk
-- R44: Kindred to Renewal of Gondor
-- R45: Kindred to Citizens of Umbar Baharbel
-- R46: Kindred to March on Gundabad
-- R47: Fabaral of Habanakka of Thrain
-- R48: Kindred to Protectors of Wilderland
-- R49: Respected in White Company
-- R5: Acq. with Rangers of Esteldin
 - R50: Esteemed in Host of the West
-- R51: Kindred to Conquest of Gorgoroth
-- R52: Kindred to Reclaimers of the Mtn-Hold
-- R53: Friend to Yonder-watch
-- R6: Friend to Wardens of Annuminas
-- R7: Friend to Elves of Rivendell
-- R8: Friend to Galadhrim
