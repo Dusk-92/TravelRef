@@ -1,0 +1,69 @@
+name: Validate TravelRef
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "Dusk/TravelRef/**"
+      - "Dusk/TravelRef.plugin"
+      - "tools/generate_official_fr.py"
+      - "tools/TR_OfficialFR_Audit.txt"
+      - ".github/workflows/validate-travelref.yml"
+  pull_request:
+    paths:
+      - "Dusk/TravelRef/**"
+      - "Dusk/TravelRef.plugin"
+      - "tools/generate_official_fr.py"
+      - "tools/TR_OfficialFR_Audit.txt"
+      - ".github/workflows/validate-travelref.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+
+      - name: Validate Lua syntax
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            "$LUAC" -p "$file"
+          done
+
+      - name: Validate generator syntax
+        run: python3 -m py_compile tools/generate_official_fr.py
+
+      - name: Validate plugin XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
+
+      - name: Check localization coverage report
+        run: |
+          grep -F 'Matched location/destination names: 426' tools/TR_OfficialFR_Audit.txt
+          grep -F 'Unmatched location/destination names: 0' tools/TR_OfficialFR_Audit.txt
+          grep -F 'Zone names extracted: 47 / matched: 47' tools/TR_OfficialFR_Audit.txt
+          grep -F 'Area names extracted: 83 / matched: 83' tools/TR_OfficialFR_Audit.txt
+
+      - name: Check known regressions
+        run: |
+          grep -F 'local function TR_SearchNorm' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local dest = { }' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local z = Areas[areaArg]' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local pname = player:GetName()' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local dt = { [MRD] = R_Dest[MRD] }' Dusk/TravelRef/TR_Window.lua
+          grep -F 'local w = Turbine.UI.Lotro.Shortcut' Dusk/TravelRef/TR_Window.lua
+          grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'for _,en in ipairs(zones) do applyZone(en) end' Dusk/TravelRef/TR_OfficialFR.lua
+          ! grep -F 'loc.a = TR_AreaFR' Dusk/TravelRef/TR_OfficialFR.lua
+          ! grep -F 'Areas = NewAreas' Dusk/TravelRef/TR_OfficialFR.lua
+          ! grep -F 'print(loc.n.." @ "..loc.l)' Dusk/TravelRef/TR_Main.lua
+          ! grep -F '[fp]' Dusk/TravelRef/TR_OfficialFR_Auto.lua
