@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - "tools/generate_official_fr.py"
+      - "tools/generate_requirements_fr.py"
       - "Dusk/TravelRef/TR_Data.lua"
       - ".github/workflows/generate-official-fr.yml"
 
@@ -20,17 +21,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate mappings
+      - name: Generate location mappings
         run: python3 tools/generate_official_fr.py
+
+      - name: Generate requirement mappings
+        run: python3 tools/generate_requirements_fr.py
 
       - name: Commit generated files
         run: |
-          if [ -z "$(git status --porcelain -- Dusk/TravelRef/TR_OfficialFR_Auto.lua tools/TR_OfficialFR_Audit.txt)" ]; then
+          if [ -z "$(git status --porcelain -- Dusk/TravelRef/TR_OfficialFR_Auto.lua Dusk/TravelRef/TR_OfficialFR_Requirements.lua tools/TR_OfficialFR_Audit.txt tools/TR_RequirementsFR_Audit.txt)" ]; then
             echo "No generated changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Dusk/TravelRef/TR_OfficialFR_Auto.lua tools/TR_OfficialFR_Audit.txt
+          git add Dusk/TravelRef/TR_OfficialFR_Auto.lua Dusk/TravelRef/TR_OfficialFR_Requirements.lua tools/TR_OfficialFR_Audit.txt tools/TR_RequirementsFR_Audit.txt
           git commit -m "Generate official LOTRO French mappings"
+          git pull --rebase origin main
           git push
