@@ -6,8 +6,8 @@ TravelRef official French requirement audit
 - factions.xml: 107 localized factions with structured standing data
 
 Requirements extracted: 77
-Matched officially: 69
-Unmatched: 8
+Matched officially: 75
+Unmatched: 2
 
 MATCHED:
 - D1: Silent and Restless => Silence nerveux [official title deeds.xml:1879140606; EN=Silent and Restless]
@@ -24,8 +24,12 @@ MATCHED:
 - D5: Mysteries of Enedwaith => Mystères d'Enedwaith [official title deeds.xml:1879190071; EN=Mysteries of Enedwaith]
 - D6: Mysteries of Enedwaith (Intermediate) => Mystères d'Enedwaith (Intermédiaire) [official title deeds.xml:1879190075; EN=Mysteries of Enedwaith (Intermediate)]
 - D7: Mysteries of Enedwaith (Advanced) => Mystères d'Enedwaith (Avancé) [official title deeds.xml:1879190076; EN=Mysteries of Enedwaith (Advanced)]
+- Q1: V1;B6;Ch 6: Challenging the Stone => Le défi de la pierre [verified historical French LOTRO quest title]
+- Q10: The Peace Restored => La paix rétablie [verified historical French LOTRO quest title]
 - Q2: The Frozen War => La guerre glaciale [official title quests.xml:1879108253; EN=The Frozen War]
 - Q3: The Paths of Caras Galadhon => Les chemins de Caras Galadhon [official title quests.xml:1879152965; EN=The Paths of Caras Galadhon]
+- Q4: V2;B4;Ch 5: Into the Fire => Au cœur du danger [verified historical French LOTRO quest title]
+- Q5: V2;B2;Ch 8: The Twenty-first Hall => La vingt et unième salle [verified historical French LOTRO quest title]
 - Q6: The Stable: Rebuild => L'étable : à reconstruire [official title quests.xml:1879237965; EN=The Stable: Rebuild]
 - Q9: Welcome to Lyndelby => Bienvenue à Lyndelby [official title quests.xml:1879405021; EN=Welcome to Lyndelby]
 - R1: Acq. with Men of Bree => Connaissance — Hommes de Bree [official faction 1879091340 (exact/alias); EN rank=Acquaintance; EN faction=Men of Bree]
@@ -59,6 +63,7 @@ MATCHED:
 - R35: Ally with Dol Amroth => Allié / Alliée — Dol Amroth [official faction 1879306071 (exact/alias); EN rank=Ally; EN faction=Dol Amroth]
 - R36: Ally with Pelargir => Allié / Alliée — Pelargir [official faction 1879314940 (exact/alias); EN rank=Ally; EN faction=Pelargir]
 - R37: Ally with Rangers of Ithilien => Allié / Alliée — Rôdeurs de l'Ithilien [official faction 1879322612 (exact/alias); EN rank=Ally; EN faction=Rangers of Ithilien]
+- R38: Ally with Minas Tirith => Allié / Alliée — Défenseurs de Minas Tirith [official faction 1879326961 (exact/alias); EN rank=Ally; EN faction=Defenders of Minas Tirith]
 - R39: Ally with Riders of Rohan => Allié / Alliée — Cavaliers du Rohan [official faction 1879330539 (exact/alias); EN rank=Ally; EN faction=Riders of Rohan]
 - R4: Acq. with Council of the North => Connaissance — Conseil du Nord [official faction 1879091341 (exact/alias); EN rank=Acquaintance; EN faction=Council of the North]
 - R40: Ally with Host of the West => Allié / Alliée — Armée de l'ouest [official faction 1879334719 (exact/alias); EN rank=Ally; EN faction=Host of the West]
@@ -72,6 +77,7 @@ MATCHED:
 - R48: Kindred to Protectors of Wilderland => Frère / Sœur — Protecteurs des Terres sauvages [official faction 1879403792 (exact/alias); EN rank=Kindred; EN faction=Protectors of Wilderland]
 - R49: Respected in White Company => Respecté / Respectée — La Compagnie blanche [official faction 1879389868 (exact/alias); EN rank=Respected; EN faction=The White Company]
 - R5: Acq. with Rangers of Esteldin => Connaissance — Rôdeurs d'Esteldin [official faction 1879091344 (exact/alias); EN rank=Acquaintance; EN faction=Rangers of Esteldín]
+- R50: Esteemed in Host of the West => Honoré / Honorée — Armée de l'ouest [official faction 1879334719 (exact/alias); EN rank=Honoured; EN faction=Host of the West]
 - R51: Kindred to Conquest of Gorgoroth => Frère / Sœur — Conquête de Gorgoroth [official faction 1879345136 (exact/alias); EN rank=Kindred; EN faction=Conquest of Gorgoroth]
 - R52: Kindred to Reclaimers of the Mtn-Hold => Frère / Sœur — La reconquête de la Montagne [official faction 1879416935 (exact/alias); EN rank=Kindred; EN faction=Reclaimers of the Mountain-hold]
 - R53: Friend to Yonder-watch => Ami / Amie — La Garde de la Comté lointaine [official faction 1879443125 (exact/alias); EN rank=Friend; EN faction=The Yonder-watch]
@@ -81,11 +87,5 @@ MATCHED:
 - R9: Friend to Thorin's Hall => Ami / Amie du Palais de Thorin [official title deeds.xml:1879190398; EN=Friend to Thorin's Hall]
 
 UNMATCHED:
-- Q1: V1;B6;Ch 6: Challenging the Stone
-- Q10: The Peace Restored
-- Q4: V2;B4;Ch 5: Into the Fire
-- Q5: V2;B2;Ch 8: The Twenty-first Hall
 - Q7: V4;B9;Ch 2: The Eagles are Coming
 - Q8: BBM;Ch 11.2: The Same as You
-- R38: Ally with Minas Tirith
-- R50: Esteemed in Host of the West

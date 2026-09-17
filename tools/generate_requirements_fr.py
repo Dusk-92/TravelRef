@@ -35,6 +35,22 @@ FACTION_ALIASES = {
     "Grey Mountains Exp.": "Grey Mountains Expedition",
     "Habanakka of Thrain": "Haban'akkâ of Thraïn",
     "Reclaimers of the Mtn-Hold": "Reclaimers of the Mountain-hold",
+    "Minas Tirith": "Defenders of Minas Tirith",
+}
+
+# TravelRef predates a terminology change for the Host of the West standing.
+# The current client calls the same standing "Honoured".
+RANK_ALIASES = {
+    "esteemed": "Honoured",
+}
+
+# Historical epic quest titles no longer present verbatim in the current data
+# files, but documented with their French LOTRO titles on the French LOTRO wiki.
+LEGACY_QUEST_FR = {
+    "Q1": "Le défi de la pierre",
+    "Q4": "Au cœur du danger",
+    "Q5": "La vingt et unième salle",
+    "Q10": "La paix rétablie",
 }
 
 
@@ -155,7 +171,7 @@ def parse_rep(value: str) -> tuple[str, str] | None:
     if not match:
         return None
     rank = match.group(1)
-    rank = {"acq.": "Acquaintance"}.get(rank.lower(), rank)
+    rank = {"acq.": "Acquaintance", **RANK_ALIASES}.get(rank.lower(), rank)
     return rank, match.group(2).strip()
 
 
@@ -235,6 +251,13 @@ def main() -> None:
                     matches[code] = (fr, source)
                     details.append((code, old, fr, source))
                     continue
+
+        legacy = LEGACY_QUEST_FR.get(code)
+        if legacy:
+            source = "verified historical French LOTRO quest title"
+            matches[code] = (legacy, source)
+            details.append((code, old, legacy, source))
+            continue
 
         unresolved[code] = old
 

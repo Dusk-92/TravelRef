@@ -24,6 +24,7 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data4", true)
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data5", true)
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Requirements", true)
 
     -- TravelRef uses a few shortened/old internal names which do not exist as
     -- exact English labels in the current client data. These French values are

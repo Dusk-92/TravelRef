@@ -25,6 +25,8 @@ Correctifs FR r7
 - Tri des listes de zones, lieux, destinations et sous-zones selon les libellés français normalisés.
 - Suppression de deux nouvelles variables globales accidentelles dans les fenêtres.
 - Validation continue renforcée après l’audit r6.
+- Prérequis de voyage traduits via les IDs officiels des quêtes/prouesses et les paliers/factions officiels de réputation.
+- Les anciens titres dont aucune correspondance sûre n’est disponible restent en anglais plutôt que d’être traduits au hasard.
 
 Correctifs FR r6
 ----------------

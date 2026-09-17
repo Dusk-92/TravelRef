@@ -18,8 +18,12 @@ TR_OfficialReqFR["D4"] = "Silence nerveux (Final)" -- official title deeds.xml:1
 TR_OfficialReqFR["D5"] = "Mystères d'Enedwaith" -- official title deeds.xml:1879190071; EN=Mysteries of Enedwaith
 TR_OfficialReqFR["D6"] = "Mystères d'Enedwaith (Intermédiaire)" -- official title deeds.xml:1879190075; EN=Mysteries of Enedwaith (Intermediate)
 TR_OfficialReqFR["D7"] = "Mystères d'Enedwaith (Avancé)" -- official title deeds.xml:1879190076; EN=Mysteries of Enedwaith (Advanced)
+TR_OfficialReqFR["Q1"] = "Le défi de la pierre" -- verified historical French LOTRO quest title
+TR_OfficialReqFR["Q10"] = "La paix rétablie" -- verified historical French LOTRO quest title
 TR_OfficialReqFR["Q2"] = "La guerre glaciale" -- official title quests.xml:1879108253; EN=The Frozen War
 TR_OfficialReqFR["Q3"] = "Les chemins de Caras Galadhon" -- official title quests.xml:1879152965; EN=The Paths of Caras Galadhon
+TR_OfficialReqFR["Q4"] = "Au cœur du danger" -- verified historical French LOTRO quest title
+TR_OfficialReqFR["Q5"] = "La vingt et unième salle" -- verified historical French LOTRO quest title
 TR_OfficialReqFR["Q6"] = "L'étable : à reconstruire" -- official title quests.xml:1879237965; EN=The Stable: Rebuild
 TR_OfficialReqFR["Q9"] = "Bienvenue à Lyndelby" -- official title quests.xml:1879405021; EN=Welcome to Lyndelby
 TR_OfficialReqFR["R1"] = "Connaissance — Hommes de Bree" -- official faction 1879091340 (exact/alias); EN rank=Acquaintance; EN faction=Men of Bree
@@ -53,6 +57,7 @@ TR_OfficialReqFR["R34"] = "Allié / Alliée — Les Helmingas" -- official facti
 TR_OfficialReqFR["R35"] = "Allié / Alliée — Dol Amroth" -- official faction 1879306071 (exact/alias); EN rank=Ally; EN faction=Dol Amroth
 TR_OfficialReqFR["R36"] = "Allié / Alliée — Pelargir" -- official faction 1879314940 (exact/alias); EN rank=Ally; EN faction=Pelargir
 TR_OfficialReqFR["R37"] = "Allié / Alliée — Rôdeurs de l'Ithilien" -- official faction 1879322612 (exact/alias); EN rank=Ally; EN faction=Rangers of Ithilien
+TR_OfficialReqFR["R38"] = "Allié / Alliée — Défenseurs de Minas Tirith" -- official faction 1879326961 (exact/alias); EN rank=Ally; EN faction=Defenders of Minas Tirith
 TR_OfficialReqFR["R39"] = "Allié / Alliée — Cavaliers du Rohan" -- official faction 1879330539 (exact/alias); EN rank=Ally; EN faction=Riders of Rohan
 TR_OfficialReqFR["R4"] = "Connaissance — Conseil du Nord" -- official faction 1879091341 (exact/alias); EN rank=Acquaintance; EN faction=Council of the North
 TR_OfficialReqFR["R40"] = "Allié / Alliée — Armée de l'ouest" -- official faction 1879334719 (exact/alias); EN rank=Ally; EN faction=Host of the West
@@ -66,6 +71,7 @@ TR_OfficialReqFR["R47"] = "Fabarâl — Haban'akkâ de Thraïn" -- official fact
 TR_OfficialReqFR["R48"] = "Frère / Sœur — Protecteurs des Terres sauvages" -- official faction 1879403792 (exact/alias); EN rank=Kindred; EN faction=Protectors of Wilderland
 TR_OfficialReqFR["R49"] = "Respecté / Respectée — La Compagnie blanche" -- official faction 1879389868 (exact/alias); EN rank=Respected; EN faction=The White Company
 TR_OfficialReqFR["R5"] = "Connaissance — Rôdeurs d'Esteldin" -- official faction 1879091344 (exact/alias); EN rank=Acquaintance; EN faction=Rangers of Esteldín
+TR_OfficialReqFR["R50"] = "Honoré / Honorée — Armée de l'ouest" -- official faction 1879334719 (exact/alias); EN rank=Honoured; EN faction=Host of the West
 TR_OfficialReqFR["R51"] = "Frère / Sœur — Conquête de Gorgoroth" -- official faction 1879345136 (exact/alias); EN rank=Kindred; EN faction=Conquest of Gorgoroth
 TR_OfficialReqFR["R52"] = "Frère / Sœur — La reconquête de la Montagne" -- official faction 1879416935 (exact/alias); EN rank=Kindred; EN faction=Reclaimers of the Mountain-hold
 TR_OfficialReqFR["R53"] = "Ami / Amie — La Garde de la Comté lointaine" -- official faction 1879443125 (exact/alias); EN rank=Friend; EN faction=The Yonder-watch
