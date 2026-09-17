@@ -5,6 +5,13 @@ import "Turbine.Gameplay"
 import "Dusk.TravelRef.Common"
 import "Dusk.TravelRef.TR_Data"
 
+local frOk, frErr = pcall(import, "Dusk.TravelRef.TR_OfficialFR")
+if not frOk and Turbine and Turbine.Shell then
+    Turbine.Shell.WriteLine("<rgb=#FF6040>TravelRef FR officiel non chargé : "..tostring(frErr).."</rgb>")
+end
+if type(TR_AreaName) ~= "function" then function TR_AreaName(name) return name end end
+if type(TR_AreaKey) ~= "function" then function TR_AreaKey(name) return name end end
+
 function print(text) Turbine.Shell.WriteLine("<rgb=#00FFFF>TR:</rgb> "..text) end
 function printh(text) print("<rgb=#00FF00>"..text.."</rgb>") end
 function printe(text) print("<rgb=#FF6040>Erreur : "..text.."</rgb>") end
@@ -135,7 +142,7 @@ function TR_Dest( name,d,pl,flag,td )
 	end
 	if d.n then -- special named instant travel
 		l = d.nl and '('..d.nl..')' or ""
-		print(str.."(ST): "..d.n..l)
+		print(str.."(ST): "..TR_LocName(d.n)..l)
 		return
 	end
 	if d.s then
@@ -194,19 +201,21 @@ function TR_Command:GetHelp() return Dusk.TravelRef.Common.Help(help,"help") end
 
 function TR_Command:Execute( cmd,args,lvl,flag )
 	if Dusk.TravelRef.Common.HelpCmd(cmd,args,help) then return end
+	local rawArgs = args
 	args = TR_LocKey(args)
 	if cmd=="trl" then
 		TR_Find( args, Locs )
 		return
 	end
 	if cmd=="tra" then
-		if args~="" then
-			local str=args:lower()
+		if rawArgs~="" then
+			local str=rawArgs:lower()
 			local zn
       		printh("Sous-zones correspondantes :")
 			for area,zone in pairs(Areas) do
-				if area:lower():find(str,1,true) then
-					print(area.." dans "..TR_ZoneName(zone))
+				local darea = TR_AreaName(area)
+				if area:lower():find(str,1,true) or darea:lower():find(str,1,true) then
+					print(darea.." dans "..TR_ZoneName(zone))
 					if zn then zn = true
 					else zn = zone end
 				end
@@ -238,7 +247,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 					else ln = name end
 				end
 			end
-			if not ln then print("(none found)")
+			if not ln then print("(aucun trouvé)")
 			elseif ln ~= true then
 				TR_window.zoneMenu:SetText( TR_ZoneName(Locs[ln].z) )
 				TR_window.locMenu:SetText( TR_LocName(ln) )
@@ -314,7 +323,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 	if args=="areas" then
 		printh("Sous-zones connues avec des écuries :")
 		for area,zone in Sort(Areas) do
-			print(area.." dans "..TR_ZoneName(zone))
+			print(TR_AreaName(area).." dans "..TR_ZoneName(zone))
 		end
 		return
 	end
@@ -360,7 +369,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 				if t.id and t.tl<=plevel and not known then
 					nr = nr+1
 					s = barter(name,s,t.tl)
-					print(string.format(xlink,id,tbl.nm.." "..n)..s)
+					print(string.format(xlink,id,tbl.nm.." "..TR_LocName(n))..s)
 				end
 			end
 		end
@@ -375,7 +384,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 				local n,s= t.n or name
 				local id = t.id
 				if t.q then id=t.q; s='Q'
-				elseif t.r then print(tbl.nm.." "..n.." (Trait)")
+				elseif t.r then print(tbl.nm.." "..TR_LocName(n).." (Trait)")
 				elseif t.k then print(OG)
 				elseif #id<5 then
 					s = id
@@ -384,7 +393,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 				if t.id then
 					if t.j then s = " (Prouesse)"
 					else s = barter(name,s,t.tl) end
-					print(string.format(xlink,id,tbl.nm.." "..n)..s)
+					print(string.format(xlink,id,tbl.nm.." "..TR_LocName(n))..s)
 				end
 			end
 		end
@@ -459,7 +468,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 				local sz,str = "",TR_LocName(name)
 				if TR_req[name] then str="<rgb=#E01000>"..str.."</rgb>" end
 				local t = Locs[name]
-				if t.a then sz = " in "..t.a end
+				if t.a then sz = " dans "..TR_AreaName(t.a) end
 				local ql = t.ql
 				if ql then
 					local ld,cs = (plevel-ql)/2+4, Color[9]
@@ -482,7 +491,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		if not lvl then lvl = plevel end
 		local z, td = TR_ZoneName(t.z), t.td 
 		if t.r then
-			if t.a then z = string.format("%s(%s)", t.a,z) end
+			if t.a then z = string.format("%s (%s)", TR_AreaName(t.a),z) end
 			print(string.format("<rgb=#00FF00>%s @ %s dans %s - destinations :</rgb>",TR_LocName(args),t.l,z))
 		elseif args==Hs then printh("Destinations de voyage depuis l’écurie de maison :")
 		else printh("Destinations de voyage en bateau depuis la maison :") end
@@ -502,12 +511,13 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		end
 		return
 	end
-	if Areas[args] then
-		z = Areas[args]
-		printh("Écuries connues dans "..args.." (partie de "..TR_ZoneName(z)..") :")
+	local areaArg = TR_AreaKey(rawArgs)
+	if Areas[areaArg] then
+		z = Areas[areaArg]
+		printh("Écuries connues dans "..TR_AreaName(areaArg).." (partie de "..TR_ZoneName(z)..") :")
 		local Loc_list = {}
 		for name,t in pairs(Locs) do
-			if t.a==args and t.d then table.insert(Loc_list,name) end
+			if t.a==areaArg and t.d then table.insert(Loc_list,name) end
 		end
 		table.sort(Loc_list)
 		for ix,name in ipairs(Loc_list) do
@@ -528,7 +538,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 				if d<d1 then d1 = d; ln = loc end
 			end
 		end
-		d = string.format(" (%.1f units away).",d1)
+		d = string.format(" (à %.1f unités).",d1)
 		local t = Locs[ln]
 		print("L’écurie la plus proche de "..args.." est "..TR_LocName(ln).." @ "..t.l..d)
 		TR_window.zoneMenu:SetText( TR_ZoneName(t.z) )

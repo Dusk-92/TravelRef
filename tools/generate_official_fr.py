@@ -42,6 +42,12 @@ TRAVEL_SUFFIX_RE = re.compile(
 PAREN_SUFFIX_RE = re.compile(r"\s*\([^()]+\)\s*$")
 ACTION_PREFIX_RE = re.compile(r"^(?:To|Travel to|Boat to)\s+", re.IGNORECASE)
 EAGLE_SUFFIX_RE = re.compile(r"\s*-\s*Eagle\s*$", re.IGNORECASE)
+GRAMMAR_MARKER_RE = re.compile(r"\[(?:m|f|n|mp|fp|np)\]", re.IGNORECASE)
+
+VERIFIED_FR_OVERRIDES = {
+    "Blazon of the Great Alliance": "Blason de la Grande Alliance",
+    "Blazon of the Last Alliance": "Blason de la dernière Alliance",
+}
 
 # Old/short TravelRef names mapped to their current official English label.
 # The EN value is then joined to FR by the SAME LOTRO localization ID.
@@ -78,13 +84,18 @@ LEGACY_EN_ALIASES = {
 }
 
 
+def clean_label(value: str) -> str:
+    value = html.unescape(value).replace("\u00a0", " ").strip()
+    return GRAMMAR_MARKER_RE.sub("", value).strip()
+
+
 def fetch_labels(lang: str, filename: str) -> dict[str, str]:
     url = f"{BASE}/{lang}/{filename}"
     with urllib.request.urlopen(url, timeout=45) as response:
         payload = response.read()
     root = ET.fromstring(payload)
     return {
-        node.attrib["key"]: html.unescape(node.attrib.get("value", "")).strip()
+        node.attrib["key"]: clean_label(node.attrib.get("value", ""))
         for node in root.findall("label")
         if node.attrib.get("key") and node.attrib.get("value")
     }
@@ -246,12 +257,19 @@ def main() -> None:
     unresolved_zones = []
     unresolved_areas = []
 
+    verified_override_count = 0
     for name in sorted(locations):
         result = match(name)
         if result:
             loc_matches[name] = result
         else:
-            unresolved.append(name)
+            base = strip_internal_suffix(name)
+            manual_fr = VERIFIED_FR_OVERRIDES.get(base)
+            if manual_fr:
+                loc_matches[name] = (manual_fr, base, "verified legacy override")
+                verified_override_count += 1
+            else:
+                unresolved.append(name)
 
     for name in sorted(zones):
         result = match(name)
@@ -271,7 +289,8 @@ def main() -> None:
         "-- AUTO-GENERATED. Do not edit by hand.",
         "-- coding: utf-8 'ä",
         "-- Source: LotroCompanion/lotro-data official EN/FR localization tables.",
-        "-- English and French values are joined by identical localization IDs.",
+        "-- Automatic EN/FR values are joined by identical localization IDs.",
+        "-- Verified legacy-only overrides are documented by the generator.",
         "",
         "TR_OfficialLocRaw = TR_OfficialLocRaw or {}",
         "TR_OfficialZoneRaw = TR_OfficialZoneRaw or {}",
@@ -315,6 +334,7 @@ def main() -> None:
         f"Real TravelRef location/destination names extracted: {len(locations)}",
         f"Matched location/destination names: {len(loc_matches)}",
         f"Unmatched location/destination names: {len(unresolved)}",
+        f"Verified legacy overrides: {verified_override_count}",
         f"Zone names extracted: {len(zones)} / matched: {len(zone_matches)}",
         f"Area names extracted: {len(areas)} / matched: {len(area_matches)}",
         "",

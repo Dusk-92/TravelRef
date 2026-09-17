@@ -156,7 +156,7 @@ function TR_RGM(tbl,skill,pl,ss,V)
 			local t = v.t+rtt.t+skill.it -- induction time
 			if (not V) or t+ss*v.c <= V.t+ss*V.c then
 				V = v
-				V.s = skill.nm..' '..rtn.." -> "..v.s
+				V.s = skill.nm..' '..TR_LocName(rtn).." -> "..v.s
 				V.t = t
 				V.n = V.n+1
 				V.a = Action(rtt)
@@ -189,7 +189,7 @@ end
 
 -- Find best start location and route to end location
 function TR_Start(Start,pl,ss)
-	printh("Recherche du meilleur départ vers "..SetLoc.." :")
+	printh("Recherche du meilleur départ vers "..TR_LocName(SetLoc).." :")
 	local V
 	if Start and Start~=SetLoc then
 		V = Find_Route(Start,SetLoc,pl,ss)
@@ -202,7 +202,7 @@ function TR_Start(Start,pl,ss)
 					v.t = v.t + Locs[name].t+15 -- extra time for Ms
 					if (not V) or v.t+ss*v.c < V.t+ss*V.c then
 						V = v
-						V.s = "Jalon vers "..name.." -> "..v.s
+						V.s = "Jalon vers "..TR_LocName(name).." -> "..v.s
 						V.n = V.n+1
 						V.a = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..Miles[tonumber(ix)])
 					end
@@ -224,7 +224,7 @@ function TR_Start(Start,pl,ss)
 	if TR_req.house then
 		local hn,ht,v = TR_req.house,TR_req.htime
 		local ha = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..House[hn])
-		local hs = "Voyage vers maison "..hn.." -> Écurie de maison(MT) -> "
+		local hs = "Voyage vers maison "..TR_LocName(hn).." -> Écurie de maison(MT) -> "
 --		print("type(.d)="..type(Locs[Hs].d))
 		for name,dt in pairs(Locs[Hs].d) do
 			if (not dt.l or pl>= dt.l) and Req(dt) and not TR_req.NV[name] then
@@ -235,7 +235,7 @@ function TR_Start(Start,pl,ss)
 					v.t = v.t + 12 + ht + dt.st -- add time to get there
 					if (not V) or v.t+ss*v.c < V.t+ss*V.c then
 						V = v
-						V.s = hs..name..((v.s and "(ST) -> "..v.s) or "(ST)")
+						V.s = hs..TR_LocName(name)..((v.s and "(ST) -> "..v.s) or "(ST)")
 						V.n = V.n+3
 						V.a = ha
 					end
@@ -243,7 +243,7 @@ function TR_Start(Start,pl,ss)
 			end
 		end
 		if TR_req.dock then
-			local hs = "Voyage vers maison "..hn.." -> Bateau de maison(MT) -> "
+			local hs = "Voyage vers maison "..TR_LocName(hn).." -> Bateau de maison(MT) -> "
 			local ht = TR_req.dtime
 			for name,dt in pairs(Locs[Dm].d) do
 				if (not dt.l or pl>= dt.l) and Req(dt) and not TR_req.NV[name] then
@@ -254,7 +254,7 @@ function TR_Start(Start,pl,ss)
 						v.t = v.t + 12 + ht + dt.st -- add time to get there
 						if (not V) or v.t+ss*v.c < V.t+ss*V.c then
 							V = v
-							V.s = hs..name..((v.s and "(ST) -> "..v.s) or "(ST)")
+							V.s = hs..TR_LocName(name)..((v.s and "(ST) -> "..v.s) or "(ST)")
 							V.n = V.n+3
 							V.a = ha
 						end

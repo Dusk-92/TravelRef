@@ -10,14 +10,13 @@ Official sources loaded:
 - parchmentMaps.xml: 205 paired EN/FR labels
 
 Real TravelRef location/destination names extracted: 426
-Matched location/destination names: 424
-Unmatched location/destination names: 2
+Matched location/destination names: 426
+Unmatched location/destination names: 0
+Verified legacy overrides: 2
 Zone names extracted: 47 / matched: 47
 Area names extracted: 83 / matched: 83
 
 Unmatched real TravelRef location/destination names:
-- Blazon of the Great Alliance
-- Blazon of the Last Alliance
 
 Unmatched TravelRef zone names:
 

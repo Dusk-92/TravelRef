@@ -1,7 +1,8 @@
 -- AUTO-GENERATED. Do not edit by hand.
 -- coding: utf-8 'ä
 -- Source: LotroCompanion/lotro-data official EN/FR localization tables.
--- English and French values are joined by identical localization IDs.
+-- Automatic EN/FR values are joined by identical localization IDs.
+-- Verified legacy-only overrides are documented by the generator.
 
 TR_OfficialLocRaw = TR_OfficialLocRaw or {}
 TR_OfficialZoneRaw = TR_OfficialZoneRaw or {}
@@ -42,12 +43,14 @@ TR_OfficialLocRaw["Beaconwatch"] = "Veillefeu" -- travelsMap.xml: Beaconwatch
 TR_OfficialLocRaw["Bel Inzul"] = "Bel Inzûl" -- travelsMap.xml: Bel Inzûl
 TR_OfficialLocRaw["Beneath Dar Laja"] = "Sous Dâr Laja" -- travelsMap.xml: Beneath Dâr Laja
 TR_OfficialLocRaw["Beorninghus"] = "Beorninghus" -- travelsMap.xml: Beorninghús
+TR_OfficialLocRaw["Blazon of the Great Alliance"] = "Blason de la Grande Alliance" -- verified legacy override: Blazon of the Great Alliance
+TR_OfficialLocRaw["Blazon of the Last Alliance"] = "Blason de la dernière Alliance" -- verified legacy override: Blazon of the Last Alliance
 TR_OfficialLocRaw["Blomgard"] = "Blomgard" -- travelsMap.xml: Blómgard
 TR_OfficialLocRaw["Bloody Eagle Tavern"] = "Taverne de l'Aigle sanglant" -- travelsWeb.xml: The Bloody Eagle Tavern
 TR_OfficialLocRaw["Boat to Lothlorien"] = "Lothlórien" -- travelsMap.xml: Lothlórien
 TR_OfficialLocRaw["Boat to Mirkwood"] = "Forêt Noire" -- travelsMap.xml: Mirkwood
 TR_OfficialLocRaw["Bree"] = "Bree" -- geoAreas.xml: Bree
-TR_OfficialLocRaw["Breeland Festival Grounds"] = "Pré aux festivités du Pays de Bree - Voyage rapide" -- travelsWeb.xml: Bree-land Festival Grounds - Swift Travel
+TR_OfficialLocRaw["Breeland Festival Grounds"] = "Pré aux festivités du Pays de Bree - Voyage rapide" -- travelsWeb.xml: Bree-land Festival Grounds - Swift Travel
 TR_OfficialLocRaw["Breeland Homesteads"] = "Résidences du Pays de Bree" -- travelsWeb.xml: Bree-land Homesteads
 TR_OfficialLocRaw["Brockbridge"] = "Torrepont" -- travelsMap.xml: Brockbridge
 TR_OfficialLocRaw["Brockenborings"] = "Trous des Grisards" -- travelsMap.xml: Brockenborings
@@ -390,7 +393,7 @@ TR_OfficialLocRaw["Zirakzigil"] = "Zirakzigil" -- travelsMap.xml: Zirakzigil
 TR_OfficialLocRaw["Zudramdan"] = "Zudramdân" -- travelsMap.xml: Zudramdân
 
 TR_OfficialZoneRaw["Angmar"] = "Angmar" -- travelsMap.xml: Angmar
-TR_OfficialZoneRaw["Azanulbizar"] = "Contes des temps jadis : Azanulbizar" -- geoAreas.xml: Tales of Yore: Azanulbizar
+TR_OfficialZoneRaw["Azanulbizar"] = "Contes des temps jadis : Azanulbizar" -- geoAreas.xml: Tales of Yore: Azanulbizar
 TR_OfficialZoneRaw["Bree-Land"] = "Pays de Bree" -- travelsMap.xml: Bree-land
 TR_OfficialZoneRaw["Cape of Umbar"] = "Cap d'Umbar" -- parchmentMaps.xml: Cape of Umbar
 TR_OfficialZoneRaw["Cardolan"] = "Cardolan" -- travelsMap.xml: Cardolan
@@ -426,7 +429,7 @@ TR_OfficialZoneRaw["Outer Gondor"] = "Gondor extérieur" -- parchmentMaps.xml: O
 TR_OfficialZoneRaw["Strongholds"] = "Bastions du Nord" -- geoAreas.xml: Strongholds of the North
 TR_OfficialZoneRaw["Swanfleet"] = "Les Noues des cygnes" -- travelsMap.xml: Swanfleet
 TR_OfficialZoneRaw["The Shire"] = "Comté" -- travelsMap.xml: The Shire
-TR_OfficialZoneRaw["The Wastes"] = "Les Landes désertiques[fp]" -- travelsMap.xml: The Wastes
+TR_OfficialZoneRaw["The Wastes"] = "Les Landes désertiques" -- travelsMap.xml: The Wastes
 TR_OfficialZoneRaw["Trollshaws"] = "Trouée des Trolls" -- travelsMap.xml: Trollshaws
 TR_OfficialZoneRaw["Vales of Anduin"] = "Val d'Anduin" -- travelsMap.xml: Vales of Anduin
 TR_OfficialZoneRaw["Valley of Ikorbad"] = "Vallée d'Ikorbân" -- travelsMap.xml: Valley of Ikorbân

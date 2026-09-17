@@ -16,6 +16,16 @@ modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stoneja
 Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
 mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
 
+Correctifs FR r4
+----------------
+- Couche FR chargée après TR_Data et avant la création de la fenêtre.
+- 426/426 lieux/destinations couverts, y compris les deux Blasons hérités.
+- 47/47 zones et 83/83 sous-zones couvertes par les libellés FR.
+- Sous-zones traduites uniquement à l’affichage : les données internes restent intactes.
+- Textes de trajets spéciaux, jalons, retours et voyages passés par TR_LocName.
+- Nettoyage des marqueurs grammaticaux LOTRO ([fp], etc.) et des espaces insécables.
+- Génération FR relancée automatiquement quand TR_Data.lua change.
+
 Correctifs FR r3
 ----------------
 - Ajout d'une couche de noms officiels LOTRO pour les régions et destinations de voyage.

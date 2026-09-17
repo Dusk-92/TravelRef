@@ -3,9 +3,9 @@
   <Information>
 	<Name>TravelRef</Name>
 	<Author>David Down</Author>
-	<Version>3.3.2-FR-r2</Version>
+	<Version>3.3.2-FR-r4</Version>
 	<Image>Dusk/TravelRef/Stable.tga</Image>
-	<Description>Version française corrigée de TravelRef 3.3.2 : interface traduite et noms de régions LOTRO FR, avec calcul d’itinéraires entre écuries et icône flottante au style Homeopatix.</Description>
+	<Description>TravelRef 3.3.2 FR r4 : interface française, noms officiels LOTRO des lieux/zones/sous-zones, routage conservé sur les clés internes et icône flottante.</Description>
 	<website>http://www.lotrointerface.com/downloads/info524</website>
   </Information>
   <Package>Dusk.TravelRef.TR_Main</Package>

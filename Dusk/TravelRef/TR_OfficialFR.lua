@@ -54,6 +54,13 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         ["ý"]="y", ["ÿ"]="y", ["Ý"]="Y", ["œ"]="oe", ["Œ"]="OE",
     }
 
+    local function CleanOfficial(value)
+        if type(value) ~= "string" then return value end
+        value = string.gsub(value, "%[[%a]+%]", "")
+        value = string.gsub(value, "\194\160", " ")
+        return value
+    end
+
     local function OfficialNorm(value)
         if type(value) ~= "string" then return nil end
         if type(noAccent) == "function" then
@@ -74,11 +81,13 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         local ambiguous = {}
 
         local function addExact(value, fr)
+            fr = CleanOfficial(fr)
             local key = OfficialNorm(value)
             if key and key ~= "" then exact[key] = fr end
         end
 
         local function addAlias(value, fr)
+            fr = CleanOfficial(fr)
             if type(value) ~= "string" or value == "" then return end
             local key = OfficialNorm(value)
             if not key or key == "" or exact[key] then return end
@@ -144,6 +153,8 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
     }
 
     if type(TR_LocFR) == "table" then
+        for en,fr in pairs(TR_OfficialLocRaw or {}) do TR_LocFR[en] = CleanOfficial(fr) end
+
         local function applyLocation(name)
             if type(name) ~= "string" then return end
             local base = string.match(name, "^(.-)(%([A-Z]+%))$")
@@ -166,7 +177,7 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         if type(R_Dest) == "table" then
             for en in pairs(R_Dest) do applyLocation(en) end
         end
-        for en,fr in pairs(LegacyOfficial) do TR_LocFR[en] = fr end
+        for en,fr in pairs(LegacyOfficial) do TR_LocFR[en] = CleanOfficial(fr) end
 
         TR_LocFR["Lothlorien(B)"] = "Quais de la Lothlorien(B)"
 
@@ -190,35 +201,19 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         for en,fr in pairs(TR_ZoneFR) do TR_ZoneEN[fr] = en end
     end
 
-    -- Areas are display/search metadata only; routing uses the location keys and
-    -- destination graph. Translate the area labels in memory and rebuild the
-    -- area index so /tr areas, /tra and area lookups all operate in French.
-    if type(Locs) == "table" and type(Areas) == "table" then
+    -- Keep internal area keys immutable; translate display/reverse lookup only.
+    if type(Areas) == "table" then
         TR_AreaFR = {}
         TR_AreaEN = {}
-        local NewAreas = {}
-
-        for area,zone in pairs(Areas) do
+        for area in pairs(Areas) do
             local key = OfficialNorm(area)
-            local fr = (key and OfficialArea[key]) or area
+            local fr = CleanOfficial((key and OfficialArea[key]) or area)
             TR_AreaFR[area] = fr
-            TR_AreaEN[fr] = area
-            NewAreas[fr] = zone
+            if TR_AreaEN[fr] == nil then TR_AreaEN[fr] = area end
         end
 
-        for _,loc in pairs(Locs) do
-            if type(loc) == "table" and loc.a then
-                loc.a = TR_AreaFR[loc.a] or loc.a
-            end
-        end
-        Areas = NewAreas
-
-        function TR_AreaName(name)
-            return TR_AreaFR[name] or name
-        end
-        function TR_AreaKey(name)
-            return TR_AreaEN[name] or name
-        end
+        function TR_AreaName(name) return TR_AreaFR[name] or name end
+        function TR_AreaKey(name) return TR_AreaEN[name] or name end
     end
 end)
 
