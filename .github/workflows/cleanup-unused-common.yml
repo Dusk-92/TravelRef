@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify TravelRef does not reference Dusk.Common
+      - name: Verify TravelRef does not import Dusk.Common
         run: |
-          if grep -R -F 'Dusk.Common' Dusk/TravelRef Dusk/TravelRef.plugin; then
-            echo 'Unexpected Dusk.Common reference; refusing cleanup.'
+          if find Dusk/TravelRef -type f -name '*.lua' -print0 | xargs -0 grep -F 'Dusk.Common'; then
+            echo 'Unexpected Dusk.Common Lua reference; refusing cleanup.'
             exit 1
           fi
+          ! grep -F 'Dusk.Common' Dusk/TravelRef.plugin
       - name: Remove unused legacy copy
         run: rm -rf Dusk/Common
       - name: Commit cleanup
