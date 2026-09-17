@@ -17,11 +17,16 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
 
     TR_OfficialZoneRaw = {}
     TR_OfficialLocRaw = {}
+    TR_OfficialAreaRaw = {}
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data1")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data2")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data3")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data4")
     TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data5")
+    -- Generated from travelsMap + travelsWeb + dungeons + landmarks + geoAreas.
+    -- SafeImport keeps TravelRef loadable even if this optional generated file
+    -- is absent or malformed.
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto")
 
     -- Fallback local: LOTRO/Turbine Lua peut parfois ne pas charger noAccent
     -- assez tôt. On garde donc ici les caractères utiles pour comparer les
