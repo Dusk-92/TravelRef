@@ -66,8 +66,8 @@ jobs:
 
           text = Path('tools/TR_OfficialFR_Audit.txt').read_text(encoding='utf-8')
 
-          def number(pattern):
-              match = re.search(pattern, text)
+          def number(pattern, source=text):
+              match = re.search(pattern, source)
               if not match:
                   raise SystemExit(f'Missing audit metric: {pattern}')
               return tuple(int(value) for value in match.groups())
@@ -84,20 +84,26 @@ jobs:
           assert areas == matched_areas, (areas, matched_areas)
 
           req = Path('tools/TR_RequirementsFR_Audit.txt').read_text(encoding='utf-8')
-          total = int(re.search(r'Requirements extracted: (\d+)', req).group(1))
-          matched = int(re.search(r'Matched officially: (\d+)', req).group(1))
-          unmatched = int(re.search(r'Unmatched: (\d+)', req).group(1))
-          assert total == 77, total
+          total, = number(r'Requirements extracted: (\d+)', req)
+          matched, = number(r'Matched/verified French: (\d+)', req)
+          current, = number(r'Current official-data matches: (\d+)', req)
+          historical, = number(r'Verified historical overrides: (\d+)', req)
+          fuzzy, = number(r'Fuzzy faction matches: (\d+)', req)
+          unmatched, = number(r'Unmatched: (\d+)', req)
+
           assert matched == total, (matched, total)
+          assert current + historical == total, (current, historical, total)
           assert unmatched == 0, unmatched
-          assert not re.search(r'^- \w+:', req.split('UNMATCHED:', 1)[1], re.M)
-          print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas, {matched}/{total} requirements')
+          assert fuzzy == 0, fuzzy
+          unmatched_section = req.split('UNMATCHED:', 1)[1] if 'UNMATCHED:' in req else ''
+          assert not re.search(r'^- \w+:', unmatched_section, re.M)
+          print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas, {matched}/{total} requirements ({historical} historical overrides)')
           PY
 
       - name: Check known regressions
         run: |
           grep -F '<Package>Dusk.TravelRef.TR_Entry</Package>' Dusk/TravelRef.plugin
-          grep -F '<Version>3.3.2-FR-r7</Version>' Dusk/TravelRef.plugin
+          grep -F '<Version>3.3.2-FR-r8</Version>' Dusk/TravelRef.plugin
           grep -F 'import "Dusk.TravelRef.TR_Main"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'import "Dusk.TravelRef.TR_Robustness"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'elseif (flg or tbl.d) and (not r or tbl.r == r) then' Dusk/TravelRef/TR_Robustness.lua
@@ -106,6 +112,13 @@ jobs:
           grep -F 'TR_req.NV[args] = not TR_req.NV[args]' Dusk/TravelRef/TR_Main.lua
           grep -F 'for name,nv in pairs(TR_req.NV) do' Dusk/TravelRef/TR_Main.lua
           grep -F 'if TR_req.NV[name] then markname=' Dusk/TravelRef/TR_Main.lua
+          test "$(grep -F -c 'if TR_req.NV[name] then str=' Dusk/TravelRef/TR_Main.lua)" -eq 2
+          ! grep -F 'if TR_req[name] then str=' Dusk/TravelRef/TR_Main.lua
+          grep -F 'table.sort(Loc_list, function(a,b) return TR_FrenchSort(TR_LocName(a),TR_LocName(b)) end)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'table.sort(dest, function(a,b) return TR_FrenchSort(TR_LocName(a),TR_LocName(b)) end)' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'table.sort(Loc_list)' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'table.sort(dest)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local d,ln = Loc_Find(nil, y, x, Locs)' Dusk/TravelRef/TR_Main.lua
           grep -F 'local dest = { }' Dusk/TravelRef/TR_Main.lua
           grep -F 'local z = Areas[areaArg]' Dusk/TravelRef/TR_Main.lua
           grep -F 'local pname = player:GetName()' Dusk/TravelRef/TR_Main.lua
@@ -120,11 +133,16 @@ jobs:
           grep -F 'table.sort(zlist, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
           grep -F 'table.sort(Loc_list, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
           grep -F 'table.sort(list, TR_FrenchSort)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'Lieu de route introuvable' Dusk/TravelRef/TR_Window.lua
+          ! grep -F 'Nul loc' Dusk/TravelRef/TR_Window.lua
           grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Requirements", true)' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F 'for _,en in ipairs(zones) do applyZone(en) end' Dusk/TravelRef/TR_OfficialFR.lua
-          grep -F '["œ"]="oe"' Dusk/TravelRef/Common/noAccent.lua
           grep -F 'local ambiguousLoc = {}' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'local ambiguousZone = {}' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'local ambiguousArea = {}' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F '["œ"]="oe"' Dusk/TravelRef/Common/noAccent.lua
+          grep -F '"Men of Entwash Vale": "Men of the Entwash Vale"' tools/generate_requirements_fr.py
           ! grep -F 'loc.a = TR_AreaFR' Dusk/TravelRef/TR_OfficialFR.lua
           ! grep -F 'Areas = NewAreas' Dusk/TravelRef/TR_OfficialFR.lua
           ! grep -F 'print(loc.n.." @ "..loc.l)' Dusk/TravelRef/TR_Main.lua
