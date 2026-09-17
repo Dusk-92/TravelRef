@@ -1,6 +1,14 @@
 -- TravelRef runtime robustness fixes loaded after TR_Main.
 -- coding: utf-8 'ä
 
+-- Old saves may have the dock option enabled without a separate dtime value
+-- (older builds accidentally reused htime).  Give them a safe default before
+-- any route calculation can use the value.
+if type(TR_req) == "table" and TR_req.dock and not tonumber(TR_req.dtime) then
+    TR_req.dtime = 20
+    Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
+end
+
 local TR_RobustCoord = "^(%d+%.%d[NnSs]), ?(%d+%.%d[EeWw])$"
 local TR_RobustZloc = "^(.+): .+: (%d+%.%d[NS]), (%d+%.%d[EW])$"
 
