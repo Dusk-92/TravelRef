@@ -45,11 +45,14 @@ RANK_ALIASES = {
 }
 
 # Historical epic quest titles no longer present verbatim in the current data
-# files, but documented with their French LOTRO titles on the French LOTRO wiki.
+# files. These are verified French LOTRO/Tolkien titles retained explicitly so
+# TravelRef never falls back to an English prerequisite label.
 LEGACY_QUEST_FR = {
     "Q1": "Le défi de la pierre",
     "Q4": "Au cœur du danger",
     "Q5": "La vingt et unième salle",
+    "Q7": "Les Aigles arrivent !",
+    "Q8": "La même que vous",
     "Q10": "La paix rétablie",
 }
 
@@ -254,7 +257,7 @@ def main() -> None:
 
         legacy = LEGACY_QUEST_FR.get(code)
         if legacy:
-            source = "verified historical French LOTRO quest title"
+            source = "verified historical French LOTRO/Tolkien quest title"
             matches[code] = (legacy, source)
             details.append((code, old, legacy, source))
             continue
