@@ -7,36 +7,20 @@ Official sources loaded:
 - dungeons.xml: 1299 paired EN/FR labels
 - landmarks.xml: 2734 paired EN/FR labels
 - geoAreas.xml: 768 paired EN/FR labels
+- parchmentMaps.xml: 205 paired EN/FR labels
 
 Real TravelRef location/destination names extracted: 426
-Matched location/destination names: 401
-Unmatched location/destination names: 25
-Zone names extracted: 47 / matched: 40
-Area names extracted: 83 / matched: 73
+Matched location/destination names: 418
+Unmatched location/destination names: 8
+Zone names extracted: 47 / matched: 44
+Area names extracted: 83 / matched: 75
 
 Unmatched real TravelRef location/destination names:
 - Blazon of the Great Alliance
 - Blazon of the Last Alliance
-- Bloody Eagle Tavern
-- Bloody Eagle Tavern(R)
-- Boat to Lothlorien
-- Boat to Mirkwood
-- Cape of Belfalas
-- Cape of Belfalas Housing
-- Hall Under the Mtn
 - Northern Shore(B)
 - Ruins of Dol Guldur
 - Southern Shore(B)
-- The Carrock - Eagle
-- The Eyrie - Eagle
 - the War-stead
-- To Kings End
-- To Minas Tirith, After the Battle
 - To Minas Tirith, Before the Battle
 - To Mins Tirith, Before the Battle
-- To Riders' Stand
-- To the Cape of Belfalas
-- To the Field of Onslaught
-- To the Ruin of Pel Duven
-- To the Threshold of the City
-- Travel to Dol Amroth
