@@ -1,0 +1,32 @@
+name: Cleanup unused Common copy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/cleanup-unused-common.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify TravelRef does not reference Dusk.Common
+        run: |
+          if grep -R -F 'Dusk.Common' Dusk/TravelRef Dusk/TravelRef.plugin; then
+            echo 'Unexpected Dusk.Common reference; refusing cleanup.'
+            exit 1
+          fi
+      - name: Remove unused legacy copy
+        run: rm -rf Dusk/Common
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A Dusk/Common
+          git diff --cached --quiet && exit 0
+          git commit -m "Remove unused duplicate Dusk Common library"
+          git push
