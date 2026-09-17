@@ -121,7 +121,8 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
 
     -- Anciennes clés TravelRef encore utilisées par l'addon mais absentes ou
     -- orthographiées différemment dans travelsMap.xml. Les valeurs ci-dessous
-    -- viennent des tables FR officielles LOTRO (travelsWeb/dungeons).
+    -- viennent des tables FR officielles LOTRO (travelsWeb/dungeons) ou de
+    -- libellés français vérifiés du client/notes officielles.
     local LegacyOfficial = {
         ["Anazarmekhem"] = "Anazârmekhem",
         ["Eastern Crossroads"] = "Carrefour de l'Est",
@@ -136,6 +137,8 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         ["Trader's Wharf"] = "Quai des négociants - Trajet en bateau",
         ["Court of Celeborn"] = "Cour de Celeborn",
         ["The Vineyards of Lorien"] = "Les Vignes de la Lórien",
+        ["Blazon of the Great Alliance"] = "Blason de la Grande Alliance",
+        ["Blazon of the Last Alliance"] = "Blason de la dernière Alliance",
     }
 
     if type(TR_LocFR) == "table" then
