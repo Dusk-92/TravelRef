@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "tools/generate_official_fr.py"
+      - "Dusk/TravelRef/TR_Data.lua"
       - ".github/workflows/generate-official-fr.yml"
 
 permissions:
