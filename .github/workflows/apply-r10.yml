@@ -1,0 +1,55 @@
+name: Apply TravelRef r10 release fixes
+
+on:
+  push:
+    paths:
+      - "tools/apply_r10.py"
+      - ".github/workflows/apply-r10.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply guarded r10 patch
+        run: python3 tools/apply_r10.py
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+      - name: Compile every Lua file
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef tools -type f -name '*.lua' -print0 | while IFS= read -r -d '' f; do
+            echo "LUAC $f"
+            "$LUAC" -p "$f"
+          done
+      - name: Run source and routing audits
+        run: |
+          python3 tools/source_audit.py
+          lua5.1 tools/test_route_rules.lua
+          lua5.1 tools/release_audit.lua
+      - name: Validate manifest XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
+      - name: Verify r10 markers
+        run: |
+          grep -F '<Version>3.3.2-FR-r10</Version>' Dusk/TravelRef.plugin
+          grep -F 'TR_DiscountRate(td, TR_req, TD_list, Reqs)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'TR_DiscountRate(td, TR_req, TD_list, Reqs)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'AreaZones = { }' Dusk/TravelRef/TR_Data.lua
+          grep -F 'elseif (not r) or ((flg or tbl.d) and tbl.r == r) then' Dusk/TravelRef/TR_Robustness.lua
+      - name: Commit r10 source fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Dusk/TravelRef Dusk/TravelRef.plugin tools/release_audit.lua tools/test_route_rules.lua
+          if git diff --cached --quiet; then
+            echo "No source changes to commit"
+          else
+            git commit -m "Harden TravelRef r10 release"
+            git push
+          fi
