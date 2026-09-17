@@ -138,12 +138,23 @@ for name,loc in pairs(Locs or {}) do
   end
 end
 
+check(type(AreaZones)=="table","AreaZones is not a table")
+local multi_zone_areas = 0
 for area,zone_set in pairs(area_zones) do
-  local n, names = 0, {}
-  for zone in pairs(zone_set) do n=n+1; names[#names+1]=zone end
-  if n > 1 then
-    table.sort(names)
-    err("ambiguous internal area name "..area.." belongs to zones: "..table.concat(names,", "))
+  local published = type(AreaZones)=="table" and AreaZones[area] or nil
+  if type(published)~="table" then
+    err("AreaZones missing area: "..area)
+  else
+    local n = 0
+    for zone in pairs(zone_set) do
+      n=n+1
+      if not published[zone] then err("AreaZones missing mapping: "..area.." -> "..zone) end
+    end
+    for zone in pairs(published) do
+      if not zone_set[zone] then err("AreaZones has stale mapping: "..area.." -> "..zone) end
+    end
+    if n>1 then multi_zone_areas=multi_zone_areas+1 end
+    if Areas[area] and not zone_set[Areas[area]] then err("Areas compatibility mapping invalid: "..area) end
   end
 end
 
@@ -291,7 +302,7 @@ end
 
 print(string.format("DATA: %d locations, %d destination edges, %d zones, %d areas, %d requirements", count(Locs), dest_count, #(zones or {}), count(Areas), count(Reqs)))
 print(string.format("ROUTING: %d mixed requirement edges, %d swift fallback times, %d metadata-only edges", mixed_requirements, swift_without_time, metadata_edges))
-print(string.format("SPECIAL DATA: %d legacy generic discounts, %d hidden-region locations", legacy_discounts, hidden_regions))
+print(string.format("SPECIAL DATA: %d legacy generic discounts, %d hidden-region locations, %d multi-zone areas", legacy_discounts, hidden_regions, multi_zone_areas))
 print("RACE_ONLY: "..table.concat(race_only, ", "))
 for _,w in ipairs(warnings) do print("WARNING: "..w) end
 for _,e in ipairs(errors) do print("ERROR: "..e) end

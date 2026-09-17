@@ -4,9 +4,22 @@
 -- Old saves may have the dock option enabled without a separate dtime value
 -- (older builds accidentally reused htime).  Give them a safe default before
 -- any route calculation can use the value.
-if type(TR_req) == "table" and TR_req.dock and not tonumber(TR_req.dtime) then
-    TR_req.dtime = 20
-    Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
+if type(TR_req) == "table" then
+    local changed = false
+    if TR_req.house and (type(House) ~= "table" or not House[TR_req.house]) then
+        TR_req.house,TR_req.htime,TR_req.dock,TR_req.dtime = nil,nil,nil,nil
+        changed = true
+    elseif TR_req.house and not tonumber(TR_req.htime) then
+        TR_req.htime = 20
+        changed = true
+    end
+    if TR_req.dock and not tonumber(TR_req.dtime) then
+        TR_req.dtime = 20
+        changed = true
+    end
+    if changed then
+        Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
+    end
 end
 
 local TR_RobustCoord = "^(%d+%.%d[NnSs]), ?(%d+%.%d[EeWw])$"
@@ -53,7 +66,7 @@ function Loc_Find(r, y, x, locs, flg)
 
         if type(tbl) ~= "table" then
             printe("Aucun lieu défini pour "..tostring(name))
-        elseif (flg or tbl.d) and (not r or tbl.r == r) then
+        elseif (not r) or ((flg or tbl.d) and tbl.r == r) then
             local y0, x0
             if type(tbl.l) == "string" then y0, x0 = tbl.l:match(TR_RobustCoord) end
             if not y0 or not x0 then

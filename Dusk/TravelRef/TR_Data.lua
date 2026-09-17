@@ -252,14 +252,14 @@ Locs = {
 		["Hengstacer Farm"] = { c=1, t=160 },
 		["South Bree"] = { mt=75, s=1, st=18 },
 		["Bree(R)"] = { mt=35 },
-		["Andrath"] = { c=1500, t=161, l=-10, st=2500, t=14 },
-		["Herne"] = { c=1500, t=418, l=-10, st=2500, t=30 },
+		["Andrath"] = { c=15, t=161, l=-10, s=25, st=14 },
+		["Herne"] = { c=15, t=418, l=-10, s=25, st=30 },
 		["Celondim"] = { s=1, st=20, S0=true },
 		["Thorin's Gate"] = { s=1, st=28, S0=true },
 		["Ost Forod"] = { s=35, l=30, st=36 },
 		["Tinnudir"] = { s=35, st=40 },
 		["Suri-kyla"] = { s=35, l=40, st=39, r="R3" },
-		["Mossward"] = { st=500, t=23, S0=true },
+		["Mossward"] = { s=5, st=23, S0=true },
 		["Esteldin"] = { s=35, l=30, st=33 },
 		["Trestlebridge"] = { c=5, t=209 },
 		["Hobbiton"] = { c=5, t=337 },
@@ -346,9 +346,9 @@ Locs = {
 	["The Forsaken Inn"] = { t=12, ql=22, d={
 		["Breeland Homesteads"] = { c=1, t=108, s=5, st=31 },
 		["South Bree"] = { c=5, t=190 },
-		["Caranost"] = { c=15, t=222, l=-10, st=25, t=35 },
-		["Herne"] = { c=15, t=380, l=-10, st=25, t=26 },
-		["Scurloc Farm"] = { c=15, t=295, l=-10, st=25, t=21 },
+		["Caranost"] = { c=15, t=222, l=-10, s=25, st=35 },
+		["Herne"] = { c=15, t=380, l=-10, s=25, st=26 },
+		["Scurloc Farm"] = { c=15, t=295, l=-10, s=25, st=21 },
 		["Ost Guruth"] = { c=15, t=203 },
 		}, z="Lone-lands", r=1, l="34.4s,40.6w" },
 	["Ost Guruth"] = { t=26, ql=26, d={
@@ -363,7 +363,7 @@ Locs = {
 		["Clegur"] = { c=1, t=297, s=5, st=22 },
 		["Glyn Helyg"] = { c=1, t=215, s=5, st=21 },
 		["Lhan Garan"] = { c=1, t=1000, s=5, st=26 },
-		["Lintrev"] = { c=1, t=242, s=450, st=21 },
+		["Lintrev"] = { c=1, t=242, s=5, st=21 },
 		["Mossward"] = { c=1, t=289, s=5, st=23 },
 		["Western Eregion"] = { c=1, t=135, s=5, st=15 },
 		}, z="Swanfleet", r=1, td="R11", l="52.7s,22.4w" },
@@ -383,18 +383,18 @@ Locs = {
 		["Caras Gelebren"] = { c=1, t=215, s=5, st=21 },
 		["Clegur"] = { c=1, t=105, s=32, st=29 },
 		["Lhan Garan"] = { c=1, t=149, s=5, st=29 },
-		["Lintrev"] = { c=1, t=48, s=450, st=25 },
+		["Lintrev"] = { c=1, t=48, s=5, st=25 },
 		["Mossward"] = { c=1, t=232, s=5, st=27 },
 		["Western Eregion"] = { c=1, t=336, s=5, st=18 },
 		}, z="Swanfleet", r=1, td="R11", l="62.3s,25.9w" },
 	["Lhan Garan"] = { t=4, ql=10, d={ -- Delving
-		["Herne"] = { c=15, t=412, l=-10, st=25, t=33 },
+		["Herne"] = { c=15, t=412, l=-10, s=25, st=33 },
 		["Tharbad"] = { c=15, t=323, l=-10, s=25, st=33 },
 		["Lhanuch"] = { c=25, t=350, l=-55, s=35, st=32 },
 		["Caras Gelebren"] = { c=1, t=100, s=5, st=26 },
 		["Clegur"] = { c=1, t=231, s=32, st=32 },
 		["Glyn Helyg"] = { c=1, t=149, s=5, st=29 },
-		["Lintrev"] = { c=1, t=175, s=450, st=30 },
+		["Lintrev"] = { c=1, t=175, s=5, st=30 },
 		["Mossward"] = { c=1, t=222, s=5, st=30 },
 		["Western Eregion"] = { c=1, t=220, s=5, st=23 },
 		}, z="Swanfleet", r=1, td="R11", l="55.2s,27.1w" },
@@ -404,7 +404,7 @@ Locs = {
 		["Caras Gelebren"] = { c=1, t=242, s=5, st=21 },
 		["Clegur"] = { c=1, t=126, s=32, st=27 },
 		["Glyn Helyg"] = { c=1, t=48, s=5, st=25 },
-		["Lhan Garan"] = { c=1, t=175, s=5, st=330 },
+		["Lhan Garan"] = { c=1, t=175, s=5, st=33 },
 		["Mossward"] = { c=1, t=253, s=5, st=27 },
 		["Western Eregion"] = { c=1, t=352, s=5, st=30 },
 		}, z="Swanfleet", r=1, td="R11", l="61.7s,24.2w" },
@@ -492,7 +492,7 @@ Locs = {
 		["Herne"] = { c=15, t=122, l=-10, s=25, st=30 },
 		["Sarn Ford"] = { c=15, t=319, l=-10, s=25, st=25 },
 		["Scurloc Farm"] = { c=15, t=315, l=-10, s=25, st=24 },
-		["Lhan Garan"] = { c=1, t=323, st=5, t=33 },
+		["Lhan Garan"] = { c=1, t=323, s=5, st=33 },
 		["Mossward"] = { c=1, t=180, s=5, st=28 },
 		}, z="Cardolan", r=1, td="R11", l="54.2s,40.3w" },
 		-- Yondershire starts here
@@ -743,7 +743,7 @@ Locs = {
 		["Mossward"] = { l=20, s=1, st=22 },
 		}, z="Trollshaws", r=1, a="Rivendell", td="R7", l="29.3s,6.7w" },
 	["The Last Bridge"] = { ql=35, d={
-		["Ost Guruth"] = { c=15, t=128, l=-15, c=25, t=27 },
+		["Ost Guruth"] = { c=15, t=128, l=-15, s=25, st=27 },
 		["Barachen's Camp"] = { c=15, t=71, l=-20, s=25, st=48 },
 		["Echad Candelleth"] = { c=15, t=288, l=-20, s=25, st=42 },
 		["Gaerond"] = { c=15, t=56, l=-20, s=25, st=28 },
@@ -1446,7 +1446,7 @@ Locs = {
 		}, z="Dunland", r=1, td="R22", l="80.9s,10.6w" },
 	["Barnavon"] = { t=15, ml=48, ql=71, d={
 		["Lhan Rhos"] = { c=25, t=162, l=-65, s=35, st=12 },
-		["Galtrev"] = { c=25, st=158, l=-65, s=35, st=18 },
+		["Galtrev"] = { c=25, t=158, l=-65, s=35, st=18 },
 		["Rohirrim Scout-camp"] = { c=25, t=156, l=-65, s=35, st=16 },
 		}, z="Dunland", r=1, td="R20", l="84.7s,16.3w" },
 	["Avardin"] = { t=12, ml=47, ql=69, d={
@@ -2703,7 +2703,7 @@ Locs = {
 		}, z="King's Gondor", a="Belfalas", r=4, l="74.9s,69.4w" },
 	["Ethring(KG)"] = { t=6, ml=115, td="R44", ql=141, d={
 		["Barad Rill"] = { c=120, t=269, l=130, s=180, st=34 },
-		["Calembel(KG)"] = { c=120, t=170, l=130, s=180, st=224 },
+		["Calembel(KG)"] = { c=120, t=170, l=130, s=180, st=24 },
 		["Dinadab"] = { c=120, t=267, l=130, s=180, st=24 },
 		["Dol Amroth(KG)"] = { c=120, t=477, l=130, s=180, st=36 },
 		["Lancrath"] = { c=120, t=376, l=130, s=180, st=23 },
@@ -2745,7 +2745,7 @@ Locs = {
 		["Calembel(KG)"] = { c=120, t=308, l=130, s=180, st=24 },
 		["Dinadab"] = { c=120, t=190, l=130, s=180, st=22 },
 		["Dol Amroth(KG)"] = { c=120, t=535, l=130, s=180, st=38 },
-		["Ethring(KG)"] = { c=120, t=456, l=130, s=180, st24 },
+		["Ethring(KG)"] = { c=120, t=456, l=130, s=180, st=24 },
 		["Lancrath"] = { c=120, t=91, l=130, s=180, st=25 },
 		["Lothgobel"] = { c=120, t=240, l=130, s=180, st=22 },
 		["Ost Lontir"] = { c=120, t=415, l=130, s=180, st=19 },
@@ -3654,7 +3654,7 @@ Locs = {
 		["The Dawn-warden"] = { c=128, t=587, l=-150, s=192, st=22 },
 		["Urmakh"] = { l=-150, s=192, st=11 },
 		["Zajana"] = { l=-150, s=192, st=15 },
-		["Ingaruma"] = { l=-150, t=113, l=-150, s=192, st=16 },
+		["Ingaruma"] = { l=-150, t=113, s=192, st=16 },
 		["Umbar Baharbel(E)"] = { l=150, s=192, st=20 },
 		}, z="Mur Ghala", a="Hatokali Fells", r=5, l="70.3s,89.6w" },
 	["Ingaruma"] = { t=7, ml=145, ql=155, d={
@@ -3662,7 +3662,7 @@ Locs = {
 		["Dur Nagu"] = { c=128, t=500, l=-150, s=192, st=21 },
 		["Nashubu"] = { c=128, t=487, l=-150, s=192, st=21 },
 		["The Dawn-warden"] = { c=128, t=691, l=-150, s=192, st=25 },
-		["Hanamíku"] = { l=-150, t=113, l=-150, s=192, st=15 },
+		["Hanamíku"] = { l=-150, t=113, s=192, st=15 },
 		}, z="Mur Ghala", a="Hatokali Fells", r=5, l="74.8s,85.2w" },
 
 
@@ -4774,7 +4774,22 @@ for name in pairs(Zones) do
 end
 table.sort(zones)
 
+-- Preserve every zone associated with a sub-area.  Several historical area
+-- names legitimately occur in more than one zone; a single Areas[area]=zone
+-- assignment depended on pairs() order and was therefore nondeterministic.
+AreaZones = { }
+for _,t in pairs(Locs) do
+	if t.a then
+		if not AreaZones[t.a] then AreaZones[t.a] = { } end
+		AreaZones[t.a][t.z] = true
+	end
+end
+-- Compatibility view for old code/addons: choose a deterministic zone while
+-- AreaZones remains the authoritative many-to-many mapping.
 Areas = { }
-for n,t in pairs(Locs) do
-	if t.a then Areas[t.a] = t.z end
+for area,zoneSet in pairs(AreaZones) do
+	local zoneList = { }
+	for zone in pairs(zoneSet) do table.insert(zoneList,zone) end
+	table.sort(zoneList)
+	Areas[area] = zoneList[1]
 end

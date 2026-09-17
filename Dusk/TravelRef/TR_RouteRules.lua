@@ -25,12 +25,16 @@ end
 
 -- Keep route calculation and destination display on exactly the same discount
 -- rules, including the special R17/R18 stacking and the global S2 reduction.
-function TR_DiscountRate(code, req, discounts)
+function TR_DiscountRate(code, req, discounts, requirements)
     req = type(req) == "table" and req or {}
     discounts = type(discounts) == "table" and discounts or {}
+    requirements = type(requirements) == "table" and requirements or {}
 
     local rate = 1
-    if code and req[code] then rate = discounts[code] or 1 end
+    if code and req[code] then
+        if discounts[code] then rate = discounts[code]
+        elseif requirements[code] then rate = 0.9 end
+    end
     if code == "R17" and req.R18 then rate = rate - 0.1 end
     if req.S2 then rate = rate * 0.8 end
     return rate

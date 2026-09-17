@@ -3,9 +3,9 @@
   <Information>
 	<Name>TravelRef</Name>
 	<Author>David Down</Author>
-	<Version>3.3.2-FR-r9</Version>
+	<Version>3.3.2-FR-r10</Version>
 	<Image>Dusk/TravelRef/Stable.tga</Image>
-	<Description>TravelRef 3.3.2 FR r9 : prérequis de routage corrigés, fenêtres de voyage francisées et sauvegardes fiabilisées.</Description>
+	<Description>TravelRef 3.3.2 FR r10 : prérequis de routage corrigés, fenêtres de voyage francisées et sauvegardes fiabilisées.</Description>
 	<website>https://github.com/Dusk-92/TravelRef</website>
   </Information>
   <Package>Dusk.TravelRef.TR_Entry</Package>

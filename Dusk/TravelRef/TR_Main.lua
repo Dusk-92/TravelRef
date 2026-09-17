@@ -26,6 +26,18 @@ function TR_FrenchSort(a,b)
     return na < nb
 end
 
+local function TR_AreaZoneList(area)
+    local list = {}
+    local set = type(AreaZones) == "table" and AreaZones[area] or nil
+    if type(set) == "table" then
+        for zone in pairs(set) do table.insert(list,zone) end
+    elseif type(Areas) == "table" and Areas[area] then
+        table.insert(list,Areas[area])
+    end
+    table.sort(list,function(a,b) return TR_FrenchSort(TR_ZoneName(a),TR_ZoneName(b)) end)
+    return list
+end
+
 function print(text) Turbine.Shell.WriteLine("<rgb=#00FFFF>TR:</rgb> "..text) end
 function printh(text) print("<rgb=#00FF00>"..text.."</rgb>") end
 function printe(text) print("<rgb=#FF6040>Erreur : "..text.."</rgb>") end
@@ -64,7 +76,7 @@ end
 local TRv = "Travel Ref. "..Plugins["TravelRef"]:GetVersion()
 
 TR_Opt = Dusk.TravelRef.Common.PluginDataLoad(Turbine.DataScope.Server,"TravelRef_Opt")
-if not TR_Opt then
+if type(TR_Opt) ~= "table" then
     TR_Opt = { SE=true }
 	printh(TRv..", paramètres initialisés.")
 else printh(TRv..", paramètres chargés.") end
@@ -89,7 +101,9 @@ Plugins.TravelRef.Open = function(sender,args)
 end
 
 if TR_Opt and TR_Opt.auto then
-	TR_window:SetPosition(TR_Opt.auto.x, TR_Opt.auto.y)
+	if type(TR_Opt.auto)=="table" and tonumber(TR_Opt.auto.x) and tonumber(TR_Opt.auto.y) then
+		TR_window:SetPosition(TR_Opt.auto.x, TR_Opt.auto.y)
+	end
 	TR_window:SetVisible( true )
 end
 
@@ -142,7 +156,7 @@ local function d2(n)
 end
 
 function TR_Dest( name,d,pl,flag,td )
-	local tdr = TR_DiscountRate(td, TR_req, TD_list)
+	local tdr = TR_DiscountRate(td, TR_req, TD_list, Reqs)
 	if not Locs[name] then
 		printe("Entrée de lieu manquante : '"..TR_LocName(name).."'.")
 		return
@@ -232,22 +246,27 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		TR_Find( args, Locs )
 		return
 	end
-	if cmd=="tra" then
+		if cmd=="tra" then
 		if rawArgs~="" then
 			local str=TR_SearchNorm(rawArgs)
-			local zn
-      		printh("Sous-zones correspondantes :")
-			for area,zone in pairs(Areas) do
+			local matchedZones, matches = {}, 0
+     		printh("Sous-zones correspondantes :")
+			local source = type(AreaZones)=="table" and AreaZones or Areas
+			for area in pairs(source) do
 				local darea = TR_AreaName(area)
 				if TR_SearchNorm(area):find(str,1,true) or TR_SearchNorm(darea):find(str,1,true) then
-					print(darea.." dans "..TR_ZoneName(zone))
-					if zn then zn = true
-					else zn = zone end
+					for _,zone in ipairs(TR_AreaZoneList(area)) do
+						print(darea.." dans "..TR_ZoneName(zone))
+						matchedZones[zone] = true
+						matches = matches + 1
+					end
 				end
 			end
-			if not zn then print("(aucune trouvée)")
-			elseif zn ~= true then
-				TR_window.zoneMenu:SetText( TR_ZoneName(zn) )
+			if matches==0 then print("(aucune trouvée)")
+			else
+				local only,count
+				for zone in pairs(matchedZones) do only,count = zone,(count or 0)+1 end
+				if count==1 then TR_window.zoneMenu:SetText(TR_ZoneName(only)) end
 			end
 		else printe("Aucun nom de sous-zone.") end
 		return
@@ -348,8 +367,11 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 	end
 	if args=="areas" then
 		printh("Sous-zones connues avec des écuries :")
-		for area,zone in Sort(Areas, function(a,b) return TR_FrenchSort(TR_AreaName(a),TR_AreaName(b)) end) do
-			print(TR_AreaName(area).." dans "..TR_ZoneName(zone))
+		local source = type(AreaZones)=="table" and AreaZones or Areas
+		for area in Sort(source, function(a,b) return TR_FrenchSort(TR_AreaName(a),TR_AreaName(b)) end) do
+			for _,zone in ipairs(TR_AreaZoneList(area)) do
+				print(TR_AreaName(area).." dans "..TR_ZoneName(zone))
+			end
 		end
 		return
 	end
@@ -538,18 +560,18 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		return
 	end
 	local areaArg = TR_AreaKey(rawArgs)
-	if Areas[areaArg] then
-		local z = Areas[areaArg]
-		printh("Écuries connues dans "..TR_AreaName(areaArg).." (partie de "..TR_ZoneName(z)..") :")
+	local areaZones = TR_AreaZoneList(areaArg)
+	if #areaZones>0 then
+		printh("Écuries connues dans "..TR_AreaName(areaArg).." :")
 		local Loc_list = {}
 		for name,t in pairs(Locs) do
 			if t.a==areaArg and t.d then table.insert(Loc_list,name) end
 		end
 		table.sort(Loc_list, function(a,b) return TR_FrenchSort(TR_LocName(a),TR_LocName(b)) end)
-		for ix,name in ipairs(Loc_list) do
+		for _,name in ipairs(Loc_list) do
 			local str = TR_LocName(name)
 			if TR_req.NV[name] then str="<rgb=#E01000>"..str.."</rgb>" end
-			print(str.." @ "..Locs[name].l)
+			print(str.." @ "..Locs[name].l.." dans "..TR_ZoneName(Locs[name].z))
 		end
 		return
 	end
@@ -579,13 +601,17 @@ Plugins.TravelRef.Unload = function(sender,args)
 	if pname:sub(1,1)=="~" then return end -- session play?
     -- Sauvegarde explicitement la position de l’icône avant les autres réglages.
     if TR_Launcher and TR_Launcher.SavePosition then TR_Launcher.SavePosition() end
+    if TR_window and TR_window.secs then
+        TR_req.secs = TR_window.secs:GetText()
+        Dusk.TravelRef.Common.PluginDataSave(Character,"Travel_req",TR_req)
+    end
     Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Server,"TravelRef_Opt",TR_Opt)
     print(TRv..", paramètres enregistrés.")
 end
 
 -- Options panel
 import "Dusk.TravelRef.Common.Options"
-if not TR_Opt.scale then TR_Opt.scale = 1 end
+if type(TR_Opt.scale) ~= "number" then TR_Opt.scale = 1 end
 OP,YP = Dusk.TravelRef.Common.Options_Init(print,TR_Opt,TR_window,"TravelRef_Opt",TR_HTwindow)
 
 local SE = Dusk.TravelRef.Common.Options_Box(OP,YP," Définir l’arrivée par défaut")

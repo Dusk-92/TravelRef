@@ -83,7 +83,7 @@ function DropMenu:addItem(menu, name, check)
 	Item.Click = function( sender,args )
 		local selected = sender:GetText()
 		menu:SetText( selected )
-		print( "Selected "..selected )
+		print( "Sélection : "..selected )
 		if menu.action then menu.action(selected) end
 		menu.menu = nil
 	end

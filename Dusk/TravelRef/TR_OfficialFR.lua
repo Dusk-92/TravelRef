@@ -241,7 +241,8 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
         TR_AreaFR = {}
         TR_AreaEN = {}
         local ambiguousArea = {}
-        for area in pairs(Areas) do
+        local AreaSource = type(AreaZones)=="table" and AreaZones or Areas
+        for area in pairs(AreaSource) do
             local key = OfficialNorm(area)
             local fr = CleanOfficial((key and OfficialArea[key]) or area)
             TR_AreaFR[area] = fr

@@ -134,7 +134,7 @@ function ScrollMenu:addItem(menu, name, check, color)
 		local selected = sender:GetText()
 		local menu = ScrollMenu.Menu
 		menu:SetText( selected )
-		print( "Selected "..selected )
+		print( "Sélection : "..selected )
 		if menu.action then menu.action(selected) end
 		ScrollMenu.box:Close()
 		ScrollMenu.Items = nil

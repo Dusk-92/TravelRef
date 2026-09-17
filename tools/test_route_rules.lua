@@ -20,9 +20,9 @@ check(not TR_RequirementCodesMet("R29", {}, false), "swift R29 must require R29"
 
 -- Discount behavior shared by display and route calculation.
 local discounts = {R17=.9, R23=.75}
-check(math.abs(TR_DiscountRate("R23", {R23=true}, discounts) - .75) < 0.000001, "R23 discount")
-check(math.abs(TR_DiscountRate("R23", {R23=true,S2=true}, discounts) - .60) < 0.000001, "R23 + S2 discount")
-check(math.abs(TR_DiscountRate("R17", {R17=true,R18=true}, discounts) - .80) < 0.000001, "R17 + R18 discount")
-check(math.abs(TR_DiscountRate("UNKNOWN", {UNKNOWN=true}, discounts) - 1) < 0.000001, "unknown discount must be safe")
+check(math.abs(TR_DiscountRate("R23", {R23=true}, discounts, requirements) - .75) < 0.000001, "R23 discount")
+check(math.abs(TR_DiscountRate("R23", {R23=true,S2=true}, discounts, requirements) - .60) < 0.000001, "R23 + S2 discount")
+check(math.abs(TR_DiscountRate("R17", {R17=true,R18=true}, discounts, requirements) - .80) < 0.000001, "R17 + R18 discount")
+check(math.abs(TR_DiscountRate("UNKNOWN", {UNKNOWN=true}, discounts, requirements) - 1) < 0.000001, "unknown discount must be safe")
 
 print("TravelRef route-rule tests OK")

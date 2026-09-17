@@ -11,12 +11,12 @@ function Help(help,arg)
     if not arg then
         print(help.help)
     elseif arg=='?' then
-        printh("Possible command arguments:")
+        printh("Arguments de commande possibles :")
         for name,desc in Sort(help.arg) do
             if #name>0 then print(name..' - '..desc) end
         end
     elseif arg=='??' then
-        printh("Possible commands:")
+        printh("Commandes possibles :")
         local str = help.arg[''] or help.arg[' ']
         if str then print(pre..' - '..str) end
         for name,desc in Sort(help.cmd) do
@@ -30,12 +30,12 @@ function Help(help,arg)
     elseif help.cmd and help.cmd[arg] then
         local text = help.cmd[arg]
         if type(text) == "table" then
-            printh("Possible '/"..arg.."' arguments:")
+            printh("Arguments possibles pour '/"..arg.."' :")
             for name,desc in Sort(text) do
                 print(name..' - '..desc)
             end
         else print(arg..' - '..text) end
-    else print("Enter '"..pre.." ?' for arguments, '"..pre.."?' for commands") end
+    else print("Entre '"..pre.." ?' pour les arguments et '"..pre.."?' pour les commandes.") end
 end
 
 function HelpCmd(cmd,args,help)

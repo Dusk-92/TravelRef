@@ -54,6 +54,7 @@ end
 
 local function Action(tbl)
 	local code = tbl.r==Race and tbl.rd or tbl.d
+	if not code then return nil end
 	return Turbine.UI.Lotro.Shortcut(Skill,"0x700"..code)
 end
 
@@ -102,7 +103,7 @@ local function Find_Route(Start,End,pl,ss,ht)
 			for n,t in pairs(d) do dt[n] = t end
 			d = dt
 		else
-            td = TR_DiscountRate(td, TR_req, TD_list)
+            td = TR_DiscountRate(td, TR_req, TD_list, Reqs)
         end
 		for dest,dv in pairs(d) do
 			if not Locs[dest] then printe("Destination manquante="..TR_LocName(dest).." @ "..TR_LocName(loc))
@@ -236,8 +237,8 @@ function TR_Start(Start,pl,ss)
 	elseif plevel>30 then
 		print("Attention : aucun lieu de Retour n’a été défini.")
 	end
-	if TR_req.house then
-		local hn,ht,v = TR_req.house,TR_req.htime
+	if TR_req.house and House[TR_req.house] then
+		local hn,ht,v = TR_req.house,tonumber(TR_req.htime) or 20
 		local ha = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..House[hn])
 		local hs = "Voyage vers maison "..TR_LocName(hn).." -> Écurie de maison(MT) -> "
 --		print("type(.d)="..type(Locs[Hs].d))
@@ -259,7 +260,7 @@ function TR_Start(Start,pl,ss)
 		end
 		if TR_req.dock then
 			local hs = "Voyage vers maison "..TR_LocName(hn).." -> Bateau de maison(MT) -> "
-			local ht = TR_req.dtime
+			local ht = tonumber(TR_req.dtime) or 20
 			for name,dt in pairs(Locs[Dm].d) do
 				if (not dt.l or pl>= dt.l) and Req(dt) and not TR_req.NV[name] then
 					if name==SetLoc then
@@ -692,13 +693,14 @@ function TR_RWindow:Constructor(list,width,title)
 	if not title then -- return/guide/muster/sail?
 		skill = list
 		tb = skill.tb
-		if not TR_req[tb] then TR_req[tb] = {} end
+		if type(TR_req[tb]) ~= "table" then TR_req[tb] = {} end
 		list = {}
 		for name,tbl in pairs(skill) do
-			if #name>2 then 
+			if #name>2 then
 				local tl = tbl.tl
-				if plevel>=tl or tbl.r==Race then -- can it be learned?
-					table.insert(list,name) 
+				local usable = tbl.d or (tbl.r==Race and tbl.rd)
+				if usable and (plevel>=tl or tbl.r==Race) then
+					table.insert(list,name)
 				end
 			end
 		end
@@ -763,7 +765,7 @@ function TR_HTWindow:Constructor()
 	self:SetText( "Voyage maison" )
 	self:SetSize( 250,275 )
 	-- Position the window near the top and to left of center of the screen.
-	local pos = TR_Opt.pos2 or
+	local pos = type(TR_Opt.pos2)=="table" and TR_Opt.pos2 or
 			{ x=Turbine.UI.Display.GetWidth()/3+10, y=self:GetHeight()/2 }
 	self:SetPosition( pos.x, pos.y )
 	if TR_Opt.scale and self.SetScale then self:SetScale(TR_Opt.scale) end
@@ -776,7 +778,7 @@ function TR_HTWindow:Constructor()
 	-- Home label and menu
 	self:AddField(Label, "Choisis la meilleure écurie.", {x=25,y=35}, {x=200,y=16} )
 	self:AddField(Label, "Maison:", {x=15,y=55}, {x=55,y=16} )
-	local name,time,dtime,Skiff = HouseName(None), 20, TR_req.dtime or 20
+	local name,time,dtime,Skiff = HouseName(None), 20, tonumber(TR_req.dtime) or 20, TR_req.dock and true or false
 	if TR_req.house and House[TR_req.house] then
 		name = HouseName(TR_req.house)
 		time = tostring(tonumber(TR_req.htime) or 20)
@@ -873,6 +875,11 @@ TR_window.KeyDown = function(sender, args)
 		TR_Dwindow:SetVisible( false )
 		TR_RTwindow:SetVisible( false )
 		TR_HTwindow:SetVisible( false )
+		if TR_GTwindow then TR_GTwindow:SetVisible(false) end
+		if TR_MTwindow then TR_MTwindow:SetVisible(false) end
+		if TR_STwindow then TR_STwindow:SetVisible(false) end
+		TR_req.secs = TR_window.secs:GetText()
+		Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
 	end
 end
 

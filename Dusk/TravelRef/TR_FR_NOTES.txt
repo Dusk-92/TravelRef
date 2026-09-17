@@ -95,3 +95,14 @@ Correctifs FR r2
 - PluginData localisé sans modifier globalement l’API Turbine et sans loadstring.
 - Traductions FR supplémentaires dans les options et les listes de compétences.
 - Métadonnées de version remises à niveau.
+
+
+Correctifs FR r10 :
+- Audit de release permanent : données, routage, recherches de coordonnées et source Lua.
+- Correction de 18 anomalies historiques de TR_Data (champs dupliqués, valeurs décalées et st24).
+- Restauration de la réduction générique 10 % pour les anciens codes connus comme Q8.
+- Correction de /trv ;loc : les coffres peuvent de nouveau être trouvés par coordonnées.
+- Sous-zones multi-régions gérées via AreaZones sans dépendre de l’ordre de pairs().
+- Compétences raciales Retour filtrées pour éviter une action inexistante.
+- Sauvegardes maison/temps et options anciennes davantage sécurisées.
+- Aide et messages génériques restants traduits en français.
