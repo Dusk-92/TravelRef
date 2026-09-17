@@ -67,7 +67,7 @@ local function Find_Dest(loc,noprint)
 		if name==loc then
 			if noprint then return true end
 			print("Jalon trouvé vers "..TR_LocName(name))
-			w = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..Miles[tonumber(ix)])
+			local w = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..Miles[tonumber(ix)])
 			TR_window.Slot:SetShortcut(w)
 			return true
 		end
@@ -85,7 +85,7 @@ local function Find_Route(Start,End,pl,ss,ht)
 		if MRD and loc:sub(-3)=="(R)" then 
 		--	print(loc.."->"..MRD)
 			td = 1
-			dt = { [MRD] = R_Dest[MRD] }
+			local dt = { [MRD] = R_Dest[MRD] }
 			for n,t in pairs(d) do dt[n] = t end
 			d = dt
 		else td = td and TR_req[td] and 0.9 or 1 end

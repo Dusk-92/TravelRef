@@ -4,23 +4,26 @@
 -- Internal travel/location keys stay in English. This layer only changes
 -- labels shown to the player. Any localization failure is contained by pcall.
 
-local function TR_OfficialSafeImport(moduleName)
-    local ok = pcall(import, moduleName)
-    return ok
+local function TR_OfficialSafeImport(moduleName, required)
+    local ok, err = pcall(import, moduleName)
+    if not ok and required then
+        error("échec import "..moduleName.." : "..tostring(err))
+    end
+    return ok, err
 end
 
 local TR_OfficialOK, TR_OfficialError = pcall(function()
-    TR_OfficialSafeImport("Dusk.TravelRef.Common.noAccent")
+    TR_OfficialSafeImport("Dusk.TravelRef.Common.noAccent", false)
 
     TR_OfficialZoneRaw = {}
     TR_OfficialLocRaw = {}
     TR_OfficialAreaRaw = {}
-    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data1")
-    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data2")
-    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data3")
-    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data4")
-    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data5")
-    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto")
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data1", true)
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data2", true)
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data3", true)
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data4", true)
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Data5", true)
+    TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)
 
     -- TravelRef uses a few shortened/old internal names which do not exist as
     -- exact English labels in the current client data. These French values are
@@ -191,14 +194,25 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
     end
 
     if type(TR_ZoneFR) == "table" then
-        for en in pairs(TR_ZoneFR) do
+        local function applyZone(en)
+            if type(en) ~= "string" then return end
             local lookup = ZoneAliases[en] or en
             local key = OfficialNorm(lookup)
             local fr = key and OfficialZone[key] or nil
-            if fr then TR_ZoneFR[en] = fr end
+            if fr then TR_ZoneFR[en] = CleanOfficial(fr)
+            elseif TR_ZoneFR[en] == nil then TR_ZoneFR[en] = en end
+        end
+        for en in pairs(TR_ZoneFR) do applyZone(en) end
+        if type(zones) == "table" then
+            for _,en in ipairs(zones) do applyZone(en) end
+        end
+        if type(Zones) == "table" then
+            for en in pairs(Zones) do applyZone(en) end
         end
         TR_ZoneEN = {}
-        for en,fr in pairs(TR_ZoneFR) do TR_ZoneEN[fr] = en end
+        for en,fr in pairs(TR_ZoneFR) do
+            if TR_ZoneEN[fr] == nil then TR_ZoneEN[fr] = en end
+        end
     end
 
     -- Keep internal area keys immutable; translate display/reverse lookup only.

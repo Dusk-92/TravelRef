@@ -16,6 +16,15 @@ modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stoneja
 Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
 mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
 
+Correctifs FR r5
+----------------
+- Recherche /trf et /tra sur les libellés français, avec tolérance aux accents.
+- Les futures zones TravelRef sont ajoutées dynamiquement à la couche d’affichage FR.
+- Les imports de données FR obligatoires signalent précisément le module en erreur.
+- Suppression de plusieurs variables globales accidentelles (dt, w, dest, z, pname).
+- Affichage FR des noms de coffres et traduction des diagnostics internes.
+- Validation Lua 5.1 et contrôles de couverture prévus dans GitHub Actions.
+
 Correctifs FR r4
 ----------------
 - Couche FR chargée après TR_Data et avant la création de la fenêtre.

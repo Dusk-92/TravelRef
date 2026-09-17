@@ -3,9 +3,9 @@
   <Information>
 	<Name>TravelRef</Name>
 	<Author>David Down</Author>
-	<Version>3.3.2-FR-r4</Version>
+	<Version>3.3.2-FR-r5</Version>
 	<Image>Dusk/TravelRef/Stable.tga</Image>
-	<Description>TravelRef 3.3.2 FR r4 : interface française, noms officiels LOTRO des lieux/zones/sous-zones, routage conservé sur les clés internes et icône flottante.</Description>
+	<Description>TravelRef 3.3.2 FR r5 : interface et recherches françaises, noms officiels LOTRO, routage conservé sur les clés internes et validation automatique.</Description>
 	<website>http://www.lotrointerface.com/downloads/info524</website>
   </Information>
   <Package>Dusk.TravelRef.TR_Main</Package>

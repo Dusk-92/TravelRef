@@ -12,6 +12,12 @@ end
 if type(TR_AreaName) ~= "function" then function TR_AreaName(name) return name end end
 if type(TR_AreaKey) ~= "function" then function TR_AreaKey(name) return name end end
 
+local function TR_SearchNorm(value)
+    value = tostring(value or "")
+    if type(noAccent) == "function" then value = noAccent(value) end
+    return string.lower(value)
+end
+
 function print(text) Turbine.Shell.WriteLine("<rgb=#00FFFF>TR:</rgb> "..text) end
 function printh(text) print("<rgb=#00FF00>"..text.."</rgb>") end
 function printe(text) print("<rgb=#FF6040>Erreur : "..text.."</rgb>") end
@@ -170,10 +176,10 @@ function Loc_Find(r, y, x, locs, flg)
 	for loc,t in pairs(locs) do
 		if flg then name = t; tbl = Locs[t]
 		else name = loc; tbl = t; end
-		if not tbl then printe("no loc for "..t) end
+		if not tbl then printe("Aucun lieu défini pour "..t) end
 		if (flg or tbl.d) and tbl.r==r or not r then
 			local y0,x0 = tbl.l:match(Coord)
-			if not y0 then printe("Bad Loc for "..name) return end
+			if not y0 then printe("Coordonnées invalides pour "..TR_LocName(name)) return end
 			y2,x2 = locV(y0,"Ss"), locV(x0,"Ww")
 			d = distance(y1-y2,x1-x2)
 			if d<d1 then d1 = d; ln = r and name or tbl.n; c = tbl.l end
@@ -209,12 +215,12 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 	end
 	if cmd=="tra" then
 		if rawArgs~="" then
-			local str=rawArgs:lower()
+			local str=TR_SearchNorm(rawArgs)
 			local zn
       		printh("Sous-zones correspondantes :")
 			for area,zone in pairs(Areas) do
 				local darea = TR_AreaName(area)
-				if area:lower():find(str,1,true) or darea:lower():find(str,1,true) then
+				if TR_SearchNorm(area):find(str,1,true) or TR_SearchNorm(darea):find(str,1,true) then
 					print(darea.." dans "..TR_ZoneName(zone))
 					if zn then zn = true
 					else zn = zone end
@@ -236,13 +242,14 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		return
 	end
 	if cmd=="trf" then
-		if args~="" then
-			local str=args:lower()
+		if rawArgs~="" then
+			local str=TR_SearchNorm(rawArgs)
 			local ln
       		printh("Lieux correspondants :")
 			for name,loc in pairs(Locs) do
-				if name:lower():find(str,1,true) then
-					print(TR_LocName(name).." dans "..TR_ZoneName(loc.z))
+				local dname = TR_LocName(name)
+				if TR_SearchNorm(name):find(str,1,true) or TR_SearchNorm(dname):find(str,1,true) then
+					print(dname.." dans "..TR_ZoneName(loc.z))
 					if ln then ln = true
 					else ln = name end
 				end
@@ -419,7 +426,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		for reg,t in pairs(Vaults) do
 			for ix,loc in ipairs(t) do
 				if loc.z==zone then
-					print(loc.n.." @ "..loc.l)
+					print(TR_LocName(loc.n).." @ "..loc.l)
 					n = n+1
 				end
 			end
@@ -495,7 +502,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 			print(string.format("<rgb=#00FF00>%s @ %s dans %s - destinations :</rgb>",TR_LocName(args),t.l,z))
 		elseif args==Hs then printh("Destinations de voyage depuis l’écurie de maison :")
 		else printh("Destinations de voyage en bateau depuis la maison :") end
-		dest = { }
+		local dest = { }
 		for name in pairs(t.d) do
 			table.insert(dest,name)
 		end
@@ -513,7 +520,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 	end
 	local areaArg = TR_AreaKey(rawArgs)
 	if Areas[areaArg] then
-		z = Areas[areaArg]
+		local z = Areas[areaArg]
 		printh("Écuries connues dans "..TR_AreaName(areaArg).." (partie de "..TR_ZoneName(z)..") :")
 		local Loc_list = {}
 		for name,t in pairs(Locs) do
@@ -552,7 +559,7 @@ end
 Turbine.Shell.AddCommand( "tr;tra;trv;trl;trf;trr;trc;tr?",TR_Command )
 
 Plugins.TravelRef.Unload = function(sender,args)
-	pname = player:GetName()
+	local pname = player:GetName()
 	if pname:sub(1,1)=="~" then return end -- session play?
     -- Sauvegarde explicitement la position de l’icône avant les autres réglages.
     if TR_Launcher and TR_Launcher.SavePosition then TR_Launcher.SavePosition() end
