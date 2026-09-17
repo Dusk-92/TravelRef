@@ -24,4 +24,5 @@ jobs:
           git add tools/TR_RequirementsFR_Audit.txt
           git diff --cached --quiet && exit 0
           git commit -m "Audit official French TravelRef requirements"
+          git pull --rebase origin main
           git push
