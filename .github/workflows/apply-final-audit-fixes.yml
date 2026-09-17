@@ -1,0 +1,67 @@
+name: Apply final TravelRef audit fixes
+
+on:
+  push:
+    paths:
+      - "tools/apply_final_audit_fixes.py"
+      - ".github/workflows/apply-final-audit-fixes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate patcher
+        run: python3 -m py_compile tools/apply_final_audit_fixes.py
+
+      - name: Apply fixes
+        run: python3 tools/apply_final_audit_fixes.py
+
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+
+      - name: Validate Lua syntax
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            "$LUAC" -p "$file"
+          done
+
+      - name: Static regression checks
+        run: |
+          grep -F 'local function TR_SearchNorm' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local dest = { }' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local z = Areas[areaArg]' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local pname = player:GetName()' Dusk/TravelRef/TR_Main.lua
+          grep -F 'local dt = { [MRD] = R_Dest[MRD] }' Dusk/TravelRef/TR_Window.lua
+          grep -F 'local w = Turbine.UI.Lotro.Shortcut' Dusk/TravelRef/TR_Window.lua
+          grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'for _,en in ipairs(zones) do applyZone(en) end' Dusk/TravelRef/TR_OfficialFR.lua
+          ! grep -F 'printe("no loc for "' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'printe("Bad Loc for "' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'print(loc.n.." @ "..loc.l)' Dusk/TravelRef/TR_Main.lua
+          git diff --check
+
+      - name: Validate plugin XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
+
+      - name: Commit fixes
+        run: |
+          if [ -z "$(git status --porcelain -- Dusk/TravelRef/TR_Main.lua Dusk/TravelRef/TR_Window.lua Dusk/TravelRef/TR_OfficialFR.lua Dusk/TravelRef/TR_FR_NOTES.txt Dusk/TravelRef.plugin)" ]; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Dusk/TravelRef/TR_Main.lua Dusk/TravelRef/TR_Window.lua Dusk/TravelRef/TR_OfficialFR.lua Dusk/TravelRef/TR_FR_NOTES.txt Dusk/TravelRef.plugin
+          git commit -m "Harden TravelRef FR r5"
+          git push
