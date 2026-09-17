@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """Generate TravelRef official French labels from LotroCompanion/lotro-data.
 
-The generator joins English and French LOTRO labels by the SAME localization
-key. It then keeps only labels that can be matched to names actually present
-in TravelRef's TR_Data.lua. Internal TravelRef keys are never modified.
+English and French labels are always joined by the SAME LOTRO localization key.
+Only names actually used by TravelRef's travel-location database are emitted;
+internal route keys remain untouched.
 """
 
 from __future__ import annotations
@@ -23,7 +23,8 @@ OUT = ROOT / "Dusk" / "TravelRef" / "TR_OfficialFR_Auto.lua"
 REPORT = ROOT / "tools" / "TR_OfficialFR_Audit.txt"
 
 BASE = "https://raw.githubusercontent.com/LotroCompanion/lotro-data/master/lore/labels"
-# Priority matters: travel UI labels are the best semantic match for TravelRef.
+# Priority matters: TravelRef is a travel addon, so travel UI labels win over
+# generic landmark/area labels when both exist.
 SOURCES = [
     ("travelsMap.xml", 0),
     ("travelsWeb.xml", 1),
@@ -39,10 +40,14 @@ TRAVEL_SUFFIX_RE = re.compile(
 )
 PAREN_SUFFIX_RE = re.compile(r"\s*\([^()]+\)\s*$")
 
-# Known old TravelRef spellings/typos which cannot be recovered safely by
-# accent/punctuation normalization alone. Values are official English labels.
+# Old TravelRef spellings/typos which cannot safely be recovered by mere
+# accent/punctuation normalization. Values are current official EN labels.
 LEGACY_EN_ALIASES = {
+    "Aethir": "Aerthir",
+    "Echad Dunnan": "Echad Dúnann",
+    "Falathorn Homesteads": "Falathlorn Homesteads",
     "Sudultirh Outpost": "Sudulthurkh Outpost",
+    "The Vinyards of Lorien": "The Vineyards of Lórien",
     "Great River": "The Great River",
     "West Rohan": "Western Rohan",
     "East Gondor": "Eastern Gondor",
@@ -93,20 +98,37 @@ def official_aliases(value: str) -> set[str]:
         if item.lower().startswith("the "):
             values.add(item[4:].strip())
 
-    # Some modern labels use ', the ...' as an explanatory qualifier.
     for item in list(values):
         values.add(re.sub(r",\s+the\s+.+$", "", item, flags=re.I).strip())
 
     return {item for item in values if item}
 
 
+def section(text: str, start_marker: str, end_marker: str) -> str:
+    start = text.find(start_marker)
+    if start < 0:
+        raise RuntimeError(f"Missing section start: {start_marker}")
+    end = text.find(end_marker, start + len(start_marker))
+    if end < 0:
+        raise RuntimeError(f"Missing section end: {end_marker}")
+    return text[start:end]
+
+
 def extract_travelref_names(text: str) -> tuple[set[str], set[str], set[str]]:
-    # Every bracket key catches locations and destinations in Locs/R_Dest.
-    bracket_keys = set(re.findall(r'\["((?:\\.|[^"\\])*)"\]\s*=', text))
-    # Explicit location-ish fields used elsewhere by TravelRef.
-    named = set(re.findall(r'\bn\s*=\s*"((?:\\.|[^"\\])*)"', text))
-    zones = set(re.findall(r'\bz\s*=\s*"((?:\\.|[^"\\])*)"', text))
-    areas = set(re.findall(r'\ba\s*=\s*"((?:\\.|[^"\\])*)"', text))
+    """Extract only real travel nodes/destinations, zones and areas.
+
+    This intentionally ignores Barter, Return metadata, NPC names, item IDs,
+    etc. The previous broad audit counted those as false-positive 'places'.
+    """
+    r_dest = section(text, "R_Dest = {", "R_Locs = {")
+    locs = section(text, "Locs = {", "\nrType =")
+    travel_text = r_dest + "\n" + locs
+
+    bracket_keys = set(re.findall(r'\["((?:\\.|[^"\\])*)"\]\s*=', travel_text))
+    # In Locs, n= is an alternate display/location name, not a barter NPC.
+    named = set(re.findall(r'\bn\s*=\s*"((?:\\.|[^"\\])*)"', locs))
+    zones = set(re.findall(r'\bz\s*=\s*"((?:\\.|[^"\\])*)"', locs))
+    areas = set(re.findall(r'\ba\s*=\s*"((?:\\.|[^"\\])*)"', locs))
 
     def clean(items: set[str]) -> set[str]:
         out = set()
@@ -116,21 +138,20 @@ def extract_travelref_names(text: str) -> tuple[set[str], set[str], set[str]]:
                 out.add(item)
         return out
 
-    locations = clean(bracket_keys | named)
-    return locations, clean(zones), clean(areas)
+    return clean(bracket_keys | named), clean(zones), clean(areas)
 
 
-def choose(records: list[tuple[int, str, str, str]]) -> tuple[str, str, str] | None:
-    """Pick the highest-priority unambiguous FR label."""
+def choose(records: list[tuple[int, int, str, str, str]]) -> tuple[str, str, str] | None:
+    """Pick highest-priority, then most exact, unambiguous official label."""
     if not records:
         return None
-    best_priority = min(row[0] for row in records)
-    best = [row for row in records if row[0] == best_priority]
-    french = {row[2] for row in best}
+    best_rank = min((row[0], row[1]) for row in records)
+    best = [row for row in records if (row[0], row[1]) == best_rank]
+    french = {row[3] for row in best}
     if len(french) != 1:
         return None
-    row = sorted(best, key=lambda r: (len(r[1]), r[1]))[0]
-    return row[2], row[1], row[3]
+    row = sorted(best, key=lambda r: (len(r[2]), r[2]))[0]
+    return row[3], row[2], row[4]
 
 
 def lua_quote(value: str) -> str:
@@ -162,21 +183,20 @@ def main() -> None:
 
     def match(name: str):
         base = strip_internal_suffix(name)
-        search_names = [base]
-        if base.lower().startswith("the "):
-            search_names.append(base[4:].strip())
+        search_names = []
         legacy = LEGACY_EN_ALIASES.get(base)
         if legacy:
-            search_names.insert(0, legacy)
+            search_names.append(legacy)
+        search_names.append(base)
+        if base.lower().startswith("the "):
+            search_names.append(base[4:].strip())
 
-        # Exact official labels first.
         for candidate in search_names:
-            result = choose(exact.get(norm(candidate), []))
-            if result:
-                return result
-        # Then conservative aliases such as stripped travel/region qualifiers.
-        for candidate in search_names:
-            result = choose(aliases.get(norm(candidate), []))
+            key = norm(candidate)
+            records = []
+            records += [(p, 0, en, fr, src) for p, en, fr, src in exact.get(key, [])]
+            records += [(p, 1, en, fr, src) for p, en, fr, src in aliases.get(key, [])]
+            result = choose(records)
             if result:
                 return result
         return None
@@ -215,8 +235,14 @@ def main() -> None:
         "",
     ]
 
+    # Suffix variants such as (B)/(R)/(KG) share the same display base, so emit
+    # each base only once.
+    emitted = set()
     for name, (fr, en_official, source) in sorted(loc_matches.items(), key=lambda x: x[0].lower()):
         base = strip_internal_suffix(name)
+        if base in emitted:
+            continue
+        emitted.add(base)
         lines.append(
             f"TR_OfficialLocRaw[{lua_quote(base)}] = {lua_quote(fr)} -- {source}: {en_official}"
         )
@@ -235,8 +261,6 @@ def main() -> None:
 
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    # The unresolved list intentionally includes non-location keys from the Lua
-    # database too; it is an audit aid, not a claim that every line needs FR.
     report = [
         "TravelRef official French localization audit",
         "===========================================",
@@ -246,18 +270,20 @@ def main() -> None:
     report += [f"- {name}: {count} paired EN/FR labels" for name, count in loaded_sources]
     report += [
         "",
-        f"TravelRef location-like names extracted: {len(locations)}",
-        f"Matched location-like names: {len(loc_matches)}",
+        f"Real TravelRef location/destination names extracted: {len(locations)}",
+        f"Matched location/destination names: {len(loc_matches)}",
+        f"Unmatched location/destination names: {len(unresolved)}",
         f"Zone names extracted: {len(zones)} / matched: {len(zone_matches)}",
         f"Area names extracted: {len(areas)} / matched: {len(area_matches)}",
         "",
-        "Unresolved extracted names (includes non-location database keys):",
+        "Unmatched real TravelRef location/destination names:",
     ]
     report += [f"- {name}" for name in sorted(unresolved, key=str.lower)]
     REPORT.write_text("\n".join(report) + "\n", encoding="utf-8")
 
-    print(f"Generated {OUT.relative_to(ROOT)} with {len(loc_matches)} location mappings")
-    print(f"Matched {len(zone_matches)} zones and {len(area_matches)} areas")
+    print(f"Generated {OUT.relative_to(ROOT)} with {len(emitted)} unique location mappings")
+    print(f"Matched {len(loc_matches)}/{len(locations)} TravelRef location/destination names")
+    print(f"Matched {len(zone_matches)}/{len(zones)} zones and {len(area_matches)}/{len(areas)} areas")
     print(f"Audit report: {REPORT.relative_to(ROOT)}")
 
 
