@@ -43,8 +43,8 @@ PAREN_SUFFIX_RE = re.compile(r"\s*\([^()]+\)\s*$")
 ACTION_PREFIX_RE = re.compile(r"^(?:To|Travel to|Boat to)\s+", re.IGNORECASE)
 EAGLE_SUFFIX_RE = re.compile(r"\s*-\s*Eagle\s*$", re.IGNORECASE)
 
-# Old TravelRef spellings/typos which cannot safely be recovered by mere
-# accent/punctuation normalization. Values are current official EN labels.
+# Old/short TravelRef names mapped to their current official English label.
+# The EN value is then joined to FR by the SAME LOTRO localization ID.
 LEGACY_EN_ALIASES = {
     "Aethir": "Aerthir",
     "Bloody Eagle Tavern": "The Bloody Eagle Tavern",
@@ -53,7 +53,7 @@ LEGACY_EN_ALIASES = {
     "Hall Under the Mtn": "Hall Under the Mountain",
     "Sudultirh Outpost": "Sudulthurkh Outpost",
     "The Vinyards of Lorien": "The Vineyards of Lórien",
-    "To Mins Tirith, Before the Battle": "Minas Tirith (before battle)",
+    "To Mins Tirith, Before the Battle": "Minas Tirith",
     "Great River": "The Great River",
     "West Rohan": "Western Rohan",
     "East Gondor": "Eastern Gondor",
@@ -64,6 +64,17 @@ LEGACY_EN_ALIASES = {
     "the War-stead": "War-stead of the Rohirrim",
     "Ruins of Dol Guldur": "Dol Guldur (razed)",
     "To Minas Tirith, Before the Battle": "Minas Tirith",
+    "Azanulbizar": "Tales of Yore: Azanulbizar",
+    "Strongholds": "Strongholds of the North",
+    "Zirer Tarka": "The Shield Isles",
+    "Belfalas": "The Havens of Belfalas (King's Gondor)",
+    "Dor-en-Emil": "Dor-en-Ernil (King's Gondor)",
+    "Fearwater": "Sûg Nidar, the Fearwater",
+    "the berths": "Dil-irmíz, The Berths",
+    "the cellars": "Tâkhdar, The Cellars",
+    "the crypts": "Khabârkhad, The Crypts",
+    "the vaults": "Kamrabezûr, The Vaults",
+    "the wells": "Ilmabiri, The Wells",
 }
 
 
@@ -98,20 +109,15 @@ def strip_internal_suffix(value: str) -> str:
 def official_aliases(value: str) -> set[str]:
     """Conservative aliases for historical TravelRef naming differences."""
     values = {value.strip()}
-
     no_travel = TRAVEL_SUFFIX_RE.sub("", value).strip()
     values.add(no_travel)
-
     for item in list(values):
         values.add(PAREN_SUFFIX_RE.sub("", item).strip())
-
     for item in list(values):
         if item.lower().startswith("the "):
             values.add(item[4:].strip())
-
     for item in list(values):
         values.add(re.sub(r",\s+the\s+.+$", "", item, flags=re.I).strip())
-
     return {item for item in values if item}
 
 
@@ -127,21 +133,17 @@ def travelref_candidates(value: str) -> list[str]:
     for item in list(values):
         add(ACTION_PREFIX_RE.sub("", item))
         add(EAGLE_SUFFIX_RE.sub("", item))
-
     for item in list(values):
         add(EAGLE_SUFFIX_RE.sub("", ACTION_PREFIX_RE.sub("", item)))
-
     for item in list(values):
         add(re.sub(r"\bHousing\b", "Homesteads", item, flags=re.I))
         add(re.sub(r",\s*After the Battle$", " (after battle)", item, flags=re.I))
         add(re.sub(r",\s*Before the Battle$", " (before battle)", item, flags=re.I))
-
     for item in list(values):
         if item.lower().startswith("the "):
             add(item[4:])
         else:
             add("The " + item)
-
     return values
 
 
