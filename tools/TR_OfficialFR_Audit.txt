@@ -1,0 +1,159 @@
+TravelRef official French localization audit
+===========================================
+
+Official sources loaded:
+- travelsMap.xml: 383 paired EN/FR labels
+- travelsWeb.xml: 5771 paired EN/FR labels
+- dungeons.xml: 1299 paired EN/FR labels
+- landmarks.xml: 2734 paired EN/FR labels
+- geoAreas.xml: 768 paired EN/FR labels
+
+TravelRef location-like names extracted: 602
+Matched location-like names: 459
+Zone names extracted: 47 / matched: 40
+Area names extracted: 83 / matched: 73
+
+Unresolved extracted names (includes non-location database keys):
+- 0AC2B
+- 0AC5F
+- 18E34
+- 1F098
+- 1F099
+- 20A7C
+- 20A7E
+- 2C4ED
+- 2E28D
+- 32BB7
+- 3391C
+- 366C8
+- 3E365
+- 3EF49
+- 3EF4A
+- 411F5
+- 440D9
+- 44EEC
+- 45BED
+- 487E5
+- 4CB62
+- 4E31F
+- 5278D
+- 52993
+- 53682
+- 56D17
+- 57CBA
+- 591B8
+- 59346
+- 59FCB
+- 5A640
+- 5BD07
+- 605CE
+- 60759
+- 61B80
+- 6330C
+- 65032
+- 65F33
+- 67CC0
+- 67CC3
+- 6B23F
+- 6F4C4
+- a-b Minas Tirith
+- a-b Osgiliath
+- Aethir
+- Afwald
+- Aldburg Auction
+- Aldburg Crafting
+- Aphamâr
+- Azanulbizar
+- Baglan
+- Bar Thorenion
+- Beriawen
+- Blazon of the Great Alliance
+- Blazon of the Last Alliance
+- Bloody Eagle Tavern
+- Bloody Eagle Tavern(R)
+- Boat to Lothlorien
+- Boat to Mirkwood
+- Bree Auction
+- Bree Crafting
+- Bree Vault
+- Cape of Belfalas
+- Cape of Belfalas East
+- Cape of Belfalas Housing
+- Cape of Belfalas South
+- Cape of Belfalas West
+- Cape of Umbar
+- Court of Lothlorien
+- Dori
+- Dunlending Qm
+- East Angmar
+- Echad Dunnan
+- Elladan
+- Estellien
+- Ethelmund
+- Falathorn Homesteads
+- Forlaw Crafting
+- Frideric the Elder
+- Galtrev Auction
+- Galtrev Crafting
+- Hall Under the Mtn
+- Harwick Crafting
+- Herne Auction
+- Horace Roxhythe
+- Horin
+- Irvo Curch
+- Kettil
+- Kinship
+- Kinship Member's
+- Lalia
+- Ledger-keepers
+- Legrindavor
+- Mabon
+- Maerchiniath
+- Malenfileg
+- March of the King
+- Merry
+- Michel Delving Crafting
+- Millaesil
+- Mur Ghala
+- Nekhur
+- Noble Gate
+- Northern Shore(B)
+- Order of the Eagle
+- Ordlaf
+- Ost Galadh Crafting
+- Outer Gondor
+- Personal
+- Premium
+- Prince Imrahil
+- Quickbeam
+- return
+- Ruins of Dol Guldur
+- Rusu
+- Snowbourn Auction
+- Snowbourn Crafting
+- Southern Shore(B)
+- Strongholds
+- Tad Leafcuter
+- The Carrock - Eagle
+- The Eyrie - Eagle
+- The Vinyards of Lorien
+- the War-stead
+- Tinúriel
+- To Kings End
+- To Minas Tirith, After the Battle
+- To Minas Tirith, Before the Battle
+- To Mins Tirith, Before the Battle
+- To Riders' Stand
+- To the Cape of Belfalas
+- To the Field of Onslaught
+- To the Ruin of Pel Duven
+- To the Threshold of the City
+- Torcal
+- Torth
+- Tracery Archives
+- Travel to Dol Amroth
+- Umbar Baharbel North
+- Upper Ward
+- Vorthur Smokebreath
+- West Angmar
+- Zirer Tarka
