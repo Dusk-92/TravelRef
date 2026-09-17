@@ -4,6 +4,7 @@ import "Turbine"
 import "Turbine.Gameplay"
 import "Dusk.TravelRef.Common"
 import "Dusk.TravelRef.TR_Data"
+import "Dusk.TravelRef.TR_RouteRules"
 
 local frOk, frErr = pcall(import, "Dusk.TravelRef.TR_OfficialFR")
 if not frOk and Turbine and Turbine.Shell then
@@ -46,7 +47,7 @@ Race = player:GetRace()
 PC = player:GetClass()
 TR_req = Dusk.TravelRef.Common.PluginDataLoad(Character,"Travel_req")
 if type(TR_req) ~= "table" then TR_req = {S0=true} end
-if not TR_req.NV then TR_req.NV = {} end
+if type(TR_req.NV) ~= "table" then TR_req.NV = {} end
 -- r7: migrate the historical top-level "not visited" flags into the single
 -- NV table used by the UI and route finder.
 local TR_nvMigrated = false
@@ -141,8 +142,7 @@ local function d2(n)
 end
 
 function TR_Dest( name,d,pl,flag,td )
-	local tdr = TR_req[td] and TD_list[td] or 1
-	if td=="R17" and TR_req.R18 then tdr = tdr-0.1 end -- special case
+	local tdr = TR_DiscountRate(td, TR_req, TD_list)
 	if not Locs[name] then
 		printe("Entrée de lieu manquante : '"..TR_LocName(name).."'.")
 		return
@@ -159,7 +159,6 @@ function TR_Dest( name,d,pl,flag,td )
 		end
 		str = str..TR_lvl(l,pl)
 	end
-	if TR_req.S2 then tdr = tdr*0.8 end -- Global 20% discount?
 	local dr = d.r
 	if dr and dr:find(",") then -- req for c
 		local i = dr:find(",")

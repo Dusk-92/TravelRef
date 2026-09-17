@@ -16,6 +16,17 @@ modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stoneja
 Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
 mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
 
+Correctifs FR r9
+----------------
+- Correction du routage des exigences mixtes comme R29,Q6 : le voyage normal exige désormais Q6, tandis que le voyage rapide exige bien R29 + Q6.
+- Ajout de règles de routage pures testées automatiquement en Lua 5.1 pour les prérequis et réductions.
+- Calcul des réductions partagé entre l’affichage des destinations et le routeur afin d’éviter toute divergence future.
+- Les fenêtres Retour/Guide/Ralliement/Navigation trient et affichent désormais les destinations avec leurs noms français.
+- Les cases des prérequis et compétences sont sauvegardées immédiatement au clic, même si la fenêtre est ensuite masquée avec Échap.
+- Le menu Voyage maison affiche des libellés français tout en conservant les clés internes anglaises dans les sauvegardes.
+- Choisir « <aucune> » pour la maison nettoie aussi les anciens temps et l’option de quai devenus inutiles.
+- Les tables NV/MS corrompues ou d’un ancien type sont réinitialisées proprement.
+
 Correctifs FR r8
 ----------------
 - Les listes /tr <zone> et /tr <sous-zone> utilisent désormais TR_req.NV pour l’état non visité.

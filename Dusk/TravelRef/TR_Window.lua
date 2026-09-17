@@ -29,14 +29,27 @@ local Qsize = 36
 local SetLoc, NoReq, SetEnd, SetFind, MRD, Blank, gmsw
 Ms_list = {"1","2","3","4","5","6","7","8","9","10","11"}
 
+local HouseDisplay = {
+    [None] = "<aucune>",
+    ["Personal"] = "Maison personnelle",
+    ["Kinship"] = "Maison de confrérie",
+    ["Premium"] = "Maison premium",
+    ["Kinship Member's"] = "Maison d’un membre de confrérie",
+}
+local HouseReverse = {}
+for key,label in pairs(HouseDisplay) do HouseReverse[label] = key end
+local function HouseName(key) return HouseDisplay[key] or key end
+local function HouseKey(label) return HouseReverse[label] or label end
+local HouseMenuFR = { HouseName(None) }
+local HouseRest = {}
+for key in pairs(House) do table.insert(HouseRest, HouseName(key)) end
+table.sort(HouseRest, TR_FrenchSort)
+for _,label in ipairs(HouseRest) do table.insert(HouseMenuFR, label) end
+
 function Req(dv)
-	if not (TR_req.S0 or dv.S0 or NoReq) then return end
-	local code = dv.r
-	if not code or NoReq then return true end
-	for s in string.gmatch(code,"%u%d+") do
-		if not TR_req[s] then return false end
-	end
-	return true
+	if NoReq then return true end
+	if not (TR_req.S0 or dv.S0) then return end
+	return TR_RequirementCodesMet(dv.r, TR_req, false)
 end
 
 local function Action(tbl)
@@ -89,10 +102,7 @@ local function Find_Route(Start,End,pl,ss,ht)
 			for n,t in pairs(d) do dt[n] = t end
 			d = dt
 		else
-            local tdCode = td
-            td = tdCode and TR_req[tdCode] and (TD_list[tdCode] or 1) or 1
-            if tdCode=="R17" and TR_req.R18 then td = td-0.1 end
-            if TR_req.S2 then td = td*0.8 end
+            td = TR_DiscountRate(td, TR_req, TD_list)
         end
 		for dest,dv in pairs(d) do
 			if not Locs[dest] then printe("Destination manquante="..TR_LocName(dest).." @ "..TR_LocName(loc))
@@ -102,7 +112,7 @@ local function Find_Route(Start,End,pl,ss,ht)
 				if dv.s and (not l or pl>=l) and Req(dv) then
 					s,c,t = true, dv.s, dv.st or 20
 				elseif c and (not l or dv.l>0 or pl>=l) and
-						not (dv.r and dv.r:sub(1,1)==',' and not Req(dv)) then
+						(NoReq or TR_RequirementCodesMet(dv.r, TR_req, true)) then
 					t = dv.t or 60
 				elseif dv.mt then
 					c,t,s = 0,dv.mt,false
@@ -664,7 +674,8 @@ function TR_RWindow:AddBox(code,line,col,title,tb,text)
 		local v = sender:IsChecked()
 		local str = v and "Activé : " or "Désactivé : "
 		req[code] = v or nil
-		print(str..(tb and title.." "..code or Reqs[code]) )
+		Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
+		print(str..(tb and title.." "..TR_LocName(code) or Reqs[code]) )
 	end
 	return box
 end
@@ -695,7 +706,7 @@ function TR_RWindow:Constructor(list,width,title)
 		table.sort(list, function(a, b)
 			local an = skill[a].n or a
 			local bn = skill[b].n or b
-			return an<bn
+			return TR_FrenchSort(TR_LocName(an),TR_LocName(bn))
 			end)
 		title = skill.nm
 	end
@@ -713,7 +724,7 @@ function TR_RWindow:Constructor(list,width,title)
 	for ix,n in ipairs(list) do
 		local tbl = skill and skill[n]
 		local code = tbl and tbl.n or n
-		local text = ' '..(skill and code or TR_Req(n) or Reqs[n])
+		local text = ' '..(skill and TR_LocName(code) or TR_Req(n) or Reqs[n])
 		l = l+1
 		if l==rows+1 then col,l = 2, 1 end
 		self:AddBox(code,l,col,title,tb,text)
@@ -765,23 +776,24 @@ function TR_HTWindow:Constructor()
 	-- Home label and menu
 	self:AddField(Label, "Choisis la meilleure écurie.", {x=25,y=35}, {x=200,y=16} )
 	self:AddField(Label, "Maison:", {x=15,y=55}, {x=55,y=16} )
-	local name,time,dtime,Skiff = None, 20, TR_req.dtime or 20
-	if TR_req.house then 
-		name = TR_req.house
-		time = tostring(TR_req.htime)
-		self.Slot:SetShortcut(Turbine.UI.Lotro.Shortcut(Skill,"0x700"..House[name]))
+	local name,time,dtime,Skiff = HouseName(None), 20, TR_req.dtime or 20
+	if TR_req.house and House[TR_req.house] then
+		name = HouseName(TR_req.house)
+		time = tostring(tonumber(TR_req.htime) or 20)
+		self.Slot:SetShortcut(Turbine.UI.Lotro.Shortcut(Skill,"0x700"..House[TR_req.house]))
 	end
 	self.houseMenu = self:AddField(DropMenu, name, {x=70,y=53}, {x=150,y=20} )
 	local action = function(args)
 		self.saveButton:SetEnabled( true )
 		local dest = Blank
-		if args~=None then
-			dest = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..House[args])
+		local key = HouseKey(args)
+		if key~=None and House[key] then
+			dest = Turbine.UI.Lotro.Shortcut(Skill,"0x700"..House[key])
 		end
 		self.Slot:SetShortcut(dest)
 	end
-	self.houseMenu.Menu.Click = function() 
-		self.houseMenu:BuildMenu(house,action,nil,print)
+	self.houseMenu.Menu.Click = function()
+		self.houseMenu:BuildMenu(HouseMenuFR,action,nil,print)
 	end
 
 	self:AddField(Label, "Temps vers écurie:", {x=20,y=84}, {x=125,y=16} )
@@ -791,7 +803,7 @@ function TR_HTWindow:Constructor()
 	self.saveButton = self:AddField(Button, "Enregistrer", {x=20,y=110}, {x=100,y=20} )
 	self.saveButton:SetEnabled( false )
 	self.saveButton.Click = function( sender,args )
-        name = self.houseMenu:GetText()
+        name = HouseKey(self.houseMenu:GetText())
 		if name~=None then
 			local time = tonumber(self.time:GetText())
 			if not time or time<4 then printe("Temps invalide.") return end
@@ -801,7 +813,13 @@ function TR_HTWindow:Constructor()
 			TR_req.htime = time
 			TR_req.dock = Skiff or nil
 			TR_req.dtime = dtime
-		else TR_req.house = nil end
+		else
+			TR_req.house = nil
+			TR_req.htime = nil
+			TR_req.dock = nil
+			TR_req.dtime = nil
+			Skiff = false
+		end
 		Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
 		print("Paramètres de voyage enregistrés.")
 	end
@@ -835,7 +853,7 @@ end
 
 TR_HTwindow = TR_HTWindow()
 
-if not TR_req.MS then TR_req.MS = {} end
+if type(TR_req.MS) ~= "table" then TR_req.MS = {} end
 TR_Rwindow = TR_RWindow(Reqs_list,440,"Prérequis de voyage")
 local TDL = {}
 for r in pairs(TD_list) do table.insert(TDL,r) end
