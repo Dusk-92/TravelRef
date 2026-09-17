@@ -9,6 +9,8 @@ on:
       - "tools/generate_official_fr.py"
       - "tools/generate_requirements_fr.py"
       - "tools/test_route_rules.lua"
+      - "tools/release_audit.lua"
+      - "tools/source_audit.py"
       - "Dusk/TravelRef/TR_Data.lua"
       - "Dusk/TravelRef/TR_RouteRules.lua"
       - ".github/workflows/generate-official-fr.yml"
@@ -34,15 +36,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y lua5.1
 
-      - name: Validate generated Lua and routing rules
+      - name: Validate Lua, data and routing
         run: |
           LUAC="$(command -v luac5.1 || command -v luac)"
-          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+          find Dusk/TravelRef tools -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
             echo "Checking $file"
             "$LUAC" -p "$file"
           done
-          "$LUAC" -p tools/test_route_rules.lua
+          python3 tools/source_audit.py
           lua5.1 tools/test_route_rules.lua
+          lua5.1 tools/release_audit.lua
 
       - name: Validate plugin XML
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
