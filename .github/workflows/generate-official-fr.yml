@@ -22,7 +22,7 @@ jobs:
 
       - name: Commit generated files
         run: |
-          if git diff --quiet -- Dusk/TravelRef/TR_OfficialFR_Auto.lua tools/TR_OfficialFR_Audit.txt; then
+          if [ -z "$(git status --porcelain -- Dusk/TravelRef/TR_OfficialFR_Auto.lua tools/TR_OfficialFR_Audit.txt)" ]; then
             echo "No generated changes."
             exit 0
           fi
