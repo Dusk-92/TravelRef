@@ -79,7 +79,7 @@ local function Find_Route(Start,End,pl,ss,ht)
 	while loc do
 		ix = ix+1; loc = list[ix]
 		if not loc then break end
-    	if not Locs[loc] then printe("Nul loc, "..loc) return end
+    	if not Locs[loc] then printe("Lieu de route introuvable : "..TR_LocName(loc)) return end
 		local v,d,td = via[loc], Locs[loc].d, Locs[loc].td
     	if not d then return end
 		if MRD and loc:sub(-3)=="(R)" then 

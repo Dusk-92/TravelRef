@@ -16,6 +16,17 @@ modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stoneja
 Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
 mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
 
+Correctifs FR r8
+----------------
+- Les listes /tr <zone> et /tr <sous-zone> utilisent désormais TR_req.NV pour l’état non visité.
+- Les listes texte de lieux et destinations sont triées sur leurs libellés français, sans modifier les clés internes.
+- La recherche directe par coordonnées réutilise Loc_Find sécurisé et ignore proprement les lignes malformées.
+- Les tables inverses FR -> clé interne des zones et sous-zones rejettent maintenant les collisions ambiguës.
+- Le dernier diagnostic anglais du routeur a été francisé.
+- La validation CI des prérequis est dynamique et contrôle l’absence des anciennes régressions NV/tri.
+- Les 77 prérequis ont un libellé FR vérifié ; les anciens titres retirés des données courantes restent identifiés comme overrides historiques.
+- L’ancien rapprochement flou « Men of Entwash Vale » est remplacé par un alias explicite vers la faction officielle.
+
 Correctifs FR r7
 ----------------
 - Unification du statut « non visité » dans TR_req.NV, avec migration des anciennes sauvegardes.
@@ -26,7 +37,7 @@ Correctifs FR r7
 - Suppression de deux nouvelles variables globales accidentelles dans les fenêtres.
 - Validation continue renforcée après l’audit r6.
 - Prérequis de voyage traduits via les IDs officiels des quêtes/prouesses et les paliers/factions officiels de réputation.
-- Les anciens titres dont aucune correspondance sûre n’est disponible restent en anglais plutôt que d’être traduits au hasard.
+- Les anciens titres absents des tables actuelles sont conservés via des correspondances françaises historiques vérifiées.
 
 Correctifs FR r6
 ----------------

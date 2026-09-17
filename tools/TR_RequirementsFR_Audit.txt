@@ -1,12 +1,15 @@
-TravelRef official French requirement audit
-===========================================
+TravelRef French requirement audit
+==================================
 
 - deeds.xml: 44167 paired EN/FR labels
 - quests.xml: 218651 paired EN/FR labels
 - factions.xml: 107 localized factions with structured standing data
 
 Requirements extracted: 77
-Matched officially: 77
+Matched/verified French: 77
+Current official-data matches: 71
+Verified historical overrides: 6
+Fuzzy faction matches: 0
 Unmatched: 0
 
 MATCHED:
@@ -58,7 +61,7 @@ MATCHED:
 - R29: Ally with Men of the Norcrofts => Allié / Alliée — Hommes des Norcrofts [official faction 1879237304 (exact/alias); EN rank=Ally; EN faction=Men of the Norcrofts]
 - R3: Acq. with Lossoth of Forochel => Connaissance — Lossoth du Forochel [official faction 1879103954 (exact/alias); EN rank=Acquaintance; EN faction=Lossoth of Forochel]
 - R30: Ally with Men of the Sutcrofts => Allié / Alliée — Hommes des Sutcrofts [official faction 1879237243 (exact/alias); EN rank=Ally; EN faction=Men of the Sutcrofts]
-- R31: Ally with Men of Entwash Vale => Allié / Alliée — Hommes de la vallée de l'Entalluve [official faction 1879237267 (fuzzy 0.914); EN rank=Ally; EN faction=Men of the Entwash Vale]
+- R31: Ally with Men of Entwash Vale => Allié / Alliée — Hommes de la vallée de l'Entalluve [official faction 1879237267 (exact/alias); EN rank=Ally; EN faction=Men of the Entwash Vale]
 - R32: Friend to People of Wildermore => Ami / Amie — Peuple des Landes farouches [official faction 1879259430 (exact/alias); EN rank=Friend; EN faction=People of Wildermore]
 - R33: Ally with The Eorlingas => Allié / Alliée — Les Eorlingas [official faction 1879271130 (exact/alias); EN rank=Ally; EN faction=The Eorlingas]
 - R34: Ally with The Helmingas => Allié / Alliée — Les Helmingas [official faction 1879271131 (exact/alias); EN rank=Ally; EN faction=The Helmingas]

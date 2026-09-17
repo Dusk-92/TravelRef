@@ -490,10 +490,10 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		for name,t in pairs(Locs) do
 			if t.z==args and t.d then table.insert(Loc_list,name) end
 		end
-		table.sort(Loc_list)
+		table.sort(Loc_list, function(a,b) return TR_FrenchSort(TR_LocName(a),TR_LocName(b)) end)
 		for ix,name in ipairs(Loc_list) do
 				local sz,str = "",TR_LocName(name)
-				if TR_req[name] then str="<rgb=#E01000>"..str.."</rgb>" end
+				if TR_req.NV[name] then str="<rgb=#E01000>"..str.."</rgb>" end
 				local t = Locs[name]
 				if t.a then sz = " dans "..TR_AreaName(t.a) end
 				local ql = t.ql
@@ -531,7 +531,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 				table.insert(dest,name)
 			end
 		end
-		table.sort(dest)
+		table.sort(dest, function(a,b) return TR_FrenchSort(TR_LocName(a),TR_LocName(b)) end)
 		for i,name in ipairs(dest) do
 			local tbl = t.d[name] or R_Dest[name]
 			TR_Dest( name,tbl,lvl,flag or false,td )
@@ -546,33 +546,30 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 		for name,t in pairs(Locs) do
 			if t.a==areaArg and t.d then table.insert(Loc_list,name) end
 		end
-		table.sort(Loc_list)
+		table.sort(Loc_list, function(a,b) return TR_FrenchSort(TR_LocName(a),TR_LocName(b)) end)
 		for ix,name in ipairs(Loc_list) do
 			local str = TR_LocName(name)
-			if TR_req[name] then str="<rgb=#E01000>"..str.."</rgb>" end
+			if TR_req.NV[name] then str="<rgb=#E01000>"..str.."</rgb>" end
 			print(str.." @ "..Locs[name].l)
 		end
 		return
 	end
-    local y,x,d = args:match(Coord)
+    local y,x = args:match(Coord)
     if y then
-		local d1,y1,x1,ln = 999,locV(y,"Ss"), locV(x,"Ww")
-		for loc,t in pairs(Locs) do
-			if t.d then
-				y,x = t.l:match(Coord)
-				local y2,x2 = locV(y,"Ss"), locV(x,"Ww")
-				d = distance(y1-y2,x1-x2)
-				if d<d1 then d1 = d; ln = loc end
-			end
-		end
-		d = string.format(" (à %.1f unités).",d1)
-		local t = Locs[ln]
-		print("L’écurie la plus proche de "..args.." est "..TR_LocName(ln).." @ "..t.l..d)
-		TR_window.zoneMenu:SetText( TR_ZoneName(t.z) )
-		TR_window.locMenu:SetText( TR_LocName(ln) )
-		TR_window:SetVisible( true )
-		return
-	end
+        -- At command execution time TR_Robustness has replaced Loc_Find with
+        -- the guarded implementation, so malformed rows are skipped safely.
+        local d,ln = Loc_Find(nil, y, x, Locs)
+        if not ln or not Locs[ln] then
+            printe("Aucune écurie correspondant à ces coordonnées.")
+            return
+        end
+        local t = Locs[ln]
+        print("L’écurie la plus proche de "..args.." est "..d)
+        TR_window.zoneMenu:SetText(TR_ZoneName(t.z))
+        TR_window.locMenu:SetText(TR_LocName(ln))
+        TR_window:SetVisible(true)
+        return
+    end
 	Dusk.TravelRef.Common.Help(help,args)
 end
 

@@ -224,21 +224,35 @@ local TR_OfficialOK, TR_OfficialError = pcall(function()
             for en in pairs(Zones) do applyZone(en) end
         end
         TR_ZoneEN = {}
+        local ambiguousZone = {}
         for en,fr in pairs(TR_ZoneFR) do
-            if TR_ZoneEN[fr] == nil then TR_ZoneEN[fr] = en end
+            local previous = TR_ZoneEN[fr]
+            if previous == nil then
+                TR_ZoneEN[fr] = en
+            elseif previous ~= en then
+                ambiguousZone[fr] = true
+            end
         end
+        for fr in pairs(ambiguousZone) do TR_ZoneEN[fr] = nil end
     end
 
     -- Keep internal area keys immutable; translate display/reverse lookup only.
     if type(Areas) == "table" then
         TR_AreaFR = {}
         TR_AreaEN = {}
+        local ambiguousArea = {}
         for area in pairs(Areas) do
             local key = OfficialNorm(area)
             local fr = CleanOfficial((key and OfficialArea[key]) or area)
             TR_AreaFR[area] = fr
-            if TR_AreaEN[fr] == nil then TR_AreaEN[fr] = area end
+            local previous = TR_AreaEN[fr]
+            if previous == nil then
+                TR_AreaEN[fr] = area
+            elseif previous ~= area then
+                ambiguousArea[fr] = true
+            end
         end
+        for fr in pairs(ambiguousArea) do TR_AreaEN[fr] = nil end
 
         function TR_AreaName(name) return TR_AreaFR[name] or name end
         function TR_AreaKey(name) return TR_AreaEN[name] or name end

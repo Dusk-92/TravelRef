@@ -32,6 +32,7 @@ FACTION_ALIASES = {
     "Lossoth": "Lossoth of Forochel",
     "Algraig": "Algraig, Men of Enedwaith",
     "Entwash Vale": "Men of the Entwash Vale",
+    "Men of Entwash Vale": "Men of the Entwash Vale",
     "Grey Mountains Exp.": "Grey Mountains Expedition",
     "Habanakka of Thrain": "Haban'akkâ of Thraïn",
     "Reclaimers of the Mtn-Hold": "Reclaimers of the Mountain-hold",
@@ -267,7 +268,8 @@ def main() -> None:
     lines = [
         "-- AUTO-GENERATED. Do not edit by hand.",
         "-- coding: utf-8 'ä",
-        "-- Requirement labels are sourced from official LOTRO EN/FR localization IDs.",
+        "-- Requirement labels use current official LOTRO EN/FR IDs where available.",
+        "-- Verified historical French titles are explicit overrides for retired labels.",
         "-- Reputation fallbacks combine an official localized standing with an official localized faction.",
         "",
         "TR_OfficialReqFR = TR_OfficialReqFR or {}",
@@ -282,9 +284,13 @@ def main() -> None:
     ]
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
+    historical_count = sum("verified historical" in source for _, source in matches.values())
+    fuzzy_count = sum("(fuzzy " in source for _, source in matches.values())
+    current_count = len(matches) - historical_count
+
     report = [
-        "TravelRef official French requirement audit",
-        "===========================================",
+        "TravelRef French requirement audit",
+        "==================================",
         "",
     ]
     report += [f"- {name}: {count} paired EN/FR labels" for name, count in loaded]
@@ -292,7 +298,10 @@ def main() -> None:
         f"- factions.xml: {len(factions)} localized factions with structured standing data",
         "",
         f"Requirements extracted: {len(reqs)}",
-        f"Matched officially: {len(matches)}",
+        f"Matched/verified French: {len(matches)}",
+        f"Current official-data matches: {current_count}",
+        f"Verified historical overrides: {historical_count}",
+        f"Fuzzy faction matches: {fuzzy_count}",
         f"Unmatched: {len(unresolved)}",
         "",
         "MATCHED:",

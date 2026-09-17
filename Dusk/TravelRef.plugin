@@ -3,9 +3,9 @@
   <Information>
 	<Name>TravelRef</Name>
 	<Author>David Down</Author>
-	<Version>3.3.2-FR-r7</Version>
+	<Version>3.3.2-FR-r8</Version>
 	<Image>Dusk/TravelRef/Stable.tga</Image>
-	<Description>TravelRef 3.3.2 FR r7 : cohérence des écuries non visitées, coûts de routage corrigés, voyage maison fiabilisé et tri français.</Description>
+	<Description>TravelRef 3.3.2 FR r8 : affichage non visité unifié, tris FR complets, coordonnées robustes et couverture FR vérifiée.</Description>
 	<website>https://github.com/Dusk-92/TravelRef</website>
   </Information>
   <Package>Dusk.TravelRef.TR_Entry</Package>

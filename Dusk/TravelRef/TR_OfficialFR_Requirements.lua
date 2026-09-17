@@ -1,6 +1,7 @@
 -- AUTO-GENERATED. Do not edit by hand.
 -- coding: utf-8 'ä
--- Requirement labels are sourced from official LOTRO EN/FR localization IDs.
+-- Requirement labels use current official LOTRO EN/FR IDs where available.
+-- Verified historical French titles are explicit overrides for retired labels.
 -- Reputation fallbacks combine an official localized standing with an official localized faction.
 
 TR_OfficialReqFR = TR_OfficialReqFR or {}
@@ -52,7 +53,7 @@ TR_OfficialReqFR["R28"] = "Allié / Alliée — Hommes du Plateau" -- official f
 TR_OfficialReqFR["R29"] = "Allié / Alliée — Hommes des Norcrofts" -- official faction 1879237304 (exact/alias); EN rank=Ally; EN faction=Men of the Norcrofts
 TR_OfficialReqFR["R3"] = "Connaissance — Lossoth du Forochel" -- official faction 1879103954 (exact/alias); EN rank=Acquaintance; EN faction=Lossoth of Forochel
 TR_OfficialReqFR["R30"] = "Allié / Alliée — Hommes des Sutcrofts" -- official faction 1879237243 (exact/alias); EN rank=Ally; EN faction=Men of the Sutcrofts
-TR_OfficialReqFR["R31"] = "Allié / Alliée — Hommes de la vallée de l'Entalluve" -- official faction 1879237267 (fuzzy 0.914); EN rank=Ally; EN faction=Men of the Entwash Vale
+TR_OfficialReqFR["R31"] = "Allié / Alliée — Hommes de la vallée de l'Entalluve" -- official faction 1879237267 (exact/alias); EN rank=Ally; EN faction=Men of the Entwash Vale
 TR_OfficialReqFR["R32"] = "Ami / Amie — Peuple des Landes farouches" -- official faction 1879259430 (exact/alias); EN rank=Friend; EN faction=People of Wildermore
 TR_OfficialReqFR["R33"] = "Allié / Alliée — Les Eorlingas" -- official faction 1879271130 (exact/alias); EN rank=Ally; EN faction=The Eorlingas
 TR_OfficialReqFR["R34"] = "Allié / Alliée — Les Helmingas" -- official faction 1879271131 (exact/alias); EN rank=Ally; EN faction=The Helmingas
