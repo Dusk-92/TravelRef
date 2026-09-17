@@ -18,6 +18,13 @@ local function TR_SearchNorm(value)
     return string.lower(value)
 end
 
+-- Locale-friendly display sorting.  Internal keys stay untouched.
+function TR_FrenchSort(a,b)
+    local na, nb = TR_SearchNorm(a), TR_SearchNorm(b)
+    if na == nb then return tostring(a) < tostring(b) end
+    return na < nb
+end
+
 function print(text) Turbine.Shell.WriteLine("<rgb=#00FFFF>TR:</rgb> "..text) end
 function printh(text) print("<rgb=#00FF00>"..text.."</rgb>") end
 function printe(text) print("<rgb=#FF6040>Erreur : "..text.."</rgb>") end
@@ -40,6 +47,19 @@ PC = player:GetClass()
 TR_req = Dusk.TravelRef.Common.PluginDataLoad(Character,"Travel_req")
 if type(TR_req) ~= "table" then TR_req = {S0=true} end
 if not TR_req.NV then TR_req.NV = {} end
+-- r7: migrate the historical top-level "not visited" flags into the single
+-- NV table used by the UI and route finder.
+local TR_nvMigrated = false
+for name in pairs(Locs or {}) do
+    if TR_req[name] ~= nil then
+        if TR_req[name] then TR_req.NV[name] = true end
+        TR_req[name] = nil
+        TR_nvMigrated = true
+    end
+end
+if TR_nvMigrated then
+    Dusk.TravelRef.Common.PluginDataSave(Character,"Travel_req",TR_req)
+end
 local TRv = "Travel Ref. "..Plugins["TravelRef"]:GetVersion()
 
 TR_Opt = Dusk.TravelRef.Common.PluginDataLoad(Turbine.DataScope.Server,"TravelRef_Opt")
@@ -130,7 +150,7 @@ function TR_Dest( name,d,pl,flag,td )
 	local n = Locs[name].n -- alternate name?
 	local dname = TR_LocName(n or name)
 	local markname = TR_LocName(name)
-	if TR_req[name] then markname="<rgb=#E01000>"..markname.."</rgb>" end
+	if TR_req.NV[name] then markname="<rgb=#E01000>"..markname.."</rgb>" end
 	local str,l,c,t = dname, d.l, d.c, d.t
 	if l and (l<0 or not d.s) then
 		if l<0 then l = -l end
@@ -265,7 +285,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 	if cmd=="trv" then
 		if args=="" then
 			printh("Écuries non visitées :")
-			for name,nv in pairs(TR_req) do
+			for name,nv in pairs(TR_req.NV) do
 				if nv and Locs[name] then
 					print(TR_LocName(name).." dans "..TR_ZoneName(Locs[name].z))
 				end
@@ -273,9 +293,9 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 			return
 		end
 		if Locs[args] then
-			TR_req[args] = not TR_req[args]
+			TR_req.NV[args] = not TR_req.NV[args]
 			Dusk.TravelRef.Common.PluginDataSave(Character,"Travel_req",TR_req)
-			local str = TR_req[args] and "Non " or ""
+			local str = TR_req.NV[args] and "Non " or ""
 			print(str.."visité : "..TR_LocName(args))
 			return
 		end
@@ -329,7 +349,7 @@ function TR_Command:Execute( cmd,args,lvl,flag )
 	end
 	if args=="areas" then
 		printh("Sous-zones connues avec des écuries :")
-		for area,zone in Sort(Areas) do
+		for area,zone in Sort(Areas, function(a,b) return TR_FrenchSort(TR_AreaName(a),TR_AreaName(b)) end) do
 			print(TR_AreaName(area).." dans "..TR_ZoneName(zone))
 		end
 		return

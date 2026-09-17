@@ -16,6 +16,24 @@ modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stoneja
 Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
 mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
 
+Correctifs FR r7
+----------------
+- Unification du statut « non visité » dans TR_req.NV, avec migration des anciennes sauvegardes.
+- Correction du bouton/menu « Non visité » et de la commande /trv pour utiliser la même donnée.
+- Calcul des réductions de coût du routeur aligné sur l’affichage des destinations (TD_list, R17/R18, S2).
+- Correction du champ « Temps vers quai » : lecture de dtime et restauration de la valeur sauvegardée.
+- Tri des listes de zones, lieux, destinations et sous-zones selon les libellés français normalisés.
+- Suppression de deux nouvelles variables globales accidentelles dans les fenêtres.
+- Validation continue renforcée après l’audit r6.
+
+Correctifs FR r6
+----------------
+- Ajout d’un point d’entrée r6 et d’une couche de robustesse chargée après le plugin principal.
+- Loc_Find/TR_Find ignorent proprement les données absentes ou malformées sans interrompre TravelRef.
+- Normalisation de recherche complétée pour œ/Œ et æ/Æ.
+- Les collisions de noms FR vers plusieurs clés internes ne sont plus résolues arbitrairement.
+- La validation de couverture FR est devenue dynamique au lieu de dépendre de compteurs figés.
+
 Correctifs FR r5
 ----------------
 - Recherche /trf et /tra sur les libellés français, avec tolérance aux accents.

@@ -88,7 +88,12 @@ local function Find_Route(Start,End,pl,ss,ht)
 			local dt = { [MRD] = R_Dest[MRD] }
 			for n,t in pairs(d) do dt[n] = t end
 			d = dt
-		else td = td and TR_req[td] and 0.9 or 1 end
+		else
+            local tdCode = td
+            td = tdCode and TR_req[tdCode] and (TD_list[tdCode] or 1) or 1
+            if tdCode=="R17" and TR_req.R18 then td = td-0.1 end
+            if TR_req.S2 then td = td*0.8 end
+        end
 		for dest,dv in pairs(d) do
 			if not Locs[dest] then printe("Destination manquante="..TR_LocName(dest).." @ "..TR_LocName(loc))
 			elseif Locs[dest].d and not TR_req.NV[dest] then
@@ -338,7 +343,7 @@ function TR_Window:Constructor()
 			zlist = {}
 			for i,name in ipairs(zones) do table.insert(zlist,TR_ZoneName(name)) end
 		end
-		table.sort(zlist)
+		table.sort(zlist, TR_FrenchSort)
 		self.zoneMenu:BuildMenu(zlist,30,print,action,nil,color) 
 	end
 
@@ -363,7 +368,7 @@ function TR_Window:Constructor()
 					if Find_Dest(name,true) then color[dname]=Green end
 				end
 			end
-			table.sort(Loc_list)
+			table.sort(Loc_list, TR_FrenchSort)
 			--self.locMenu:BuildMenu(Loc_list,action,nil,print)
 			self.locMenu:BuildMenu(Loc_list,25,print,action,nil,color)
 		else printe("Sélectionne une zone.") end
@@ -436,7 +441,7 @@ function TR_Window:Constructor()
 		if Locs[dest].n then dest = Locs[dest].n end
 		self.zoneMenu:SetText( TR_ZoneName(Locs[dest].z) )
 		self.locMenu:SetText( TR_LocName(dest) )
-		self.visit:SetChecked(TR_req[dest])
+		self.visit:SetChecked(TR_req.NV[dest] or false)
 		self.destMenu:SetText( '' )
 	end
 	self.destMenu.MenuBox.Click = function()
@@ -459,7 +464,7 @@ function TR_Window:Constructor()
 					table.insert(list,TR_LocName(name))
 				end
 			end
-			table.sort(list)
+			table.sort(list, TR_FrenchSort)
 			self.destMenu:BuildMenu(list,15,print,action,nil,color)
 		else print("Sélectionne un lieu.") end
 	end
@@ -704,7 +709,7 @@ function TR_RWindow:Constructor(list,width,title)
 	self:SetText( title )
 
 	-- Create a checkbox and add it to the window.
-	l = 0
+	local l = 0
 	for ix,n in ipairs(list) do
 		local tbl = skill and skill[n]
 		local code = tbl and tbl.n or n
@@ -760,7 +765,7 @@ function TR_HTWindow:Constructor()
 	-- Home label and menu
 	self:AddField(Label, "Choisis la meilleure écurie.", {x=25,y=35}, {x=200,y=16} )
 	self:AddField(Label, "Maison:", {x=15,y=55}, {x=55,y=16} )
-	local name,time,dtime,Skiff = None, 20, 20
+	local name,time,dtime,Skiff = None, 20, TR_req.dtime or 20
 	if TR_req.house then 
 		name = TR_req.house
 		time = tostring(TR_req.htime)
@@ -790,7 +795,7 @@ function TR_HTWindow:Constructor()
 		if name~=None then
 			local time = tonumber(self.time:GetText())
 			if not time or time<4 then printe("Temps invalide.") return end
-			local dtime = tonumber(self.time:GetText())
+			local dtime = tonumber(self.dtime:GetText())
 			if not dtime or dtime<4 then printe("Temps d’accès au quai invalide.") return end
 			TR_req.house = name
 			TR_req.htime = time
@@ -808,7 +813,7 @@ function TR_HTWindow:Constructor()
 	end
 
 	-- Dock-master check box
-	box = self:AddField(CheckBox, "Maître du quai", {x=45,y=190}, {x=120,y=16} )
+	local box = self:AddField(CheckBox, "Maître du quai", {x=45,y=190}, {x=120,y=16} )
 	Dusk.TravelRef.Common.ToolTip(box,2,-20,"Utiliser l’esquif du maître du quai.",220)
 	box.CheckedChanged = function( sender,args )
 		Skiff = sender:IsChecked()
