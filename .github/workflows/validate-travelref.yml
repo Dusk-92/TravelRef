@@ -75,6 +75,10 @@ jobs:
 
       - name: Check known regressions
         run: |
+          grep -F '<Package>Dusk.TravelRef.TR_Entry</Package>' Dusk/TravelRef.plugin
+          grep -F 'import "Dusk.TravelRef.TR_Main"' Dusk/TravelRef/TR_Entry.lua
+          grep -F 'import "Dusk.TravelRef.TR_Robustness"' Dusk/TravelRef/TR_Entry.lua
+          grep -F 'elseif (flg or tbl.d) and (not r or tbl.r == r) then' Dusk/TravelRef/TR_Robustness.lua
           grep -F 'local function TR_SearchNorm' Dusk/TravelRef/TR_Main.lua
           grep -F 'local dest = { }' Dusk/TravelRef/TR_Main.lua
           grep -F 'local z = Areas[areaArg]' Dusk/TravelRef/TR_Main.lua
