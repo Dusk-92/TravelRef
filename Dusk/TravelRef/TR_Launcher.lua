@@ -4,6 +4,7 @@
 -- La position utilise un fichier de réglages dédié, par personnage, comme les addons Homeopatix.
 
 import "Turbine.UI"
+import "Dusk.TravelRef.TR_OfficialFR"
 
 local LAUNCHER_SETTINGS = "TravelRef_Launcher"
 local launcherSaved = Dusk.TravelRef.Common.PluginDataLoad(Turbine.DataScope.Character, LAUNCHER_SETTINGS)
