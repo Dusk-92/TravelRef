@@ -1,0 +1,252 @@
+09/14/26 3.3.2-FR-r2	Affichage : TravelRef, son lanceur et ses menus restent sous les panneaux natifs LOTRO, notamment la grande carte.
+09/12/26 3.3.1-FR-r2	Correctifs de l’adaptation française : R44/R53, S0, routage de deux retours, positions initiales, PluginData localisé, traductions et métadonnées.
+09/12/26 3.3.1-FR	Adaptation française + icône flottante style Homeopatix et mémorisation de position.
+
+--- Historique original de TravelRef ---
+Version updates of the TravelRef plugin:
+04/09/26 3.3	Added scalable windows.
+04/08/26 3.2.6	Added House Travel window position save.
+02/22/26 3.2.5	Finished Mur Ghala slow travel times.
+02/21/26 3.2.4	Fixed Fearwater travel requirements.
+01/11/26 3.2.3	Updated Guide-to levels and level check.
+12/28/25 3.2.2	Added /tra command to find an area.
+12/16/25 3.2.1	Added Fearwater stables.
+12/03/25 3.2	Added Harad expansion (Lotro Update 46)
+11/28/25 3.1.6	Fixed House Travel for not visited locs.
+07/02/25 3.1.5	VIP not needed for some Mossward swift travel.
+06/20/25 3.1.4	Added Glan Vraig stable.
+06/11/25 3.1.3	Added ignore Esc option.
+02/14/25 3.1.2	Fixed some minor typos.
+02/01/25 3.1.1	Added green location menu items.
+01/31/25 3.1	Moria stable update (Lotro Update 42.4)
+01/09/25 3.0.3	Fixed Learnable Return to.
+12/13/24 3.0.2	Updated Annak-khurfu(R) routes.
+12/10/24 3.0.1	Finished Morgoth slow routes.
+12/01/24 3.0	Major update for Mission Recruiter routes.
+11/28/24 2.40.4	Updated the ReadMe file.
+11/27/24 2.40.3	Standardized Mission Recruiter locations.
+11/25/24 2.40.2	Corrected induction times for travel skills.
+11/20/24 2.40.1	Fixed "Dusk.Common" error.
+11/06/24 2.40	Added Morgoth expansion (Lotro Update 42)
+10/11/24 2.39.2 Split long check-box lists.
+09/16/24 2.39.1 Revised Allegiance Hall travel locations.
+09/11/24 2.39	Added scrollable menus with color.
+06/01/24 2.38	Added "Jouney to" locations.
+06/01/24 2.37.2 Fixed several travel skill details.
+05/17/24 2.37.1	Added 11 Umbar-mokh stables.
+05/15/24 2.37	Added new Cape of Umber stables (Lotro Update 40).
+05/13/24 2.36.2	Updated Help usage.
+04/20/24 2.36.1	Removed Langhold stable.
+03/27/24 2.36	Added Find nearest Vault button.
+03/09/24 2.35.18 Fixed several subscriber requirements.
+03/01/24 2.35.17 Shift key suppresses Hide option.
+02/16/24 2.35.16 Fixed ToolTip positioning.
+02/15/24 2.35.15 Sorted location lists.
+02/14/24 2.35.14 Fixed some location errors.
+02/04/24 2.35.13 Added housing Dock-master option.
+02/03/24 2.35.12 Added Journey to Order of the Eagle.
+01/31/24 2.35.11 Added Journey to Ledger-keepers.
+01/28/24 2.35.10 Added Return/Guide/Muster Bloody Eagle Tavern.
+01/12/24 2.35.9	Added "Hide above level" option.
+01/11/24 2.35.8	Fixed "Not Visited" logic.
+01/10/24 2.35.7	Fixed displayed R/G/M/S list names.
+12/30/23 2.35.6	Made Lalia's Market a travel location.
+12/27/23 2.35.5	Fixed some House Travel issues.
+11/28/23 2.35.4	Added Corsairs slow travel times.
+11/26/23 2.35.3	Added missing travel discounts.
+11/25/23 2.35.2	Fixed travel discount %.
+11/21/23 2.35.1	Fixed details for Bail Avarc.
+11/11/23 2.35	Added Corsairs expansion (Lotro Update 38).
+11/02/23 2.34.4	Updated Mariner "Sail to" skills.
+10/31/23 2.34.3	Added Coin cost to travel skills list.
+10/26/23 2.34.2	Added Egladil as "Boat to Mirkwood".
+10/21/23 2.34.1	Added Shift to Return & Guide/Muster/Sail buttons.
+10/19/23 2.34	Added location info to Return/Guide/Muster/Sail.
+10/18/23 2.33.3 Fixed logic error for MT in Find Route.
+10/12/23 2.33.2 Fixed spelling of "Echad Dunnan".
+10/11/23 2.33.1 "Sail to Sarn Ford" now "Tharbad".
+10/06/23 2.33	Added Mariner "Sail to" destinations.
+08/30/23 2.32.3 Updated Shire routes (Lotro Update 37).
+08/29/23 2.32.2 Added Return/Guide/Muster to Clegur.
+08/27/23 2.32.1 Completed non-ST routes.
+06/11/23 2.32   Added King's Gondor (Lotro Update 36).
+04/10/23 2.31   Added Bail Avarc (Lotro Update 35).
+11/21/22 2.30.0 Added Swanfleet,Cardolan (Lotro Update 34).
+11/15/22 2.29.5 Added some missing travel times.
+05/13/22 2.29.4 Corrected Cliving stable location.
+05/11/22 2.29.3 Changed Apartment back to Dusk.
+05/10/22 2.29.2 Changed Akraz-zahar to Akraz-zahar(I).
+04/29/22 2.29.1 Fixed Lyndelby stable settings.
+04/23/22 2.29   Yondershire stables (Lotro Update 33).
+04/21/22 2.28.3 Added Beorning Return Home travel skill.
+04/20/22 2.28.2 Added ToolTip support.
+04/19/22 2.28.1 Added Haerondir as a destination.
+04/04/22 2.28   Added travel to house with homestead stable-master.
+04/02/22 2.27.4 Updated for new common help facility.
+03/27/22 2.27.3 Added Akraz-zahar in Strongholds.
+03/26/22 2.27.2 Fixed logic error in '/trf'.
+02/23/22 2.27.1 Updated Trollshaw travel times.
+02/19/22 2.27   Trollshaws update (Lotro Update 32).
+01/22/22 2.26.8 Fixed a Find Best Start logic error.
+01/21/22 2.26.7 A single find match sets selected stable.
+01/20/22 2.26.6 Added code to ensure options are initialized.
+01/09/22 2.26.5 Added Option to default to Set End.
+01/03/22 2.26.4 Corrected Writhendowns to Scylfig in Harwick.
+01/01/22 2.26.3 Added close window on the Escape key.
+12/10/21 2.26.2 Updated Gundabad slow route times (for 31.1).
+11/25/21 2.26.1 Finished Gundabad stable route times.
+11/17/21 2.26   Added Gundabad stables (Lotro Update 31).
+06/20/21 2.25.2 Added (Level) or (Quest) to Guide/Muster list.
+06/16/21 2.25.1 Deleted defective Azanulbizar stable.
+06/13/21 2.25   Added Azanulbizar stables (Lotro Update 30).
+06/11/21 2.24.3 Added Return/Guide/Muster codes for Wildwood.
+03/17/21 2.24.2 Added Wildwood boat locations (Lotro Update 29).
+11/01/20 2.24.1 Added War Effort Recruiter stable locations.
+10/21/20 2.24   Added Elderslade stables (Lotro Update 28).
+07/03/20 2.23   Added Minas Tirith - Midsummer (Lotro Update 27).
+05/18/20 2.22.3 Added Kingstead Homestead stables.
+05/02/20 2.22.2 Fixed Return/Guide/Muster codes for Camp of the Host.
+05/01/20 2.22.1 Fixed typo in Ruins of Dingarth data.
+04/30/20 2.22   Added Wells of Anduin stables (Lotro Update 26).
+04/29/20 2.21.7 Added Pelennor Fields travel locations.
+04/28/20 2.21.6 Added Mordor Besieged stables.
+01/12/20 2.21.5 When settings are saved, Secs/silver is included.
+01/12/20 2.21.4 Updated Great River destinations.
+12/15/19 2.21.3 Added homestead stables (Lotro Update 25.1).
+12/13/19 2.21.2 Fixed several minor logic errors and naming typos.
+12/12/19 2.21.1 Moved Guide/Muster check before Return-to check.
+11/05/19 2.21   Added Morgul Vale stables (Lotro Update 25).
+10/12/19 2.20.1 Corrected Return/Guide/Muster action codes.
+08/08/19 2.20   Added "/trf" command for finding locations.
+06/29/19 2.19.2 Limited Return/Guide/Muster to learnable list.
+06/22/19 2.19.1 Fixed "/tr rt" and "/tr gm" for table change.
+06/06/19 2.19   Added Vales of Anduin stables (Update 24).
+06/04/19 2.18.3 Fixed some location name typos.
+02/27/19 2.18.2 Added ST non-VIP flags in Misty Mountains.
+12/02/18 2.18.1 Added travel discounts for Strongholds and Dwarf-holds.
+10/12/18 2.18   Added Dwarf-holds (Lotro Update 23).
+10/06/18 2.17.2 Changed "W-s King's Men" to "the War-stead".
+09/26/18 2.17.1 Fixed spelling of Tham Taerdol.
+03/07/18 2.17   Added Strongholds (Lotro Update 22).
+08/18/17 2.16.1 Added Return/Guide/Muster to a-b Minas Tirith.
+08/09/17 2.16   Added Mordor (Lotro Update 21).
+08/07/17 2.15.1 Added Return/Guide/Muster to War-stead.
+10/21/16 2.15   Added March of the King (Lotro Update 19).
+04/19/16 2.14.1 Fixed undefined value error.
+04/13/16 2.14   Added Far Anorien (Lotro Update 18).
+03/06/16 2.13.4 Added "/tr gm" for learnable Guide/Muster.
+03/06/16 2.13.3 Added "Set Returns" and "Guide/Muster" buttons.
+03/06/15 2.13.2 Added Return/Guide/Muster to Minas Tirith.
+02/05/16 2.13.1 Filtered learnable Return To by level.
+10/28/15 2.13   Added Old Anorien (Lotro Update 17).
+10/26/15 2.12.2 Fixed level check error when over 95.
+06/09/15 2.12.1 Added stable at Iorelen's Camp(Lotro U16.1).
+05/06/15 2.12   Added East Gondor (Lotro Update 16).
+02/08/15 2.11.1 Fixed travel discounts requiring Ally rep.
+11/05/14 2.11   Added Central Gondor (Lotro Update 15).
+09/02/14 2.10.4 Added support for up to 11 milestones.
+07/30/14 2.10.3 Added Return to Derndingle and stable.
+07/17/14 2.10.2 Added Return/Guide/Muster to Dol Amroth.
+07/16/14 2.10.1 Added West Gondor travel discounts.
+07/15/14 2.10	Added West Gondor (Lotro Update 14).
+04/15/14 2.9	Revised for Lotro Update 13 changes.
+12/07/13 2.8.6	Fixed Bree to Suri-kyla rep,Kuru-leiri spelling.
+12/02/13 2.8.5	Added Eorlingas travel discounts.
+12/01/13 2.8.4	Revised HD travel costs and level.
+11/28/13 2.8.3	Added alternate stable names.
+11/26/13 2.8.2	Removed traveling ration costs.
+11/24/13 2.8.1	Revised max level to 95.
+11/11/13 2.8	Updated for Helm's Deep expansion.
+10/25/13 2.7.8	Added option for Writ of Passage discount.
+10/24/13 2.7.7	Corrected milestone travel times.
+09/05/13 2.7.6	Fixed spelling of Ered Luin.
+09/01/13 2.7.5	Corrected a requirement for Gabilshathur.
+07/04/13 2.7.4	Moved Options menu to Common.
+06/14/13 2.7.3	Added Return/Guide/Muster for Forlaw.
+06/06/13 2.7.2	Corrected the stable location for Writhendowns.
+05/16/13 2.7.1	Added skill Return to Lalia's Market.
+05/13/13 2.7	Added Wildermore (Lotro Update 11).
+03/28/13 2.6.2	Changed menu button style to Lotro standard.
+03/20/13 2.6.1	Fixed stable location for Mithechad.
+03/11/13 2.6	Added Manual Travel linking routes.
+03/10/13 2.5.8	Removed obsolete deeds in Moria.
+03/09/13 2.5.7	Fixed subscriber requirement flag issues.
+03/08/13 2.5.6	Added "/tr rt" command; list learnable Return to skills.
+02/24/13 2.5.5	Fixed Rhovanion spelling and removed obsolete error msg.
+02/10/13 2.5.4	Added support for Dusk Loader plugin.
+01/31/13 2.5.3	Fixed missing labels in return/guide/muster windows.
+01/30/13 2.5.2	Fixed region selection for Find nearest Stable.
+01/29/13 2.5.1	Fixed missing default level.
+01/25/13 2.5	Added window auto-open option to Plugin Manager.
+01/24/13 2.4.11	Added swift travel times for Hytbold.
+01/13/13 2.4.10	Added regular travel times for Hytbold.
+12/18/12 2.4.9	Added buttons for Requirements and Discounts.
+12/17/12 2.4.8	Added routes for Hytbold.
+12/16/12 2.4.7	Changed directory structure for Plugin Compendium.
+12/12/12 2.4.6	Fixed typo in the name "Thrasi's Lodge".
+10/26/12 2.4.5	Added Entwash Vale rep and discount.
+10/24/12 2.4.4	Revised East Rohan travel discounts to 25%.
+10/23/12 2.4.3	Added Great River travel discounts.
+10/20/12 2.4.2	Added Return/Guide/Muster for Snowbourn.
+10/19/12 2.4.1	Updated level check to 85.
+10/16/12 2.4	Updated for Riders of Rohan expansion.
+08/08/12 2.3.1	Fixed req. bug introduced in 2.2.
+08/07/12 2.3	Added Milestone travel skills.
+07/30/12 2.2	Added Guide/Muster travel skills.
+07/28/12 2.1.3	Added disabling skills beyond player level.
+07/27/12 2.1.2	Added "Return to Stangard".
+07/26/12 2.1.1	Corrected spelling of "Aughaire".
+07/25/12 2.1	Added action slot for travel skills.
+07/20/12 2.0	Added "Return to" skills for routing.
+05/17/12 1.13.3	Added slow travel times in Great River.
+05/16/12 1.13.2	Updated travel in Great River.
+05/13/12 1.13.1	Added travel changes in Moria, update 7.
+03/17/12 1.13	Added travel sites in Great River, update 6.
+03/03/12 1.12.5	Added Plugin Manager icon.
+11/09/11 1.12.4	Added Find Nearest stable button.
+11/02/11 1.12.3	Fixed level check on Find Route.
+10/21/11 1.12.2	Finished adding travel times.
+10/16/11 1.12.1	Fixed level check and data typo.
+10/15/11 1.12	Added RoI expansion locations.
+09/12/11 1.11.3	Corrected travel discount list.
+09/08/11 1.11.2	Added category for Iron Garrison Miners.
+09/06/11 1.11.1	Added ST times in Enedwaith.
+07/15/11 1.11 	Added Ettenmoors again, but with VIP requirement.
+06/15/11 1.10 	Added Common folder to replace Turbine library.
+05/29/11 1.9.2	Added some travel times in Mirkwood.
+05/12/11 1.9.1	Added more travel times in Lothlorien.
+04/26/11 1.9  	Added Start/End check box for find route.
+04/25/11 1.8.5	Fixed logic error in find route.
+04/22/11 1.8.4	Added Kauppa-kohta <-> Kuru-lein(ST) time.
+04/05/11 1.8.3	Added Brockenborings -> Oatbarton(ST).
+04/01/11 1.8.2	Fixed a data typo that caused a routing error.
+03/31/11 1.8.1	Added some travel times in Moria and others.
+03/27/11 1.8  	Added a command to find the nearest stable.
+03/25/11 1.7.4	Added ST between Lhanuch and S.Bree, Rivendell
+03/24/11 1.7.3	Changed Annuminas ST level to 35.
+03/21/11 1.7.2	Added changes made in LOTRO update 2.
+03/20/11 1.7.1	Added "subscriber" requirement.
+03/19/11 1.7  	Added "/dtw td" command and travel discounts.
+03/10/11 1.6.2	Fixed "No Req." check box.
+03/07/11 1.6.1	Fixed "WA" description as "Wardens of Annuminas".
+03/06/11 1.6  	Added "/dtv" command and "Not Visited" check box.
+03/05/11 1.5.2	Added Lothlorien locations.
+03/04/11 1.5.1	Added Mirkwood locations.
+03/01/11 1.5  	Added "Secs/silver" and optimized find route.
+02/28/11 1.4.4	Added "No Requirements" check box.
+02/27/11 1.4.3	Added "(ST)" flag to travel route display.
+02/26/11 1.4.2	Added more travel times and made corrections.
+02/25/11 1.4.1	Destination lists now redden uncompleted requirements.
+02/24/11 1.4  	Added a requirements window to mark completed items.
+02/23/11 1.3.4	Put rep/quest/deed requirements in a table.
+02/22/11 1.3.3	Changed the style of TR window components.
+02/21/11 1.3.2	Made TR window code more modular.
+02/20/11 1.3.1	Added level restrictions to routing.
+02/19/11 1.3  	Added "Find Route" command.
+02/18/11 1.2.2	Added Forochel locations.
+02/18/11 1.2.1	Added Annuminas location and some travel times.
+02/17/11 1.2	Added most remaining locations and released to public.
+02/16/11 1.1	Added a window with buttons and menus.
+02/15/11 1.0	Added support for deed/quest requirements.
+02/14/11 0.7	Added support for level requirements.
+02/13/11 0.6	Basic system now works.
