@@ -18,13 +18,15 @@ TR_OfficialReqFR["D4"] = "Silence nerveux (Final)" -- official title deeds.xml:1
 TR_OfficialReqFR["D5"] = "Mystères d'Enedwaith" -- official title deeds.xml:1879190071; EN=Mysteries of Enedwaith
 TR_OfficialReqFR["D6"] = "Mystères d'Enedwaith (Intermédiaire)" -- official title deeds.xml:1879190075; EN=Mysteries of Enedwaith (Intermediate)
 TR_OfficialReqFR["D7"] = "Mystères d'Enedwaith (Avancé)" -- official title deeds.xml:1879190076; EN=Mysteries of Enedwaith (Advanced)
-TR_OfficialReqFR["Q1"] = "Le défi de la pierre" -- verified historical French LOTRO quest title
-TR_OfficialReqFR["Q10"] = "La paix rétablie" -- verified historical French LOTRO quest title
+TR_OfficialReqFR["Q1"] = "Le défi de la pierre" -- verified historical French LOTRO/Tolkien quest title
+TR_OfficialReqFR["Q10"] = "La paix rétablie" -- verified historical French LOTRO/Tolkien quest title
 TR_OfficialReqFR["Q2"] = "La guerre glaciale" -- official title quests.xml:1879108253; EN=The Frozen War
 TR_OfficialReqFR["Q3"] = "Les chemins de Caras Galadhon" -- official title quests.xml:1879152965; EN=The Paths of Caras Galadhon
-TR_OfficialReqFR["Q4"] = "Au cœur du danger" -- verified historical French LOTRO quest title
-TR_OfficialReqFR["Q5"] = "La vingt et unième salle" -- verified historical French LOTRO quest title
+TR_OfficialReqFR["Q4"] = "Au cœur du danger" -- verified historical French LOTRO/Tolkien quest title
+TR_OfficialReqFR["Q5"] = "La vingt et unième salle" -- verified historical French LOTRO/Tolkien quest title
 TR_OfficialReqFR["Q6"] = "L'étable : à reconstruire" -- official title quests.xml:1879237965; EN=The Stable: Rebuild
+TR_OfficialReqFR["Q7"] = "Les Aigles arrivent !" -- verified historical French LOTRO/Tolkien quest title
+TR_OfficialReqFR["Q8"] = "La même que vous" -- verified historical French LOTRO/Tolkien quest title
 TR_OfficialReqFR["Q9"] = "Bienvenue à Lyndelby" -- official title quests.xml:1879405021; EN=Welcome to Lyndelby
 TR_OfficialReqFR["R1"] = "Connaissance — Hommes de Bree" -- official faction 1879091340 (exact/alias); EN rank=Acquaintance; EN faction=Men of Bree
 TR_OfficialReqFR["R10"] = "Ami / Amie — La Société des Mathoms" -- official faction 1879091345 (exact/alias); EN rank=Friend; EN faction=The Mathom Society

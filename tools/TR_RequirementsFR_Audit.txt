@@ -6,8 +6,8 @@ TravelRef official French requirement audit
 - factions.xml: 107 localized factions with structured standing data
 
 Requirements extracted: 77
-Matched officially: 75
-Unmatched: 2
+Matched officially: 77
+Unmatched: 0
 
 MATCHED:
 - D1: Silent and Restless => Silence nerveux [official title deeds.xml:1879140606; EN=Silent and Restless]
@@ -24,13 +24,15 @@ MATCHED:
 - D5: Mysteries of Enedwaith => Mystères d'Enedwaith [official title deeds.xml:1879190071; EN=Mysteries of Enedwaith]
 - D6: Mysteries of Enedwaith (Intermediate) => Mystères d'Enedwaith (Intermédiaire) [official title deeds.xml:1879190075; EN=Mysteries of Enedwaith (Intermediate)]
 - D7: Mysteries of Enedwaith (Advanced) => Mystères d'Enedwaith (Avancé) [official title deeds.xml:1879190076; EN=Mysteries of Enedwaith (Advanced)]
-- Q1: V1;B6;Ch 6: Challenging the Stone => Le défi de la pierre [verified historical French LOTRO quest title]
-- Q10: The Peace Restored => La paix rétablie [verified historical French LOTRO quest title]
+- Q1: V1;B6;Ch 6: Challenging the Stone => Le défi de la pierre [verified historical French LOTRO/Tolkien quest title]
+- Q10: The Peace Restored => La paix rétablie [verified historical French LOTRO/Tolkien quest title]
 - Q2: The Frozen War => La guerre glaciale [official title quests.xml:1879108253; EN=The Frozen War]
 - Q3: The Paths of Caras Galadhon => Les chemins de Caras Galadhon [official title quests.xml:1879152965; EN=The Paths of Caras Galadhon]
-- Q4: V2;B4;Ch 5: Into the Fire => Au cœur du danger [verified historical French LOTRO quest title]
-- Q5: V2;B2;Ch 8: The Twenty-first Hall => La vingt et unième salle [verified historical French LOTRO quest title]
+- Q4: V2;B4;Ch 5: Into the Fire => Au cœur du danger [verified historical French LOTRO/Tolkien quest title]
+- Q5: V2;B2;Ch 8: The Twenty-first Hall => La vingt et unième salle [verified historical French LOTRO/Tolkien quest title]
 - Q6: The Stable: Rebuild => L'étable : à reconstruire [official title quests.xml:1879237965; EN=The Stable: Rebuild]
+- Q7: V4;B9;Ch 2: The Eagles are Coming => Les Aigles arrivent ! [verified historical French LOTRO/Tolkien quest title]
+- Q8: BBM;Ch 11.2: The Same as You => La même que vous [verified historical French LOTRO/Tolkien quest title]
 - Q9: Welcome to Lyndelby => Bienvenue à Lyndelby [official title quests.xml:1879405021; EN=Welcome to Lyndelby]
 - R1: Acq. with Men of Bree => Connaissance — Hommes de Bree [official faction 1879091340 (exact/alias); EN rank=Acquaintance; EN faction=Men of Bree]
 - R10: Friend to Mathom Society => Ami / Amie — La Société des Mathoms [official faction 1879091345 (exact/alias); EN rank=Friend; EN faction=The Mathom Society]
@@ -87,5 +89,3 @@ MATCHED:
 - R9: Friend to Thorin's Hall => Ami / Amie du Palais de Thorin [official title deeds.xml:1879190398; EN=Friend to Thorin's Hall]
 
 UNMATCHED:
-- Q7: V4;B9;Ch 2: The Eagles are Coming
-- Q8: BBM;Ch 11.2: The Same as You
