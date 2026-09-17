@@ -48,10 +48,30 @@ jobs:
 
       - name: Check localization coverage report
         run: |
-          grep -F 'Matched location/destination names: 426' tools/TR_OfficialFR_Audit.txt
-          grep -F 'Unmatched location/destination names: 0' tools/TR_OfficialFR_Audit.txt
-          grep -F 'Zone names extracted: 47 / matched: 47' tools/TR_OfficialFR_Audit.txt
-          grep -F 'Area names extracted: 83 / matched: 83' tools/TR_OfficialFR_Audit.txt
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          text = Path('tools/TR_OfficialFR_Audit.txt').read_text(encoding='utf-8')
+
+          def number(pattern):
+              match = re.search(pattern, text)
+              if not match:
+                  raise SystemExit(f'Missing audit metric: {pattern}')
+              return tuple(int(value) for value in match.groups())
+
+          locations, = number(r'Real TravelRef location/destination names extracted: (\d+)')
+          matched_locations, = number(r'Matched location/destination names: (\d+)')
+          unmatched_locations, = number(r'Unmatched location/destination names: (\d+)')
+          zones, matched_zones = number(r'Zone names extracted: (\d+) / matched: (\d+)')
+          areas, matched_areas = number(r'Area names extracted: (\d+) / matched: (\d+)')
+
+          assert locations == matched_locations, (locations, matched_locations)
+          assert unmatched_locations == 0, unmatched_locations
+          assert zones == matched_zones, (zones, matched_zones)
+          assert areas == matched_areas, (areas, matched_areas)
+          print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas')
+          PY
 
       - name: Check known regressions
         run: |
@@ -63,6 +83,8 @@ jobs:
           grep -F 'local w = Turbine.UI.Lotro.Shortcut' Dusk/TravelRef/TR_Window.lua
           grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F 'for _,en in ipairs(zones) do applyZone(en) end' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F '["œ"]="oe"' Dusk/TravelRef/Common/noAccent.lua
+          grep -F 'local ambiguousLoc = {}' Dusk/TravelRef/TR_OfficialFR.lua
           ! grep -F 'loc.a = TR_AreaFR' Dusk/TravelRef/TR_OfficialFR.lua
           ! grep -F 'Areas = NewAreas' Dusk/TravelRef/TR_OfficialFR.lua
           ! grep -F 'print(loc.n.." @ "..loc.l)' Dusk/TravelRef/TR_Main.lua
