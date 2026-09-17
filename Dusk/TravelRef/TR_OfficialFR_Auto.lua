@@ -349,7 +349,6 @@ TR_OfficialLocRaw["Tinnudir"] = "Tinnudir" -- travelsMap.xml: Tinnudir
 TR_OfficialLocRaw["To Kings End"] = "Mort des rois" -- geoAreas.xml: Kings' End
 TR_OfficialLocRaw["To Minas Tirith, After the Battle"] = "Minas Tirith (après la bataille)" -- geoAreas.xml: Minas Tirith (After-battle)
 TR_OfficialLocRaw["To Minas Tirith, Before the Battle"] = "Minas Tirith" -- travelsMap.xml: Minas Tirith
-TR_OfficialLocRaw["To Mins Tirith, Before the Battle"] = "Minas Tirith" -- travelsMap.xml: Minas Tirith
 TR_OfficialLocRaw["To Riders' Stand"] = "Défense des Cavaliers" -- geoAreas.xml: Riders' Stand
 TR_OfficialLocRaw["To the Cape of Belfalas"] = "Le Cap du Belfalas" -- geoAreas.xml: The Cape of Belfalas
 TR_OfficialLocRaw["To the Field of Onslaught"] = "Champ du carnage" -- geoAreas.xml: Field of Onslaught
