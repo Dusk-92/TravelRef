@@ -9,6 +9,8 @@ on:
       - "tools/generate_official_fr.py"
       - "tools/generate_requirements_fr.py"
       - "tools/test_route_rules.lua"
+      - "tools/release_audit.lua"
+      - "tools/source_audit.py"
       - "tools/TR_OfficialFR_Audit.txt"
       - "tools/TR_RequirementsFR_Audit.txt"
       - ".github/workflows/validate-travelref.yml"
@@ -19,6 +21,8 @@ on:
       - "tools/generate_official_fr.py"
       - "tools/generate_requirements_fr.py"
       - "tools/test_route_rules.lua"
+      - "tools/release_audit.lua"
+      - "tools/source_audit.py"
       - "tools/TR_OfficialFR_Audit.txt"
       - "tools/TR_RequirementsFR_Audit.txt"
       - ".github/workflows/validate-travelref.yml"
@@ -41,19 +45,25 @@ jobs:
       - name: Validate Lua syntax
         run: |
           LUAC="$(command -v luac5.1 || command -v luac)"
-          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+          find Dusk/TravelRef tools -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
             echo "Checking $file"
             "$LUAC" -p "$file"
           done
-          "$LUAC" -p tools/test_route_rules.lua
+
+      - name: Audit raw TravelRef data source
+        run: python3 tools/source_audit.py
 
       - name: Test routing rules
         run: lua5.1 tools/test_route_rules.lua
+
+      - name: Run full release audit
+        run: lua5.1 tools/release_audit.lua
 
       - name: Validate generator syntax
         run: |
           python3 -m py_compile tools/generate_official_fr.py
           python3 -m py_compile tools/generate_requirements_fr.py
+          python3 -m py_compile tools/source_audit.py
 
       - name: Validate plugin XML
         run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
@@ -101,56 +111,32 @@ jobs:
           assert current + historical == total, (current, historical, total)
           assert unmatched == 0, unmatched
           assert fuzzy == 0, fuzzy
-          unmatched_section = req.split('UNMATCHED:', 1)[1] if 'UNMATCHED:' in req else ''
-          assert not re.search(r'^- \w+:', unmatched_section, re.M)
           print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas, {matched}/{total} requirements ({historical} historical overrides)')
           PY
 
-      - name: Check known regressions
+      - name: Check r10 regression guards
         run: |
           grep -F '<Package>Dusk.TravelRef.TR_Entry</Package>' Dusk/TravelRef.plugin
-          grep -F '<Version>3.3.2-FR-r9</Version>' Dusk/TravelRef.plugin
+          grep -F '<Version>3.3.2-FR-r10</Version>' Dusk/TravelRef.plugin
           grep -F 'import "Dusk.TravelRef.TR_Main"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'import "Dusk.TravelRef.TR_Robustness"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'import "Dusk.TravelRef.TR_RouteRules"' Dusk/TravelRef/TR_Main.lua
           grep -F 'function TR_RequirementCodesMet' Dusk/TravelRef/TR_RouteRules.lua
-          grep -F 'function TR_DiscountRate' Dusk/TravelRef/TR_RouteRules.lua
-          grep -F 'local tdr = TR_DiscountRate(td, TR_req, TD_list)' Dusk/TravelRef/TR_Main.lua
-          grep -F 'td = TR_DiscountRate(td, TR_req, TD_list)' Dusk/TravelRef/TR_Window.lua
-          grep -F 'return TR_RequirementCodesMet(dv.r, TR_req, false)' Dusk/TravelRef/TR_Window.lua
-          grep -F '(NoReq or TR_RequirementCodesMet(dv.r, TR_req, true))' Dusk/TravelRef/TR_Window.lua
-          ! grep -F 'dv.r:sub(1,1)==","' Dusk/TravelRef/TR_Window.lua
+          grep -F 'function TR_DiscountRate(code, req, discounts, requirements)' Dusk/TravelRef/TR_RouteRules.lua
+          grep -F 'TR_DiscountRate(td, TR_req, TD_list, Reqs)' Dusk/TravelRef/TR_Main.lua
+          grep -F 'TR_DiscountRate(td, TR_req, TD_list, Reqs)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'AreaZones = { }' Dusk/TravelRef/TR_Data.lua
+          grep -F 'local AreaSource = type(AreaZones)=="table" and AreaZones or Areas' Dusk/TravelRef/TR_OfficialFR.lua
+          grep -F 'elseif (not r) or ((flg or tbl.d) and tbl.r == r) then' Dusk/TravelRef/TR_Robustness.lua
+          grep -F 'local usable = tbl.d or (tbl.r==Race and tbl.rd)' Dusk/TravelRef/TR_Window.lua
+          grep -F 'if not code then return nil end' Dusk/TravelRef/TR_Window.lua
           grep -F 'if type(TR_req.NV) ~= "table" then TR_req.NV = {} end' Dusk/TravelRef/TR_Main.lua
           grep -F 'if type(TR_req.MS) ~= "table" then TR_req.MS = {} end' Dusk/TravelRef/TR_Window.lua
-          grep -F 'Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)' Dusk/TravelRef/TR_Window.lua
-          grep -F 'skill and TR_LocName(code)' Dusk/TravelRef/TR_Window.lua
-          ! grep -F "skill and code or TR_Req" Dusk/TravelRef/TR_Window.lua
-          grep -F 'return TR_FrenchSort(TR_LocName(an),TR_LocName(bn))' Dusk/TravelRef/TR_Window.lua
-          grep -F 'local HouseDisplay = {' Dusk/TravelRef/TR_Window.lua
-          grep -F 'self.houseMenu:BuildMenu(HouseMenuFR' Dusk/TravelRef/TR_Window.lua
-          grep -F 'TR_req.house = nil' Dusk/TravelRef/TR_Window.lua
-          grep -F 'TR_req.htime = nil' Dusk/TravelRef/TR_Window.lua
-          grep -F 'TR_req.dock = nil' Dusk/TravelRef/TR_Window.lua
-          grep -F 'TR_req.dtime = nil' Dusk/TravelRef/TR_Window.lua
-          grep -F 'elseif (flg or tbl.d) and (not r or tbl.r == r) then' Dusk/TravelRef/TR_Robustness.lua
-          grep -F 'local function TR_SearchNorm' Dusk/TravelRef/TR_Main.lua
-          grep -F 'function TR_FrenchSort(a,b)' Dusk/TravelRef/TR_Main.lua
-          grep -F 'TR_req.NV[args] = not TR_req.NV[args]' Dusk/TravelRef/TR_Main.lua
-          test "$(grep -F -c 'if TR_req.NV[name] then str=' Dusk/TravelRef/TR_Main.lua)" -eq 2
-          ! grep -F 'if TR_req[name] then str=' Dusk/TravelRef/TR_Main.lua
-          grep -F 'local d,ln = Loc_Find(nil, y, x, Locs)' Dusk/TravelRef/TR_Main.lua
           grep -F 'local dtime = tonumber(self.dtime:GetText())' Dusk/TravelRef/TR_Window.lua
-          grep -F 'TR_req.dtime or 20' Dusk/TravelRef/TR_Window.lua
+          grep -F 'tonumber(TR_req.dtime) or 20' Dusk/TravelRef/TR_Window.lua
           grep -F 'self.visit:SetChecked(TR_req.NV[dest] or false)' Dusk/TravelRef/TR_Window.lua
-          grep -F 'Lieu de route introuvable' Dusk/TravelRef/TR_Window.lua
-          ! grep -F 'Nul loc' Dusk/TravelRef/TR_Window.lua
-          grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Auto", true)' Dusk/TravelRef/TR_OfficialFR.lua
-          grep -F 'TR_OfficialSafeImport("Dusk.TravelRef.TR_OfficialFR_Requirements", true)' Dusk/TravelRef/TR_OfficialFR.lua
-          grep -F 'local ambiguousLoc = {}' Dusk/TravelRef/TR_OfficialFR.lua
-          grep -F 'local ambiguousZone = {}' Dusk/TravelRef/TR_OfficialFR.lua
-          grep -F 'local ambiguousArea = {}' Dusk/TravelRef/TR_OfficialFR.lua
           grep -F '["œ"]="oe"' Dusk/TravelRef/Common/noAccent.lua
-          grep -F '"Men of Entwash Vale": "Men of the Entwash Vale"' tools/generate_requirements_fr.py
-          ! grep -F 'loc.a = TR_AreaFR' Dusk/TravelRef/TR_OfficialFR.lua
-          ! grep -F 'Areas = NewAreas' Dusk/TravelRef/TR_OfficialFR.lua
+          ! grep -F 'if TR_req[name] then str=' Dusk/TravelRef/TR_Main.lua
+          ! grep -F 'dv.r:sub(1,1)==","' Dusk/TravelRef/TR_Window.lua
+          ! grep -F 'Nul loc' Dusk/TravelRef/TR_Window.lua
           ! grep -F '[fp]' Dusk/TravelRef/TR_OfficialFR_Auto.lua
