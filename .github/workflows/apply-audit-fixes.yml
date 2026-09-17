@@ -50,6 +50,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Dusk/TravelRef/TR_Main.lua Dusk/TravelRef/TR_Window.lua Dusk/TravelRef/TR_Launcher.lua Dusk/TravelRef/TR_OfficialFR.lua Dusk/TravelRef/TR_OfficialFR_Auto.lua Dusk/TravelRef/TR_FR_NOTES.txt Dusk/TravelRef.plugin Dusk/TravelRef.plugincompendium tools/generate_official_fr.py tools/TR_OfficialFR_Audit.txt .github/workflows/generate-official-fr.yml
+          git add Dusk/TravelRef/TR_Main.lua Dusk/TravelRef/TR_Window.lua Dusk/TravelRef/TR_Launcher.lua Dusk/TravelRef/TR_OfficialFR.lua Dusk/TravelRef/TR_OfficialFR_Auto.lua Dusk/TravelRef/TR_FR_NOTES.txt Dusk/TravelRef.plugin Dusk/TravelRef.plugincompendium tools/generate_official_fr.py tools/TR_OfficialFR_Audit.txt
           git commit -m "Fix TravelRef FR audit findings"
           git push
