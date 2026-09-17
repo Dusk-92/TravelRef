@@ -3,14 +3,26 @@ TravelRef 3.3.2 - adaptation française
 Cette adaptation conserve les clés internes anglaises pour ne pas casser la base de trajets.
 Les menus et principaux messages de l'interface sont traduits en français.
 
-Les noms de régions affichés utilisent les noms français de LOTRO, notamment :
-Pays de Bree, Terres Solitaires, Hauts du Nord, Trouée des Trolls, Noues des cygnes,
-La Comté lointaine, Les bastions des nains, Plateau de Gorgoroth, Mordor assiégé,
-La vallée d'Ikorbân, Les îles du Bouclier, Cap d'Umbar et Mûr Ghala.
+Les noms de régions affichés utilisent les noms français de LOTRO. Les destinations de voyage
+et les écuries utilisent désormais en priorité les libellés français officiels issus des données
+de localisation du client LOTRO, via les tables EN/FR de LotroCompanion/lotro-data.
 
-Les noms individuels des écuries/lieux restent ceux de la base originale lorsqu'aucune
-correspondance française fiable n'est incluse dans la base de l'addon. Aucune traduction
-inventée n'a été appliquée aux lieux.
+La correspondance EN -> FR est faite avec la même clé interne de localisation du jeu : aucune
+traduction automatique ou inventée n'est utilisée. Les anciennes clés anglaises TravelRef restent
+inchangées pour préserver le routage et les sauvegardes. Une normalisation limitée des accents,
+tirets et qualificatifs permet de faire correspondre les anciens noms TravelRef aux libellés
+modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stonejaws)).
+
+Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
+mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
+
+Correctifs FR r3
+----------------
+- Ajout d'une couche de noms officiels LOTRO pour les régions et destinations de voyage.
+- Données EN/FR jointes par les clés de localisation du client, sans traduction automatique.
+- Conservation intégrale des clés anglaises internes utilisées par les routes et sauvegardes.
+- Gestion des variantes d'accents, de ponctuation et de certains qualificatifs géographiques.
+- Reconstruction des tables inverses FR -> clé interne après application des noms officiels.
 
 Correctifs FR r2
 ----------------
