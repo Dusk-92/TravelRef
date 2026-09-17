@@ -5,6 +5,13 @@
 
 import "Turbine.UI"
 
+-- La couche de noms FR officiels est optionnelle et protégée : une erreur de
+-- localisation ne doit jamais empêcher TravelRef de se charger.
+local frOk, frErr = pcall(import, "Dusk.TravelRef.TR_OfficialFR")
+if not frOk and Turbine and Turbine.Shell then
+    Turbine.Shell.WriteLine("<rgb=#FF6040>TravelRef FR officiel non chargé : "..tostring(frErr).."</rgb>")
+end
+
 local LAUNCHER_SETTINGS = "TravelRef_Launcher"
 local launcherSaved = Dusk.TravelRef.Common.PluginDataLoad(Turbine.DataScope.Character, LAUNCHER_SETTINGS)
 
