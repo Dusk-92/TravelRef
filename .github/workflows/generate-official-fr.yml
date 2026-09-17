@@ -8,7 +8,9 @@ on:
     paths:
       - "tools/generate_official_fr.py"
       - "tools/generate_requirements_fr.py"
+      - "tools/test_route_rules.lua"
       - "Dusk/TravelRef/TR_Data.lua"
+      - "Dusk/TravelRef/TR_RouteRules.lua"
       - ".github/workflows/generate-official-fr.yml"
 
 permissions:
@@ -26,6 +28,60 @@ jobs:
 
       - name: Generate requirement mappings
         run: python3 tools/generate_requirements_fr.py
+
+      - name: Install Lua 5.1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1
+
+      - name: Validate generated Lua and routing rules
+        run: |
+          LUAC="$(command -v luac5.1 || command -v luac)"
+          find Dusk/TravelRef -type f -name '*.lua' -print0 | while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            "$LUAC" -p "$file"
+          done
+          "$LUAC" -p tools/test_route_rules.lua
+          lua5.1 tools/test_route_rules.lua
+
+      - name: Validate plugin XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('Dusk/TravelRef.plugin')"
+
+      - name: Validate generated coverage
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          geo = Path('tools/TR_OfficialFR_Audit.txt').read_text(encoding='utf-8')
+          req = Path('tools/TR_RequirementsFR_Audit.txt').read_text(encoding='utf-8')
+
+          def one(pattern, text):
+              m = re.search(pattern, text)
+              if not m:
+                  raise SystemExit(f'Missing audit metric: {pattern}')
+              return int(m.group(1))
+
+          locations = one(r'Real TravelRef location/destination names extracted: (\d+)', geo)
+          matched_locations = one(r'Matched location/destination names: (\d+)', geo)
+          unmatched_locations = one(r'Unmatched location/destination names: (\d+)', geo)
+          zone_match = re.search(r'Zone names extracted: (\d+) / matched: (\d+)', geo)
+          area_match = re.search(r'Area names extracted: (\d+) / matched: (\d+)', geo)
+          assert zone_match and area_match
+          assert locations == matched_locations
+          assert unmatched_locations == 0
+          assert zone_match.group(1) == zone_match.group(2)
+          assert area_match.group(1) == area_match.group(2)
+
+          total = one(r'Requirements extracted: (\d+)', req)
+          matched = one(r'Matched/verified French: (\d+)', req)
+          fuzzy = one(r'Fuzzy faction matches: (\d+)', req)
+          unmatched = one(r'Unmatched: (\d+)', req)
+          assert matched == total
+          assert fuzzy == 0
+          assert unmatched == 0
+          print(f'Generated coverage OK: {matched_locations}/{locations} locations, {matched}/{total} requirements')
+          PY
 
       - name: Commit generated files
         run: |
