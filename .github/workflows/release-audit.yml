@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "tools/release_audit.lua"
+      - "tools/source_audit.py"
       - ".github/workflows/release-audit.yml"
   workflow_dispatch:
 
@@ -26,9 +27,12 @@ jobs:
             echo "LUAC $f"
             "$LUAC" -p "$f"
           done
+      - name: Audit source-level data
+        run: python3 tools/source_audit.py
       - name: Audit real TravelRef data and route rules
         run: lua5.1 tools/release_audit.lua
       - name: Inventory visible English and state-sensitive code
+        if: always()
         run: |
           python3 - <<'PY'
           import re
