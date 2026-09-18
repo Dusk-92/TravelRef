@@ -16,6 +16,16 @@ modernes du client (ex. Jarnfast/Járnfast ou Bargstad/Bárgstad (Pit of Stoneja
 Lorsqu'aucune correspondance officielle fiable n'est disponible, TravelRef conserve son ancien
 mapping français ou, à défaut, le nom original plutôt que de deviner une traduction.
 
+Correctifs FR r12
+-----------------
+- Les champs Temps vers écurie / Temps vers quai activent désormais Enregistrer dès leur modification.
+- La position courante des fenêtres principale et Voyage maison est sauvegardée au déchargement.
+- L’échelle utilisateur s’applique à toutes les fenêtres TravelRef, y compris prérequis/réductions et compétences.
+- Les coordonnées françaises acceptent O/o pour Ouest en plus de W/w.
+- Les sauvegardes PluginData r11 disposent maintenant de tests automatiques : natif, FR, double encodage historique, changement de langue, callback et erreur de chargement.
+- Les quatre liaisons t-only connues des nœuds recruteurs sont identifiées comme métadonnées dans l’audit au lieu de produire des faux warnings.
+- Nettoyage de références UI réutilisées, d’une variable globale accidentelle et d’un ancien affichage de debug par octet.
+
 Correctifs FR r9
 ----------------
 - Correction du routage des exigences mixtes comme R29,Q6 : le voyage normal exige désormais Q6, tandis que le voyage rapide exige bien R29 + Q6.
