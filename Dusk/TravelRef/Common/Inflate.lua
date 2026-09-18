@@ -157,7 +157,6 @@ local function bytestream_from_string(s)
     local by
     if i <= #s then
       by = s:byte(i)
-Turbine.Shell.WriteLine( "t["..i.."]="..by)
       i = i + 1
     end
     return by

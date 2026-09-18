@@ -46,9 +46,9 @@ function printf(fmt, ...) print(string.format(fmt, ...)) end
 import "Dusk.TravelRef.Common.Help"
 import "Dusk.TravelRef.Common.Sort"
 
-local Coord = "^(%d+%.%d[NnSs]), ?(%d+%.%d[EeWw])$"
-local RCoord = "^(%d) (%d+%.%d[NnSs]),(%d+%.%d[EeWw])$"
-local Zloc = "^(.+): .+: (%d+%.%d[NS]), (%d+%.%d[EW])$"
+local Coord = "^(%d+%.%d[NnSs]), ?(%d+%.%d[EeWwOo])$"
+local RCoord = "^(%d) (%d+%.%d[NnSs]),(%d+%.%d[EeWwOo])$"
+local Zloc = "^(.+): .+: (%d+%.%d[NnSs]), (%d+%.%d[EeWwOo])$"
 xlink = "<Examine:IIDDID:0x0000000000000000:0x700%s>[%s]<\\Examine>"
 local S0 = ", <rgb=#E01000>Prérequis : abonné actuel ou ancien</rgb>"
 local Color = {"880088","FF0000","FF8C00","FFFF00","FFFFFF","1E90FF","00CED1","009800","707070"}
@@ -204,7 +204,7 @@ function TR_Dest( name,d,pl,flag,td )
 end
 
 function Loc_Find(r, y, x, locs, flg)
-	local d1,y1,x1,ln = 999,locV(y,"Ss"), locV(x,"Ww"), ''
+	local d1,y1,x1,ln = 999,locV(y,"Ss"), locV(x,"WwOo"), ''
 	local y2,x2,d,c,name,tbl
 	for loc,t in pairs(locs) do
 		if flg then name = t; tbl = Locs[t]
@@ -213,7 +213,7 @@ function Loc_Find(r, y, x, locs, flg)
 		if (flg or tbl.d) and tbl.r==r or not r then
 			local y0,x0 = tbl.l:match(Coord)
 			if not y0 then printe("Coordonnées invalides pour "..TR_LocName(name)) return end
-			y2,x2 = locV(y0,"Ss"), locV(x0,"Ww")
+			y2,x2 = locV(y0,"Ss"), locV(x0,"WwOo")
 			d = distance(y1-y2,x1-x2)
 			if d<d1 then d1 = d; ln = r and name or tbl.n; c = tbl.l end
 		end
@@ -599,8 +599,17 @@ Turbine.Shell.AddCommand( "tr;tra;trv;trl;trf;trr;trc;tr?",TR_Command )
 Plugins.TravelRef.Unload = function(sender,args)
 	local pname = player:GetName()
 	if pname:sub(1,1)=="~" then return end -- session play?
-    -- Sauvegarde explicitement la position de l’icône avant les autres réglages.
+    -- Sauvegarde explicitement les positions courantes avant les autres réglages.
     if TR_Launcher and TR_Launcher.SavePosition then TR_Launcher.SavePosition() end
+    if TR_window then
+        local x,y = TR_window:GetPosition()
+        TR_Opt.pos1 = { x=x, y=y }
+        if TR_Opt.auto then TR_Opt.auto = { x=x, y=y } end
+    end
+    if TR_HTwindow then
+        local x,y = TR_HTwindow:GetPosition()
+        TR_Opt.pos2 = { x=x, y=y }
+    end
     if TR_window and TR_window.secs then
         TR_req.secs = TR_window.secs:GetText()
         Dusk.TravelRef.Common.PluginDataSave(Character,"Travel_req",TR_req)

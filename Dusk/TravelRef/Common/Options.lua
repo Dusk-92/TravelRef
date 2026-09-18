@@ -24,7 +24,8 @@ function Options_sBar(OP,scale,Window)
 	sBar.lbl:SetPosition( 30,10 )
 	sBar.lbl:SetSize( 150,15 )
 	sBar.lbl:SetText( string.format("Échelle de la fenêtre : %.2f", scale) )
-	Window:SetScale(scale)
+	if type(TR_ApplyScale)=="function" then TR_ApplyScale(scale)
+	else Window:SetScale(scale) end
 	return sBar
 end
 
@@ -45,8 +46,12 @@ function Options_Init(print,Settings,Window,Fname,Window2)
 			local scale = wScale:GetValue()/100
 			Settings.scale = scale
 			wScale.lbl:SetText( string.format("Échelle de la fenêtre : %.2f", scale) )
-			Window:SetScale(scale)
-			if Window2 then Window2:SetScale(scale) end
+			if type(TR_ApplyScale)=="function" then
+				TR_ApplyScale(scale)
+			else
+				Window:SetScale(scale)
+				if Window2 then Window2:SetScale(scale) end
+			end
 		end
 	end
 

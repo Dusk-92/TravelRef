@@ -414,8 +414,8 @@ function TR_Window:Constructor()
 	end
 
 	-- Locations button
-	self.locsButton = self:AddField(Button, "Lieux", {x=115,y=139}, {x=120,y=20} )
-	self.locsButton.Click = function( sender,args )
+	self.locationsButton = self:AddField(Button, "Lieux", {x=115,y=139}, {x=120,y=20} )
+	self.locationsButton.Click = function( sender,args )
         local zone = TR_ZoneKey(self.zoneMenu:GetText())
 		if zone=="" then printe("Sélectionne une zone.")
         else TR_Command:Execute("tr",zone) end
@@ -550,9 +550,9 @@ function TR_Window:Constructor()
 	end
 
 	-- Find Nearest button
-	self.locsButton = self:AddField(Button, "Écurie la plus proche", {x=15,y=275}, {x=150,y=20} )
+	self.nearestButton = self:AddField(Button, "Écurie la plus proche", {x=15,y=275}, {x=150,y=20} )
 	local slot = Turbine.UI.Lotro.Quickslot()
-	slot:SetParent( self.locsButton )
+	slot:SetParent( self.nearestButton )
     slot:SetPosition( 2,2 )
     slot:SetSize( 99, 15 )
     slot:SetShortcut(Turbine.UI.Lotro.Shortcut( Alias, "/trl ;loc" ))
@@ -596,8 +596,8 @@ function TR_Window:Constructor()
 	end
 
 	-- Requirements button
-	self.reqButton = self:AddField(Button, "Prérequis", {x=25,y=355}, {x=105,y=20} )
-	self.reqButton.Click = function( sender,args )
+	self.requirementsButton = self:AddField(Button, "Prérequis", {x=25,y=355}, {x=105,y=20} )
+	self.requirementsButton.Click = function( sender,args )
         TRW_Command:Execute("trw","tr")
 	end
 
@@ -608,9 +608,9 @@ function TR_Window:Constructor()
 	end
 
 	-- Return to button
-	self.reqButton = self:AddField(Button, "Retour", {x=15,y=380}, {x=70,y=20} )
-	Dusk.TravelRef.Common.ToolTip(self.reqButton,2,-20,"Maj : compétences pouvant être apprises.",250)
-	self.reqButton.Click = function( sender,args )
+	self.returnButton = self:AddField(Button, "Retour", {x=15,y=380}, {x=70,y=20} )
+	Dusk.TravelRef.Common.ToolTip(self.returnButton,2,-20,"Maj : compétences pouvant être apprises.",250)
+	self.returnButton.Click = function( sender,args )
 		if sender:IsShiftKeyDown() then
 			TR_Command:Execute("tr","rt")
 		else TRW_Command:Execute("trw","rt") end
@@ -804,8 +804,11 @@ function TR_HTWindow:Constructor()
 	-- Save button
 	self.saveButton = self:AddField(Button, "Enregistrer", {x=20,y=110}, {x=100,y=20} )
 	self.saveButton:SetEnabled( false )
+	self.time.TextChanged = function()
+		self.saveButton:SetEnabled( true )
+	end
 	self.saveButton.Click = function( sender,args )
-        name = HouseKey(self.houseMenu:GetText())
+		local name = HouseKey(self.houseMenu:GetText())
 		if name~=None then
 			local time = tonumber(self.time:GetText())
 			if not time or time<4 then printe("Temps invalide.") return end
@@ -823,6 +826,7 @@ function TR_HTWindow:Constructor()
 			Skiff = false
 		end
 		Dusk.TravelRef.Common.PluginDataSave(Turbine.DataScope.Character,"Travel_req",TR_req)
+		self.saveButton:SetEnabled( false )
 		print("Paramètres de voyage enregistrés.")
 	end
 
@@ -844,6 +848,9 @@ function TR_HTWindow:Constructor()
 
 	self:AddField(Label, "Temps vers quai:", {x=40,y=211}, {x=125,y=16} )
 	self.dtime = self:AddField(TextBox, dtime, {x=167,y=210}, {x=30,y=17} )
+	self.dtime.TextChanged = function()
+		self.saveButton:SetEnabled( true )
+	end
 
 	-- List button
 	self.dlistButton = self:AddField(Button, "Quais", {x=70,y=235}, {x=100,y=20} )
@@ -851,6 +858,9 @@ function TR_HTWindow:Constructor()
 		TR_Command:Execute("tr",Dm)
 	end
 
+	-- SetChecked above can fire CheckedChanged on some clients; the initial
+	-- state is already loaded from TR_req and therefore is not a pending edit.
+	self.saveButton:SetEnabled( false )
 end
 
 TR_HTwindow = TR_HTWindow()
@@ -865,6 +875,23 @@ TR_RTwindow = TR_RWindow(Return,230)
 if PC==162 then TR_GTwindow = TR_RWindow(Guide,230) end
 if PC==194 then TR_MTwindow = TR_RWindow(Muster,230) end
 if PC==216 then TR_STwindow = TR_RWindow(Sail,230) end
+
+-- Keep every TravelRef window on the same user-selected scale.
+function TR_ApplyScale(scale)
+	scale = tonumber(scale) or 1
+	local function apply(window)
+		if window and window.SetScale then window:SetScale(scale) end
+	end
+	apply(TR_window)
+	apply(TR_HTwindow)
+	apply(TR_Rwindow)
+	apply(TR_Dwindow)
+	apply(TR_RTwindow)
+	apply(TR_GTwindow)
+	apply(TR_MTwindow)
+	apply(TR_STwindow)
+end
+TR_ApplyScale(TR_Opt.scale)
 
 -- Set Escape action
 TR_window:SetWantsKeyEvents( true )

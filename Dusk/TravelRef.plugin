@@ -3,9 +3,9 @@
   <Information>
 	<Name>TravelRef</Name>
 	<Author>David Down</Author>
-	<Version>3.3.2-FR-r11</Version>
+	<Version>3.3.2-FR-r12</Version>
 	<Image>Dusk/TravelRef/Stable.tga</Image>
-	<Description>TravelRef 3.3.2 FR r11 : sauvegardes locales isolées et récupération des anciennes données simple/double-encodées.</Description>
+	<Description>TravelRef 3.3.2 FR r12 : stabilisation UI, positions/échelle, coordonnées Ouest et tests de sauvegarde.</Description>
 	<website>https://github.com/Dusk-92/TravelRef</website>
   </Information>
   <Package>Dusk.TravelRef.TR_Entry</Package>

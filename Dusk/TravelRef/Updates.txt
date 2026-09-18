@@ -1,3 +1,4 @@
+09/18/26 3.3.2-FR-r12	Stabilisation finale : édition des temps maison, positions et échelle de toutes les fenêtres, coordonnées O/Ouest, tests PluginData et audit sans faux warnings.
 09/18/26 3.3.2-FR-r11	Appartement Lua isolé et récupération sûre des anciennes sauvegardes PluginData simple/double-encodées, y compris après changement de langue.
 09/14/26 3.3.2-FR-r2	Affichage : TravelRef, son lanceur et ses menus restent sous les panneaux natifs LOTRO, notamment la grande carte.
 09/12/26 3.3.1-FR-r2	Correctifs de l’adaptation française : R44/R53, S0, routage de deux retours, positions initiales, PluginData localisé, traductions et métadonnées.
