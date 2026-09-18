@@ -49,6 +49,15 @@ local numeric_fields = {"c","s","l","t","st","mt"}
 local nonnegative_fields = {c=true,s=true,t=true,st=true,mt=true}
 local dest_count, swift_without_time, mixed_requirements = 0,0,0
 local legacy_discounts, hidden_regions, metadata_edges = 0,0,0
+-- These four t-only links deliberately describe the short physical transfer
+-- between a normal stable and its co-located mission-recruiter node. They are
+-- metadata, not ride edges, so the route engine must not treat them as travel.
+local known_metadata_edges = {
+  ["Gabilshathur -> Gabilshathur(R)"] = true,
+  ["Gabilshathur(R) -> Gabilshathur"] = true,
+  ["Thorin's Gate -> Thorin's Gate(R)"] = true,
+  ["Thorin's Gate(R) -> Thorin's Gate"] = true,
+}
 local used_req = {}
 local area_zones = {}
 
@@ -118,7 +127,10 @@ for name,loc in pairs(Locs or {}) do
           end
           if dv.c==nil and dv.s==nil and dv.mt==nil and dv.n==nil then
             metadata_edges = metadata_edges + 1
-            warn("destination has no routable travel mode: "..name.." -> "..dest)
+            local edge = name.." -> "..dest
+            if not (dv.t and known_metadata_edges[edge]) then
+              warn("destination has no routable travel mode: "..edge)
+            end
           end
           if dv.r ~= nil and not req_codes_valid(dv.r) then
             err("malformed destination requirements on "..name.." -> "..dest..": "..tostring(dv.r))
@@ -279,12 +291,18 @@ do
 
   local stable_name,stable
   for name,loc in pairs(Locs) do
-    if loc.r and loc.r>0 and loc.d and coord_ok(loc.l) then stable_name,stable=name,loc; break end
+    if loc.r and loc.r>0 and loc.d and coord_ok(loc.l) and loc.l:match("[Ww]$") then
+      stable_name,stable=name,loc
+      break
+    end
   end
   if stable then
     local y,x = stable.l:match("^(%d+%.%d+[NnSs]), ?(%d+%.%d+[EeWw])$")
     local _,name = Loc_Find(stable.r,y,x,Locs,false)
     check(name~=nil and Locs[name]~=nil,"coordinate lookup: stable lookup must return a routable stable")
+    local ox = x:gsub("[Ww]","o")
+    local _,oname = Loc_Find(stable.r,y,ox,Locs,false)
+    check(oname~=nil and Locs[oname]~=nil,"coordinate lookup: French Ouest suffix must be accepted")
   else
     err("coordinate lookup: no stable test data")
   end
