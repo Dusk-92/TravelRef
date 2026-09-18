@@ -22,8 +22,8 @@ if type(TR_req) == "table" then
     end
 end
 
-local TR_RobustCoord = "^(%d+%.%d[NnSs]), ?(%d+%.%d[EeWw])$"
-local TR_RobustZloc = "^(.+): .+: (%d+%.%d[NS]), (%d+%.%d[EW])$"
+local TR_RobustCoord = "^(%d+%.%d[NnSs]), ?(%d+%.%d[EeWwOo])$"
+local TR_RobustZloc = "^(.+): .+: (%d+%.%d[NnSs]), (%d+%.%d[EeWwOo])$"
 
 local function TR_RobustLocValue(str, negative)
     if type(str) ~= "string" then return nil end
@@ -45,7 +45,7 @@ function Loc_Find(r, y, x, locs, flg)
     end
 
     local y1 = TR_RobustLocValue(y, "Ss")
-    local x1 = TR_RobustLocValue(x, "Ww")
+    local x1 = TR_RobustLocValue(x, "WwOo")
     if not y1 or not x1 then
         return "coordonnées invalides", nil
     end
@@ -73,7 +73,7 @@ function Loc_Find(r, y, x, locs, flg)
                 printe("Coordonnées invalides pour "..TR_LocName(name))
             else
                 local y2 = TR_RobustLocValue(y0, "Ss")
-                local x2 = TR_RobustLocValue(x0, "Ww")
+                local x2 = TR_RobustLocValue(x0, "WwOo")
                 if y2 and x2 then
                     local d = TR_RobustDistance(y1 - y2, x1 - x2)
                     if d < bestDistance then
