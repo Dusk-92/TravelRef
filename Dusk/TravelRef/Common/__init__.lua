@@ -2,24 +2,25 @@ import "Dusk.TravelRef.Common.Class"
 import "Dusk.TravelRef.Common.Sort"
 import "Dusk.TravelRef.Common.Type"
 
--- LOTRO historically had locale-sensitive PluginData number handling on some
--- French/German clients.  Keep the workaround local to Dusk plugins instead
--- of replacing Turbine.PluginData.Load/Save globally for every loaded plugin.
-local LocalizedPluginData = Turbine.Shell.IsCommand("aide") or
-    Turbine.Shell.IsCommand("zusatzmodule")
+-- Keep PluginData handling local to TravelRef. Older Dusk plugin combinations
+-- could apply two marker-encoding layers to these saves; decode complete legacy
+-- layers until the root is normal again. Decoding is always enabled so changing
+-- the LOTRO client language cannot strand FR/DE saves on an EN client.
+local NativeLoad = Turbine.PluginData.Load
+local NativeSave = Turbine.PluginData.Save
+local LocalizedPluginData =
+    Turbine.Shell.IsCommand("aide") or Turbine.Shell.IsCommand("zusatzmodule")
+local FailedLoads = {}
 
 local function ExportTable(obj)
     if type(obj) == "number" then
-        -- Store a locale-neutral decimal representation with a type marker.
         return "#" .. string.gsub(tostring(obj), ",", ".")
     elseif type(obj) == "string" then
         return "$" .. obj
     elseif type(obj) == "table" then
-        local newTable = {}
-        for i, v in pairs(obj) do
-            newTable[ExportTable(i)] = ExportTable(v)
-        end
-        return newTable
+        local out = {}
+        for k,v in pairs(obj) do out[ExportTable(k)] = ExportTable(v) end
+        return out
     end
     return obj
 end
@@ -33,45 +34,95 @@ local function ParseNumber(text)
     return n
 end
 
-local function ImportTable(obj)
+local function ImportOnce(obj)
     if type(obj) == "string" then
-        local prefix = string.sub(obj, 1, 1)
+        local prefix = string.sub(obj,1,1)
         if prefix == "$" then
-            return string.sub(obj, 2)
+            return string.sub(obj,2)
         elseif prefix == "#" then
-            local text = string.sub(obj, 2)
-            return ParseNumber(text) or text
+            local text = string.sub(obj,2)
+            return ParseNumber(text) or ("#"..text)
         end
         return obj
     elseif type(obj) == "table" then
-        local newTable = {}
-        for i, v in pairs(obj) do
-            newTable[ImportTable(i)] = ImportTable(v)
+        local out = {}
+        for k,v in pairs(obj) do
+            local dk = ImportOnce(k)
+            if dk ~= nil then out[dk] = ImportOnce(v) end
         end
-        return newTable
+        return out
     end
     return obj
 end
 
-function PluginDataLoad(dataScope, key, dataLoadEventHandler)
-    if not LocalizedPluginData then
-        return Turbine.PluginData.Load(dataScope, key, dataLoadEventHandler)
+local function LooksEncoded(value)
+    if type(value) == "string" then
+        local p = string.sub(value,1,1)
+        return p=="$" or p=="#"
     end
+    if type(value) ~= "table" then return false end
+    local saw = false
+    for k in pairs(value) do
+        if type(k) == "string" then
+            local p = string.sub(k,1,1)
+            if p~="$" and p~="#" then return false end
+            saw = true
+        elseif type(k) == "number" then
+            return false
+        end
+    end
+    return saw
+end
 
-    local wrappedHandler
+local function DecodeLegacy(value)
+    local current=value
+    for _=1,4 do
+        if not LooksEncoded(current) then break end
+        current=ImportOnce(current)
+    end
+    return current
+end
+
+function PluginDataLoadChecked(dataScope,key,dataLoadEventHandler)
+    local wrapped
     if dataLoadEventHandler then
-        wrappedHandler = function(diskData)
-            dataLoadEventHandler(ImportTable(diskData))
+        wrapped=function(diskData)
+            local ok,decoded=pcall(DecodeLegacy,diskData)
+            dataLoadEventHandler(ok and decoded or diskData)
         end
     end
 
-    local success, diskData = pcall(Turbine.PluginData.Load, dataScope, key, wrappedHandler)
-    if not success then return nil end
-    if diskData ~= nil then return ImportTable(diskData) end
-    return nil
+    local ok,diskData=pcall(NativeLoad,dataScope,key,wrapped)
+    if not ok then
+        FailedLoads[key]=tostring(diskData)
+        return nil,false,diskData
+    end
+
+    local decodedOK,decoded=pcall(DecodeLegacy,diskData)
+    if not decodedOK then
+        FailedLoads[key]=tostring(decoded)
+        return diskData,false,decoded
+    end
+    FailedLoads[key]=nil
+    return decoded,true,nil
 end
 
-function PluginDataSave(dataScope, key, data, saveCompleteEventHandler)
-    if LocalizedPluginData then data = ExportTable(data) end
-    return Turbine.PluginData.Save(dataScope, key, data, saveCompleteEventHandler)
+function PluginDataLoad(dataScope,key,dataLoadEventHandler)
+    local data=PluginDataLoadChecked(dataScope,key,dataLoadEventHandler)
+    return data
+end
+
+function PluginDataSave(dataScope,key,data,saveCompleteEventHandler)
+    if FailedLoads[key] then
+        if saveCompleteEventHandler then
+            pcall(saveCompleteEventHandler,false,"load failed earlier in this session")
+        end
+        return false
+    end
+    local payload=LocalizedPluginData and ExportTable(data) or data
+    return NativeSave(dataScope,key,payload,saveCompleteEventHandler)
+end
+
+function PluginDataDecodeLegacy(value)
+    return DecodeLegacy(value)
 end
