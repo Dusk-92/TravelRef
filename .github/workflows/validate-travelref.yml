@@ -9,6 +9,7 @@ on:
       - "tools/generate_official_fr.py"
       - "tools/generate_requirements_fr.py"
       - "tools/test_route_rules.lua"
+      - "tools/test_plugin_data.lua"
       - "tools/release_audit.lua"
       - "tools/source_audit.py"
       - "tools/TR_OfficialFR_Audit.txt"
@@ -21,6 +22,7 @@ on:
       - "tools/generate_official_fr.py"
       - "tools/generate_requirements_fr.py"
       - "tools/test_route_rules.lua"
+      - "tools/test_plugin_data.lua"
       - "tools/release_audit.lua"
       - "tools/source_audit.py"
       - "tools/TR_OfficialFR_Audit.txt"
@@ -55,6 +57,9 @@ jobs:
 
       - name: Test routing rules
         run: lua5.1 tools/test_route_rules.lua
+
+      - name: Test PluginData persistence
+        run: lua5.1 tools/test_plugin_data.lua
 
       - name: Run full release audit
         run: lua5.1 tools/release_audit.lua
