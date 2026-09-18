@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Lua 5.1
         run: |
@@ -114,10 +114,15 @@ jobs:
           print(f'Coverage OK: {locations} locations, {zones} zones, {areas} areas, {matched}/{total} requirements ({historical} historical overrides)')
           PY
 
-      - name: Check r10 regression guards
+      - name: Check r11 regression guards
         run: |
           grep -F '<Package>Dusk.TravelRef.TR_Entry</Package>' Dusk/TravelRef.plugin
-          grep -F '<Version>3.3.2-FR-r10</Version>' Dusk/TravelRef.plugin
+          grep -F '<Configuration Apartment="TravelRef" />' Dusk/TravelRef.plugin
+          grep -F 'function PluginDataLoadChecked' Dusk/TravelRef/Common/__init__.lua
+          grep -F 'local function DecodeLegacy' Dusk/TravelRef/Common/__init__.lua
+          ! grep -F 'function Turbine.PluginData.Load' Dusk/TravelRef/Common/__init__.lua
+          ! grep -F 'function Turbine.PluginData.Save' Dusk/TravelRef/Common/__init__.lua
+          grep -F '<Version>3.3.2-FR-r11</Version>' Dusk/TravelRef.plugin
           grep -F 'import "Dusk.TravelRef.TR_Main"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'import "Dusk.TravelRef.TR_Robustness"' Dusk/TravelRef/TR_Entry.lua
           grep -F 'import "Dusk.TravelRef.TR_RouteRules"' Dusk/TravelRef/TR_Main.lua
