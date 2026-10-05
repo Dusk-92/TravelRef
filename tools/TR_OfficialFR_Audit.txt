@@ -4,7 +4,7 @@ TravelRef official French localization audit
 Official sources loaded:
 - travelsMap.xml: 383 paired EN/FR labels
 - travelsWeb.xml: 5771 paired EN/FR labels
-- dungeons.xml: 1299 paired EN/FR labels
+- dungeons.xml: 1303 paired EN/FR labels
 - landmarks.xml: 2734 paired EN/FR labels
 - geoAreas.xml: 768 paired EN/FR labels
 - parchmentMaps.xml: 205 paired EN/FR labels

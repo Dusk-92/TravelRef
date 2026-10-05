@@ -1,8 +1,8 @@
 TravelRef French requirement audit
 ==================================
 
-- deeds.xml: 44167 paired EN/FR labels
-- quests.xml: 218651 paired EN/FR labels
+- deeds.xml: 44183 paired EN/FR labels
+- quests.xml: 220664 paired EN/FR labels
 - factions.xml: 107 localized factions with structured standing data
 
 Requirements extracted: 77
